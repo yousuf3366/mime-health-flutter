@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "423901980794",
+    "project_id": "mime-health",
+    "storage_bucket": "mime-health.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423901980794:android:fb7a5c75a840263add73c3",
+        "android_client_info": {
+          "package_name": "com.stardust.mimehealth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "423901980794-bf9jnhl14m6sk34einb74qd4b1ogouln.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stardust.mimehealth",
+            "certificate_hash": "a9b4ee7ca4d24378271fe47b46bef516013d406c"
+          }
+        },
+        {
+          "client_id": "423901980794-m3uvujkcke5gd79b10t79s6o3m3897fm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stardust.mimehealth",
+            "certificate_hash": "163a416a6c687fbff4b1e81fac693961fb9f8271"
+          }
+        },
+        {
+          "client_id": "423901980794-lbg7bar4h4d9d9frbge2d34j4f1nkf8g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDohI0N7Ou2YT0jL6gpcXT0OnQly6boQWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "423901980794-lbg7bar4h4d9d9frbge2d34j4f1nkf8g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

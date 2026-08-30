@@ -1,0 +1,72 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://engine.intelliprove.com/v2/questions/answer/many",
+    "headers": {
+      "content-type": "application/json",
+      "accept": "application/json",
+      "x-api-key": "testKey-wkqhs6ya8xf295suue9gembfl1k9dwt269z1ybzj"
+    },
+    "query_parameters": {
+      "external_user_id": "8"
+    },
+    "body": [
+      {
+        "lookup_key": "average_sleep_hours",
+        "value": 2,
+        "timezone": "Asia/Dhaka"
+      },
+      {
+        "lookup_key": "feeling_stressed_last_month",
+        "value": 2,
+        "timezone": "Asia/Dhaka"
+      },
+      {
+        "lookup_key": "daily_activities",
+        "value": 4,
+        "timezone": "Asia/Dhaka"
+      },
+      {
+        "lookup_key": "hours_sport_week",
+        "value": 3,
+        "timezone": "Asia/Dhaka"
+      },
+      {
+        "lookup_key": "nightly_wake_ups",
+        "value": 2,
+        "timezone": "Asia/Dhaka"
+      }
+    ]
+  },
+  "response": {
+    "status_code": 201,
+    "duration_ms": 275,
+    "body": [
+      {
+        "lookup_key": "average_sleep_hours",
+        "value": 2,
+        "user_id": "5151d12e-2f9a-4d7a-962f-fd85d23bd68b"
+      },
+      {
+        "lookup_key": "feeling_stressed_last_month",
+        "value": 2,
+        "user_id": "5151d12e-2f9a-4d7a-962f-fd85d23bd68b"
+      },
+      {
+        "lookup_key": "daily_activities",
+        "value": 4,
+        "user_id": "5151d12e-2f9a-4d7a-962f-fd85d23bd68b"
+      },
+      {
+        "lookup_key": "hours_sport_week",
+        "value": 3,
+        "user_id": "5151d12e-2f9a-4d7a-962f-fd85d23bd68b"
+      },
+      {
+        "lookup_key": "nightly_wake_ups",
+        "value": 2,
+        "user_id": "5151d12e-2f9a-4d7a-962f-fd85d23bd68b"
+      }
+    ]
+  }
+}

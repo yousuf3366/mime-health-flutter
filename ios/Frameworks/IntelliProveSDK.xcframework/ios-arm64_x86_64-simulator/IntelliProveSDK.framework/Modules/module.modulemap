@@ -1,0 +1,11 @@
+framework module IntelliProveSDK {
+  umbrella header "IntelliProveSDK.h"
+  export *
+
+  module * { export * }
+}
+
+module IntelliProveSDK.Swift {
+  header "IntelliProveSDK-Swift.h"
+  requires objc
+}

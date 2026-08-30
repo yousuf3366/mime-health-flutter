@@ -1,0 +1,557 @@
+You are a Senior Flutter Architect and Software Engineer.
+
+Your goal is to generate a complete production-ready Flutter application following Enterprise-level architecture and best practices.
+
+The project must be fully runnable without TODOs or placeholders.
+
+=================================================
+GENERAL
+=================================================
+
+- Flutter latest stable
+- Dart latest stable
+- Material 3
+- Null Safety
+- SOLID Principle
+- Clean Architecture
+- DRY
+- KISS
+- Feature-first folder structure
+- Production Ready
+- Reusable Components
+- Clean Code
+- Fully documented important classes
+
+=================================================
+PROJECT STRUCTURE
+=================================================
+
+lib/
+
+core/
+  config/
+  constants/
+  network/
+  storage/
+  error/
+  router/
+  services/
+  localization/
+  widgets/
+  utils/
+  theme/
+  extensions/
+
+features/
+
+  splash/
+
+  login/
+
+    data/
+      datasource/
+      model/
+      repository/
+
+    domain/
+      entity/
+      repository/
+      usecase/
+
+    presentation/
+      page/
+      controller/
+      provider/
+      widget/
+
+=================================================
+STATE MANAGEMENT
+=================================================
+
+Use
+
+- flutter_riverpod
+- hooks_riverpod
+- flutter_hooks
+
+Riverpod will also be used for Dependency Injection.
+
+Never use get_it.
+
+Prefer
+
+- AsyncNotifier
+- Notifier
+- FutureProvider
+
+Avoid unnecessary StateProvider.
+
+=================================================
+NETWORK
+=================================================
+
+Use Dio.
+
+Need:
+
+✓ BaseOptions
+
+✓ Interceptors
+
+✓ Timeout
+
+✓ CancelToken
+
+Need Interceptors
+
+- AuthInterceptor
+- LoggingInterceptor
+- RetryInterceptor
+
+Logging must print
+
+- URL
+- Method
+- Headers
+- Query
+- Body
+- Multipart Body
+- Response
+- Status Code
+- Response Time
+- Error
+
+Multipart upload request/response must also be logged.
+
+=================================================
+NETWORK INSPECTOR
+=================================================
+
+Integrate a Network Inspector.
+
+Use
+
+talker_dio_logger
+
+or
+
+chucker_flutter
+
+or another production-ready inspector.
+
+Inspector should be enabled only in Debug Mode.
+
+=================================================
+RETRY
+=================================================
+
+Automatic Retry
+
+Support
+
+GET
+
+POST
+
+PUT
+
+DELETE
+
+PATCH
+
+Multipart Upload
+
+Retry Count configurable.
+
+Use Exponential Backoff.
+
+=================================================
+TOKEN
+=================================================
+
+JWT Authentication
+
+Need
+
+Access Token
+
+Refresh Token
+
+Store using
+
+flutter_secure_storage
+
+Never use SharedPreferences for token.
+
+=================================================
+TOKEN REFRESH
+=================================================
+
+If API returns
+
+401
+
+Automatically
+
+↓
+
+Refresh Token API
+
+↓
+
+Save New Token
+
+↓
+
+Retry Original Request
+
+If Refresh API also fails
+
+↓
+
+Logout
+
+↓
+
+Navigate Login
+
+Everything must be centralized inside Dio Interceptor.
+
+=================================================
+ERROR HANDLING
+=================================================
+
+Centralized Error Handling.
+
+Need
+
+AppException
+
+ApiException
+
+UnauthorizedException
+
+TimeoutException
+
+NoInternetException
+
+UnknownException
+
+Need
+
+ErrorHandler
+
+Need Generic
+
+Result<T>
+
+No Repository should throw exceptions.
+
+=================================================
+LOCAL STORAGE
+=================================================
+
+flutter_secure_storage
+
+Store
+
+Access Token
+
+Refresh Token
+
+User Info
+
+SharedPreferences
+
+Store
+
+Language Code
+
+Theme
+
+App Preferences
+
+=================================================
+CONNECTIVITY
+=================================================
+
+Use connectivity_plus
+
+Need
+
+ConnectivityService
+
+Expose Stream
+
+Global Provider
+
+Automatically detect
+
+Internet Lost
+
+Internet Restored
+
+Global Offline Banner
+
+API should not execute if internet is unavailable.
+
+=================================================
+BASE REPOSITORY
+=================================================
+
+Create Generic BaseRepository.
+
+Every Repository extends BaseRepository.
+
+Need
+
+safeApiCall()
+
+Result<T>
+
+Centralized Error Parsing
+
+No duplicate try-catch.
+
+=================================================
+GLOBAL SNACKBAR & DIALOG
+=================================================
+
+Create Global Service.
+
+Need
+
+showSuccess()
+
+showError()
+
+showWarning()
+
+showInfo()
+
+showLoading()
+
+hideLoading()
+
+confirmationDialog()
+
+No ScaffoldMessenger inside screens.
+
+Everything must be centralized.
+
+=================================================
+DEVICE INFO
+=================================================
+
+Use
+
+device_info_plus
+
+Need
+
+DeviceInfoService
+
+Provide
+
+Platform
+
+Brand
+
+Model
+
+OS Version
+
+SDK Version
+
+Manufacturer
+
+Physical Device
+
+Unique Device Identifier (where available and appropriate)
+
+Expose using Riverpod.
+
+=================================================
+ROUTING
+=================================================
+
+Use GoRouter.
+
+Need
+
+Splash
+
+Login
+
+Home
+
+404
+
+Auth Guard
+
+Redirect
+
+=================================================
+LOCALIZATION
+=================================================
+
+Dual Language
+
+English
+
+Bangla
+
+Language comes from API.
+
+Example
+
+{
+"login":"Login",
+"password":"Password"
+}
+
+Need
+
+LanguageRepository
+
+LanguageUseCase
+
+LanguageController
+
+LanguageProvider
+
+AppLocalization
+
+Flow
+
+App Start
+
+↓
+
+Read Language Code from SharedPreferences
+
+↓
+
+Call Language API
+
+↓
+
+Store Map globally
+
+↓
+
+Whole app uses same provider.
+
+Language change updates UI instantly.
+
+=================================================
+UI
+=================================================
+
+Create
+
+Splash
+
+Login
+
+Home
+
+=================================================
+SPLASH FLOW
+=================================================
+
+Splash
+
+↓
+
+Initialize Dependencies
+
+↓
+
+Check Internet
+
+↓
+
+Read Token
+
+↓
+
+Read Language Code
+
+↓
+
+Load Language API
+
+↓
+
+If Logged In
+
+Home
+
+Else
+
+Login
+
+=================================================
+LOGIN
+=================================================
+
+Need
+
+Email
+
+Password
+
+Validation
+
+Loading
+
+Error
+
+Retry
+
+Success
+
+=================================================
+CODE STYLE
+=================================================
+
+No API Call inside Widget.
+
+UI
+
+↓
+
+Controller
+
+↓
+
+UseCase
+
+↓
+
+Repository
+
+↓
+
+Datasource
+
+↓
+
+Dio
+
+=================================================
+OUTPUT
+=================================================
+
+Generate a complete runnable Flutter project.
+
+Generate every file.
+
+No TODO.
+
+No placeholders.
+
+No skipped implementation.
+
+Everything must compile successfully.

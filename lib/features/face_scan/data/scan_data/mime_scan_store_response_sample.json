@@ -1,0 +1,67 @@
+{
+  "success": true,
+  "message": "Scan stored successfully.",
+  "data": {
+    "id": 1,
+    "profile_id": 1,
+    "parent_user_id": 2,
+    "scanner_user_id": 2,
+    "face_scan_id": "55e7b4f3-c240-475b-8a9b-a6a071943073",
+    "external_user_id": "1",
+    "context_note": null,
+    "quality_status": "good",
+    "quality_flags": null,
+    "biomarkers": {
+      "heart_rate": 82,
+      "respiratory_rate": 10,
+      "heart_rate_variability": 114,
+      "resonant_breathing_score": 11,
+      "systolic_blood_pressure": 130,
+      "diastolic_blood_pressure": 83
+    },
+    "metrics": {
+      "energy_balance": {
+        "score": 67.37,
+        "confidence": 66.67
+      },
+      "general_fitness": {
+        "score": 73.94,
+        "confidence": 87.5
+      },
+      "hypertension": {
+        "score": 82,
+        "confidence": 100
+      },
+      "mental_health_risk": {
+        "score": 84.17,
+        "confidence": 75
+      },
+      "mental_stress": {
+        "score": 93.33,
+        "confidence": 91.67
+      },
+      "sleep_quality": {
+        "score": 67.28,
+        "confidence": 50
+      },
+      "wellbeing": {
+        "mental": {
+          "score": 89,
+          "assessment": "optimal"
+        },
+        "physical": {
+          "score": 76,
+          "assessment": "optimal"
+        },
+        "energy_sleep": {
+          "score": 67,
+          "assessment": "optimal"
+        },
+        "status_label": "GGG"
+      }
+    },
+    "metrics_last_update_at": "2026-08-04T15:12:57+00:00",
+    "created_at": "2026-08-09T04:09:49+00:00"
+  },
+  "errors": []
+}

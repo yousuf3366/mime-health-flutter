@@ -1,0 +1,562 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "IntelliProveSDK",
+    "printedName": "IntelliProveSDK",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI",
+        "declKind": "Import",
+        "moduleName": "IntelliProveSDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "IntelliWebViewLink",
+        "printedName": "IntelliWebViewLink",
+        "children": [
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(urlString:delegate:label:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "IntelliWebViewLink",
+                "printedName": "IntelliProveSDK.IntelliWebViewLink<τ_0_0>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "usr": "s:15IntelliProveSDK0A11WebViewLinkV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "(any IntelliProveSDK.IntelliWebViewDelegate)?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "IntelliWebViewDelegate",
+                    "printedName": "any IntelliProveSDK.IntelliWebViewDelegate",
+                    "usr": "c:@M@IntelliProveSDK@objc(pl)IntelliWebViewDelegate"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> τ_0_0",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:15IntelliProveSDK0A11WebViewLinkV9urlString8delegate5labelACyxGSS_AA0adE8Delegate_pSgxyctcfc",
+            "mangledName": "$s15IntelliProveSDK0A11WebViewLinkV9urlString8delegate5labelACyxGSS_AA0adE8Delegate_pSgxyctcfc",
+            "moduleName": "IntelliProveSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : SwiftUI.View>",
+            "sugared_genericSig": "<Label where Label : SwiftUI.View>",
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Var",
+            "name": "body",
+            "printedName": "body",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:15IntelliProveSDK0A11WebViewLinkV4bodyQrvp",
+            "mangledName": "$s15IntelliProveSDK0A11WebViewLinkV4bodyQrvp",
+            "moduleName": "IntelliProveSDK",
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom",
+              "AccessControl"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some SwiftUI.View",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "View",
+                        "printedName": "SwiftUI.View",
+                        "usr": "s:7SwiftUI4ViewP"
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:15IntelliProveSDK0A11WebViewLinkV4bodyQrvg",
+                "mangledName": "$s15IntelliProveSDK0A11WebViewLinkV4bodyQrvg",
+                "moduleName": "IntelliProveSDK",
+                "genericSig": "<τ_0_0 where τ_0_0 : SwiftUI.View>",
+                "sugared_genericSig": "<Label where Label : SwiftUI.View>",
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:15IntelliProveSDK0A11WebViewLinkV",
+        "mangledName": "$s15IntelliProveSDK0A11WebViewLinkV",
+        "moduleName": "IntelliProveSDK",
+        "genericSig": "<τ_0_0 where τ_0_0 : SwiftUI.View>",
+        "sugared_genericSig": "<Label where Label : SwiftUI.View>",
+        "declAttributes": [
+          "Preconcurrency",
+          "Custom",
+          "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "View",
+            "printedName": "View",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some SwiftUI.View",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "View",
+                        "printedName": "SwiftUI.View",
+                        "usr": "s:7SwiftUI4ViewP"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "usr": "s:7SwiftUI4ViewP",
+            "mangledName": "$s7SwiftUI4ViewP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "IntelliProveSDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "WebKit",
+        "printedName": "WebKit",
+        "declKind": "Import",
+        "moduleName": "IntelliProveSDK"
+      },
+      {
+        "kind": "Import",
+        "name": "AVKit",
+        "printedName": "AVKit",
+        "declKind": "Import",
+        "moduleName": "IntelliProveSDK"
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "IntelliWebViewFactory",
+        "printedName": "IntelliWebViewFactory",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "newWebView",
+            "printedName": "newWebView(urlString:delegate:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UIViewController",
+                "printedName": "UIKit.UIViewController",
+                "usr": "c:objc(cs)UIViewController"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "IntelliWebViewDelegate",
+                "printedName": "any IntelliProveSDK.IntelliWebViewDelegate",
+                "usr": "c:@M@IntelliProveSDK@objc(pl)IntelliWebViewDelegate"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@IntelliProveSDK@objc(cs)IntelliWebViewFactory(cm)newWebViewWithUrlString:delegate:",
+            "mangledName": "$s15IntelliProveSDK0A14WebViewFactoryC03newdE09urlString8delegateSo16UIViewControllerCSS_AA0adE8Delegate_ptFZ",
+            "moduleName": "IntelliProveSDK",
+            "static": true,
+            "objc_name": "newWebViewWithUrlString:delegate:",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "IntelliWebViewFactory",
+                "printedName": "IntelliProveSDK.IntelliWebViewFactory",
+                "usr": "c:@M@IntelliProveSDK@objc(cs)IntelliWebViewFactory"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "c:@M@IntelliProveSDK@objc(cs)IntelliWebViewFactory(im)init",
+            "mangledName": "$s15IntelliProveSDK0A14WebViewFactoryCACycfc",
+            "moduleName": "IntelliProveSDK",
+            "overriding": true,
+            "implicit": true,
+            "objc_name": "init",
+            "declAttributes": [
+              "Dynamic",
+              "ObjC",
+              "Override"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:@M@IntelliProveSDK@objc(cs)IntelliWebViewFactory",
+        "mangledName": "$s15IntelliProveSDK0A14WebViewFactoryC",
+        "moduleName": "IntelliProveSDK",
+        "declAttributes": [
+          "AccessControl",
+          "ObjC"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "IntelliWebViewDelegate",
+        "printedName": "IntelliWebViewDelegate",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "didReceive",
+            "printedName": "didReceive(postMessage:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@IntelliProveSDK@objc(pl)IntelliWebViewDelegate(im)didReceiveWithPostMessage:",
+            "mangledName": "$s15IntelliProveSDK0A15WebViewDelegateP10didReceive11postMessageySS_tF",
+            "moduleName": "IntelliProveSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : IntelliProveSDK.IntelliWebViewDelegate>",
+            "sugared_genericSig": "<Self where Self : IntelliProveSDK.IntelliWebViewDelegate>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment",
+              "ObjC"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Protocol",
+        "usr": "c:@M@IntelliProveSDK@objc(pl)IntelliWebViewDelegate",
+        "mangledName": "$s15IntelliProveSDK0A15WebViewDelegateP",
+        "moduleName": "IntelliProveSDK",
+        "genericSig": "<τ_0_0 : AnyObject>",
+        "sugared_genericSig": "<Self : AnyObject>",
+        "declAttributes": [
+          "AccessControl",
+          "ObjC"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
+        ]
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": [
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebView.swift",
+      "kind": "BooleanLiteral",
+      "offset": 340,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebView.swift",
+      "kind": "StringLiteral",
+      "offset": 2571,
+      "length": 342,
+      "value": "\"https:\/\/plugin-rc.intelliprove.com\/?action_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiIiwiY3VzdG9tZXIiOiJ0ZXN0aW5nLWFwaS1rZXkiLCJncm91cCI6ImFkbWluIiwibWF4X21lYXN1cmVtZW50X2NvdW50IjotMSwiYXV0aDBfdXNlcl9pZCI6bnVsbH0sIm1ldGEiOnt9LCJleHAiOjE3MzU2ODk2MDB9.zKWdq4lE6SXOnhvSgHCVvPKTsiwH66likFDNPIe4ozk&patient=DriesVanmeert\""
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "StringLiteral",
+      "offset": 984,
+      "length": 32,
+      "value": "\"IntelliProvePostMessageHandler\""
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "Array",
+      "offset": 1871,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1924,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "StringLiteral",
+      "offset": 1982,
+      "length": 264,
+      "value": "\"var meta = document.createElement('meta');\nmeta.name = 'viewport';\nmeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';\nvar head = document.getElementsByTagName('head')[0];\nhead.appendChild(meta);\""
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 2401,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "StringLiteral",
+      "offset": 2664,
+      "length": 185,
+      "value": "\"window.postMessage = function(data) {\n    var jsonString = JSON.stringify(data)\n    window.webkit.messageHandlers.\""
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "StringLiteral",
+      "offset": 2817,
+      "length": 1,
+      "value": "\".postMessage(jsonString);\n};\""
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3004,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3342,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3550,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3614,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3680,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/tanguy\/Development\/intelliprove-web-plugin-ios\/IntelliProveSDK\/IntelliWebViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3834,
+      "length": 4,
+      "value": "true"
+    }
+  ]
+}
