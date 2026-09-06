@@ -53,6 +53,7 @@ class ProfileMapper {
       historyOfHypertension: entity.historyOfHypertension,
       historyOfHighGlucoseLevels: entity.historyOfHighGlucoseLevels,
       privacyLevel: entity.privacyLevel,
+      imageEmbedding: entity.imageEmbedding,
     );
   }
 
@@ -91,6 +92,7 @@ class ProfileMapper {
       privacyLevel: model.privacyLevel,
       status: model.status,
       avatarPath: resolveMediaUrl(model.avatarPath),
+      imageEmbedding: model.imageEmbedding,
     );
   }
 

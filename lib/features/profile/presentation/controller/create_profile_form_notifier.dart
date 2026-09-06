@@ -52,6 +52,8 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
     Object diabetes = noValue,
     Object historyOfHypertension = noValue,
     Object historyOfHighGlucoseLevels = noValue,
+    Object? imageEmbedding = noValue,
+    Object? imageEmbeddingError = noValue,
     Object? errorMessage = noValue,
     Object isSubmitting = noValue,
   }) {
@@ -81,6 +83,8 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
       diabetes: diabetes,
       historyOfHypertension: historyOfHypertension,
       historyOfHighGlucoseLevels: historyOfHighGlucoseLevels,
+      imageEmbedding: imageEmbedding,
+      imageEmbeddingError: imageEmbeddingError,
       errorMessage: errorMessage,
       isSubmitting: isSubmitting,
     );
@@ -147,6 +151,7 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
       diabetes: profile.diabetes,
       historyOfHypertension: profile.historyOfHypertension,
       historyOfHighGlucoseLevels: profile.historyOfHighGlucoseLevels,
+      imageEmbedding: profile.imageEmbedding,
     );
   }
 
@@ -243,11 +248,21 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
     updateField(historyOfHighGlucoseLevels: value, errorMessage: null);
   }
 
+  void setImageEmbedding(String? value) {
+    updateField(
+      imageEmbedding: value,
+      imageEmbeddingError: value == null || value.trim().isEmpty
+          ? 'Face registration is required'
+          : null,
+      errorMessage: null,
+    );
+  }
+
   void resetState() {
     state = CreateProfileFormState.initial();
   }
 
-  bool validate() {
+  bool validate({required bool requireFace}) {
     final displayName = (state.displayName ?? '').trim();
     final displayNameError = displayName.isEmpty
         ? 'Display name is required'
@@ -264,6 +279,10 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
         ? 'Date of birth is required'
         : null;
     final sexError = state.sex == null ? 'Sex is required' : null;
+    final imageEmbeddingError = requireFace &&
+            (state.imageEmbedding == null || state.imageEmbedding!.trim().isEmpty)
+        ? 'Face registration is required'
+        : null;
 
     updateField(
       displayNameError: displayNameError,
@@ -276,6 +295,7 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
       dateOfBirthError: dateOfBirthError,
       sexError: sexError,
       lifestyleError: null,
+      imageEmbeddingError: imageEmbeddingError,
       errorMessage: null,
     );
 
@@ -287,7 +307,8 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
         heightInchesError == null &&
         weightKgError == null &&
         dateOfBirthError == null &&
-        sexError == null;
+        sexError == null &&
+        imageEmbeddingError == null;
   }
 
   String? _validateHeightFeet(String? feetValue) {
@@ -361,11 +382,13 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
       historyOfHypertension: state.historyOfHypertension,
       historyOfHighGlucoseLevels: state.historyOfHighGlucoseLevels,
       privacyLevel: AppConstants.profilePrivacyFullSharing,
+      imageEmbedding: state.imageEmbedding,
     );
   }
 
   Future<bool> submit({ProfileEntity? profile}) async {
-    if (!validate()) {
+    final isCreate = profile == null;
+    if (!validate(requireFace: isCreate)) {
       _snackbar.showError('Please fill all required fields');
       return false;
     }

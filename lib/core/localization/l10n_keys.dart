@@ -125,6 +125,39 @@ class L10nKeys {
       'mobile.face_scan.results_loading_title';
   static const faceScanResultsLoadingSubtitle =
       'mobile.face_scan.results_loading_subtitle';
+
+  // Face recognition
+  static const faceRecognitionCaptureTitle =
+      'mobile.face_recognition.capture_title';
+  static const faceRecognitionCaptureHint =
+      'mobile.face_recognition.capture_hint';
+  static const faceRecognitionCaptureButton =
+      'mobile.face_recognition.capture_button';
+  static const faceRecognitionRegistered =
+      'mobile.face_recognition.registered';
+  static const faceRecognitionRegisterFace =
+      'mobile.face_recognition.register_face';
+  static const faceRecognitionRetake = 'mobile.face_recognition.retake';
+  static const faceRecognitionRequired =
+      'mobile.face_recognition.required';
+  static const faceRecognitionVerifyTitle =
+      'mobile.face_recognition.verify_title';
+  static const faceRecognitionVerifyHint =
+      'mobile.face_recognition.verify_hint';
+  static const faceRecognitionVerifyButton =
+      'mobile.face_recognition.verify_button';
+  static const faceRecognitionVerifyFailed =
+      'mobile.face_recognition.verify_failed';
+  static const faceRecognitionNoFace = 'mobile.face_recognition.no_face';
+  static const faceRecognitionNoStoredFace =
+      'mobile.face_recognition.no_stored_face';
+  static const faceRecognitionProcessing =
+      'mobile.face_recognition.processing';
+  static const faceRecognitionCaptureFailed =
+      'mobile.face_recognition.capture_failed';
+  static const faceRecognitionCameraUnavailable =
+      'mobile.face_recognition.camera_unavailable';
+
   static const healthDashboardTitle = 'mobile.health_dashboard.title';
   static const healthDashboardOverallScore =
       'mobile.health_dashboard.overall_score';

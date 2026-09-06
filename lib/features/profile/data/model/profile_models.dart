@@ -16,6 +16,7 @@ class CreateProfileRequestModel {
     this.historyOfHypertension,
     this.historyOfHighGlucoseLevels,
     this.privacyLevel = 'full_sharing',
+    this.imageEmbedding,
   });
 
   final String profileKind;
@@ -34,6 +35,7 @@ class CreateProfileRequestModel {
   final bool? historyOfHypertension;
   final bool? historyOfHighGlucoseLevels;
   final String privacyLevel;
+  final String? imageEmbedding;
 
   Map<String, dynamic> toJson() => {
     'profile_kind': profileKind,
@@ -54,6 +56,7 @@ class CreateProfileRequestModel {
     if (historyOfHighGlucoseLevels != null)
       'history_of_high_glucose_levels': historyOfHighGlucoseLevels,
     'privacy_level': privacyLevel,
+    if (imageEmbedding != null) 'image_embedding': imageEmbedding,
   };
 }
 
@@ -124,6 +127,7 @@ class ProfileModel {
     this.privacyLevel,
     this.status,
     this.avatarPath,
+    this.imageEmbedding,
   });
 
   final int id;
@@ -148,6 +152,7 @@ class ProfileModel {
   final String? privacyLevel;
   final String? status;
   final String? avatarPath;
+  final String? imageEmbedding;
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     final user = _asMap(json['user']);
@@ -198,6 +203,7 @@ class ProfileModel {
           json['avatar_path']?.toString() ??
           json['avatar_url']?.toString() ??
           json['avatar']?.toString(),
+      imageEmbedding: json['image_embedding']?.toString(),
     );
   }
 }

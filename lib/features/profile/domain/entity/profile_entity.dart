@@ -42,6 +42,7 @@ class ProfileDraftEntity extends Equatable {
     this.historyOfHypertension,
     this.historyOfHighGlucoseLevels,
     this.privacyLevel = 'full_sharing',
+    this.imageEmbedding,
   });
 
   /// Mandatory. Defaults to `self`.
@@ -71,6 +72,7 @@ class ProfileDraftEntity extends Equatable {
   final bool? historyOfHypertension;
   final bool? historyOfHighGlucoseLevels;
   final String privacyLevel;
+  final String? imageEmbedding;
 
   @override
   List<Object?> get props => [
@@ -90,6 +92,7 @@ class ProfileDraftEntity extends Equatable {
     historyOfHypertension,
     historyOfHighGlucoseLevels,
     privacyLevel,
+    imageEmbedding,
   ];
 }
 
@@ -118,6 +121,7 @@ class ProfileEntity extends Equatable {
     this.privacyLevel,
     this.status,
     this.avatarPath,
+    this.imageEmbedding,
   });
 
   final int id;
@@ -142,6 +146,7 @@ class ProfileEntity extends Equatable {
   final String? privacyLevel;
   final String? status;
   final String? avatarPath;
+  final String? imageEmbedding;
 
   @override
   List<Object?> get props => [
@@ -167,6 +172,7 @@ class ProfileEntity extends Equatable {
     privacyLevel,
     status,
     avatarPath,
+    imageEmbedding,
   ];
 }
 

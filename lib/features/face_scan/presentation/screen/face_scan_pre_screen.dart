@@ -6,7 +6,11 @@ import 'package:mime_health/core/extensions/context_extensions.dart';
 import 'package:mime_health/core/theme/app_colors.dart';
 import 'package:mime_health/core/widgets/app_button.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/localization/l10n_keys.dart';
+import '../../presentation/screen/face_camera_screen.dart';
+import '../../../profile/domain/entity/profile_entity.dart';
+import '../../../profile/presentation/provider/profile_provider.dart';
 import '../../../../core/providers/core_providers.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../language/presentation/provider/language_provider.dart';
@@ -121,6 +125,33 @@ class FaceScanPreScreen extends HookConsumerWidget {
               isEnabled: consent.value && !flowState.isBusy,
               isLoading: flowState.isBusy,
               onPressed: () async {
+                final profiles = await ref.read(profilesProvider.future);
+                if (profiles.isEmpty) {
+                  ref.read(snackbarServiceProvider).showError(
+                        l10n.t(L10nKeys.faceRecognitionNoStoredFace),
+                      );
+                  return;
+                }
+                final profile = _primaryProfile(profiles);
+                final storedEmbedding = profile.imageEmbedding;
+                if (storedEmbedding == null || storedEmbedding.trim().isEmpty) {
+                  ref.read(snackbarServiceProvider).showError(
+                        l10n.t(L10nKeys.faceRecognitionNoStoredFace),
+                      );
+                  return;
+                }
+
+                if (!context.mounted) return;
+                final verified = await Navigator.of(context).push<bool>(
+                  MaterialPageRoute(
+                    builder: (_) => FaceCameraScreen(
+                      mode: FaceCameraMode.verify,
+                      storedEmbedding: storedEmbedding,
+                    ),
+                  ),
+                );
+                if (verified != true || !context.mounted) return;
+
                 final result = await ref
                     .read(faceScanFlowNotifierProvider.notifier)
                     .startScan();
@@ -150,6 +181,15 @@ class FaceScanPreScreen extends HookConsumerWidget {
       ),
     );
   }
+}
+
+ProfileEntity _primaryProfile(List<ProfileEntity> profiles) {
+  for (final profile in profiles) {
+    if (profile.profileKind == AppConstants.profileKindSelf) {
+      return profile;
+    }
+  }
+  return profiles.first;
 }
 
 class _PlanBanner extends StatelessWidget {

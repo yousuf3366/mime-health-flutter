@@ -18,9 +18,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
     // 🔐 Keystore
     val keystoreProperties = Properties()
     val keystorePropertiesFile = rootProject.file("key.properties")

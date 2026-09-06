@@ -8,6 +8,7 @@ import 'package:mime_health/core/widgets/app_date_picker.dart';
 import 'package:mime_health/core/widgets/app_dropdown_field.dart';
 import 'package:mime_health/core/widgets/app_text_field1.dart';
 
+import '../../../face_scan/presentation/screen/face_camera_screen.dart';
 import '../../../../core/localization/l10n_keys.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -355,6 +356,32 @@ class CreateProfileForm extends HookConsumerWidget {
                             ],
                           ),
                         ),
+                        SizedBox(height: context.defaultPaddingSc),
+                        _FaceCaptureCard(
+                          title: l10n.t(L10nKeys.faceRecognitionRegisterFace),
+                          registeredLabel:
+                              l10n.t(L10nKeys.faceRecognitionRegistered),
+                          hint: l10n.t(L10nKeys.faceRecognitionCaptureHint),
+                          captureLabel:
+                              l10n.t(L10nKeys.faceRecognitionCaptureButton),
+                          retakeLabel: l10n.t(L10nKeys.faceRecognitionRetake),
+                          hasFace: (formState.imageEmbedding ?? '').isNotEmpty,
+                          mandatory: !isEditing,
+                          errorText: formState.imageEmbeddingError,
+                          onCapture: () async {
+                            final embedding =
+                                await Navigator.of(context).push<String>(
+                              MaterialPageRoute(
+                                builder: (_) => const FaceCameraScreen(
+                                  mode: FaceCameraMode.capture,
+                                ),
+                              ),
+                            );
+                            if (embedding != null) {
+                              formNotifier.setImageEmbedding(embedding);
+                            }
+                          },
+                        ),
                         if (formState.errorMessage != null) ...[
                           SizedBox(height: context.scaleHeight(12)),
                           Text(
@@ -620,6 +647,106 @@ class _PillOption extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _FaceCaptureCard extends StatelessWidget {
+  const _FaceCaptureCard({
+    required this.title,
+    required this.registeredLabel,
+    required this.hint,
+    required this.captureLabel,
+    required this.retakeLabel,
+    required this.hasFace,
+    required this.mandatory,
+    required this.onCapture,
+    this.errorText,
+  });
+
+  final String title;
+  final String registeredLabel;
+  final String hint;
+  final String captureLabel;
+  final String retakeLabel;
+  final bool hasFace;
+  final bool mandatory;
+  final VoidCallback onCapture;
+  final String? errorText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(context.scaleWidth(20)),
+      decoration: BoxDecoration(
+        color: AppColors.glass,
+        borderRadius: BorderRadius.circular(context.scaleWidth(20)),
+        border: Border.all(color: AppColors.glassBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                hasFace ? Icons.verified_outlined : Icons.face_retouching_natural,
+                color: hasFace
+                    ? AppColors.primaryContainer
+                    : AppColors.textSecondary,
+              ),
+              SizedBox(width: context.scaleWidth(10)),
+              Expanded(
+                child: Text(
+                  title.toUpperCase(),
+                  style: TextStyle(
+                    color: AppColors.textPrimary.withValues(alpha: 0.7),
+                    fontSize: context.smallFontSize,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.6,
+                  ),
+                ),
+              ),
+              if (mandatory)
+                Text(
+                  '*',
+                  style: TextStyle(
+                    color: AppColors.error,
+                    fontSize: context.bodyFontSize,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(height: context.scaleHeight(10)),
+          Text(
+            hasFace ? registeredLabel : hint,
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: context.smallFontSize,
+              height: 1.35,
+            ),
+          ),
+          if (errorText != null) ...[
+            SizedBox(height: context.scaleHeight(8)),
+            Text(
+              errorText!,
+              style: TextStyle(
+                color: AppColors.error,
+                fontSize: context.smallFontSize,
+              ),
+            ),
+          ],
+          SizedBox(height: context.scaleHeight(12)),
+          AppButton(
+            label: hasFace ? retakeLabel : captureLabel,
+            icon: Icons.camera_alt_outlined,
+            btnStyle:
+                hasFace ? AppButtonStyle.secondary : AppButtonStyle.primary,
+            onPressed: onCapture,
+          ),
+        ],
       ),
     );
   }

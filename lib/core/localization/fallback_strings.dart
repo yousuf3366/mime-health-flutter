@@ -112,6 +112,28 @@ class FallbackStrings {
         'Select a subscription plan before starting a face scan.',
     L10nKeys.faceScanResultsLoadingTitle: 'Loading your results...',
     L10nKeys.faceScanResultsLoadingSubtitle: 'Please wait a moment.',
+    L10nKeys.faceRecognitionCaptureTitle: 'Register your face',
+    L10nKeys.faceRecognitionCaptureHint:
+        'Centre your face in the frame with good lighting, then tap capture.',
+    L10nKeys.faceRecognitionCaptureButton: 'Capture face',
+    L10nKeys.faceRecognitionRegistered: 'Face registered',
+    L10nKeys.faceRecognitionRegisterFace: 'Register face',
+    L10nKeys.faceRecognitionRetake: 'Retake',
+    L10nKeys.faceRecognitionRequired: 'Face registration is required',
+    L10nKeys.faceRecognitionVerifyTitle: 'Verify your identity',
+    L10nKeys.faceRecognitionVerifyHint:
+        'Look at the camera so we can match your profile face before the health scan.',
+    L10nKeys.faceRecognitionVerifyButton: 'Verify face',
+    L10nKeys.faceRecognitionVerifyFailed:
+        'Face not recognized. Please try again with good lighting and a clear view of your face.',
+    L10nKeys.faceRecognitionNoFace: 'No face detected. Please try again.',
+    L10nKeys.faceRecognitionNoStoredFace:
+        'No face on file for this profile. Please update your profile first.',
+    L10nKeys.faceRecognitionProcessing: 'Processing face…',
+    L10nKeys.faceRecognitionCaptureFailed:
+        'Could not capture face. Please try again.',
+    L10nKeys.faceRecognitionCameraUnavailable:
+        'Camera is not available on this device.',
     L10nKeys.healthDashboardTitle: 'Health Dashboard',
     L10nKeys.healthDashboardOverallScore: 'Overall health score',
     L10nKeys.healthDashboardBiomarkers: 'Biomarkers',
@@ -272,6 +294,28 @@ class FallbackStrings {
         'ফেস স্ক্যান শুরু করার আগে একটি সাবস্ক্রিপশন প্ল্যান বেছে নিন।',
     L10nKeys.faceScanResultsLoadingTitle: 'আপনার ফলাফল লোড হচ্ছে...',
     L10nKeys.faceScanResultsLoadingSubtitle: 'অনুগ্রহ করে একটু অপেক্ষা করুন।',
+    L10nKeys.faceRecognitionCaptureTitle: 'আপনার মুখ রেজিস্টার করুন',
+    L10nKeys.faceRecognitionCaptureHint:
+        'ভালো আলোতে মুখ ফ্রেমের মাঝখানে রাখুন, তারপর ক্যাপচার ট্যাপ করুন।',
+    L10nKeys.faceRecognitionCaptureButton: 'মুখ ক্যাপচার করুন',
+    L10nKeys.faceRecognitionRegistered: 'মুখ রেজিস্টার হয়েছে',
+    L10nKeys.faceRecognitionRegisterFace: 'মুখ রেজিস্টার করুন',
+    L10nKeys.faceRecognitionRetake: 'আবার নিন',
+    L10nKeys.faceRecognitionRequired: 'মুখ রেজিস্টার করা বাধ্যতামূলক',
+    L10nKeys.faceRecognitionVerifyTitle: 'পরিচয় যাচাই করুন',
+    L10nKeys.faceRecognitionVerifyHint:
+        'হেলথ স্ক্যানের আগে প্রোফাইলের মুখের সাথে মিলিয়ে নিতে ক্যামেরার দিকে তাকান।',
+    L10nKeys.faceRecognitionVerifyButton: 'মুখ যাচাই করুন',
+    L10nKeys.faceRecognitionVerifyFailed:
+        'মুখ চেনা যায়নি। ভালো আলো ও স্পষ্ট মুখ দিয়ে আবার চেষ্টা করুন।',
+    L10nKeys.faceRecognitionNoFace: 'কোনো মুখ পাওয়া যায়নি। আবার চেষ্টা করুন।',
+    L10nKeys.faceRecognitionNoStoredFace:
+        'এই প্রোফাইলে কোনো মুখ সংরক্ষিত নেই। প্রথমে প্রোফাইল আপডেট করুন।',
+    L10nKeys.faceRecognitionProcessing: 'মুখ প্রসেস হচ্ছে…',
+    L10nKeys.faceRecognitionCaptureFailed:
+        'মুখ ক্যাপচার করা যায়নি। আবার চেষ্টা করুন।',
+    L10nKeys.faceRecognitionCameraUnavailable:
+        'এই ডিভাইসে ক্যামেরা উপলব্ধ নয়।',
     L10nKeys.healthDashboardTitle: 'হেলথ ড্যাশবোর্ড',
     L10nKeys.healthDashboardOverallScore: 'সামগ্রিক স্বাস্থ্য স্কোর',
     L10nKeys.healthDashboardBiomarkers: 'বায়োমার্কার',

@@ -37,6 +37,8 @@ class CreateProfileFormState extends Equatable {
     this.diabetes = false,
     this.historyOfHypertension = false,
     this.historyOfHighGlucoseLevels = false,
+    this.imageEmbedding,
+    this.imageEmbeddingError,
     this.errorMessage,
     this.isSubmitting = false,
   });
@@ -68,6 +70,8 @@ class CreateProfileFormState extends Equatable {
   final bool diabetes;
   final bool historyOfHypertension;
   final bool historyOfHighGlucoseLevels;
+  final String? imageEmbedding;
+  final String? imageEmbeddingError;
   final String? errorMessage;
   final bool isSubmitting;
 
@@ -99,6 +103,8 @@ class CreateProfileFormState extends Equatable {
     Object diabetes = noValue,
     Object historyOfHypertension = noValue,
     Object historyOfHighGlucoseLevels = noValue,
+    Object? imageEmbedding = noValue,
+    Object? imageEmbeddingError = noValue,
     Object? errorMessage = noValue,
     Object isSubmitting = noValue,
   }) {
@@ -170,6 +176,12 @@ class CreateProfileFormState extends Equatable {
       historyOfHighGlucoseLevels: identical(historyOfHighGlucoseLevels, noValue)
           ? this.historyOfHighGlucoseLevels
           : historyOfHighGlucoseLevels as bool,
+      imageEmbedding: identical(imageEmbedding, noValue)
+          ? this.imageEmbedding
+          : imageEmbedding as String?,
+      imageEmbeddingError: identical(imageEmbeddingError, noValue)
+          ? this.imageEmbeddingError
+          : imageEmbeddingError as String?,
       errorMessage: identical(errorMessage, noValue)
           ? this.errorMessage
           : errorMessage as String?,
@@ -206,6 +218,8 @@ class CreateProfileFormState extends Equatable {
     diabetes,
     historyOfHypertension,
     historyOfHighGlucoseLevels,
+    imageEmbedding,
+    imageEmbeddingError,
     errorMessage,
     isSubmitting,
   ];
