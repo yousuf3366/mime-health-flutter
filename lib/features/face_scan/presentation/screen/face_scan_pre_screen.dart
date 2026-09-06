@@ -8,13 +8,13 @@ import 'package:mime_health/core/widgets/app_button.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/localization/l10n_keys.dart';
-import '../../presentation/screen/face_camera_screen.dart';
-import '../../../profile/domain/entity/profile_entity.dart';
-import '../../../profile/presentation/provider/profile_provider.dart';
 import '../../../../core/providers/core_providers.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../language/presentation/provider/language_provider.dart';
+import '../../../profile/domain/entity/profile_entity.dart';
+import '../../../profile/presentation/provider/profile_provider.dart';
 import '../../../subscription/presentation/provider/subscription_provider.dart';
+import '../../presentation/screen/face_camera_screen.dart';
 import '../provider/face_scan_provider.dart';
 
 /// Consent + tips shown before opening the face-scan camera.
@@ -27,6 +27,7 @@ class FaceScanPreScreen extends HookConsumerWidget {
     final flowState = ref.watch(faceScanFlowNotifierProvider);
     final mySubscription = ref.watch(mySubscriptionProvider);
     final consent = useState(false);
+    final dataSharingConsent = useState(true);
 
     final hasPlan = mySubscription.maybeWhen(
       data: (data) => data?.hasActivePlan == true,
@@ -43,6 +44,7 @@ class FaceScanPreScreen extends HookConsumerWidget {
     // Fresh UI whenever this tab/screen is shown again.
     useEffect(() {
       consent.value = false;
+      dataSharingConsent.value = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.invalidate(mySubscriptionProvider);
         ref.read(faceScanFlowNotifierProvider.notifier).reset();
@@ -54,6 +56,7 @@ class FaceScanPreScreen extends HookConsumerWidget {
     ref.listen(faceScanFlowNotifierProvider, (previous, next) {
       if (previous?.isBusy == true && !next.isBusy) {
         consent.value = false;
+        dataSharingConsent.value = true;
       }
     });
 
@@ -113,31 +116,50 @@ class FaceScanPreScreen extends HookConsumerWidget {
             SizedBox(height: context.scaleHeight(16)),
             _ConsentTile(
               value: consent.value,
-              label: l10n.t(L10nKeys.faceScanConsent),
+              prefix: l10n.t(L10nKeys.faceScanConsentPrefix),
+              linkLabel: l10n.t(L10nKeys.faceScanConsentLink),
               onChanged: flowState.isBusy
                   ? null
                   : (value) => consent.value = value,
+              onLinkTap: flowState.isBusy
+                  ? null
+                  : () => context.push(RouteNames.termsAndConditions),
+            ),
+            SizedBox(height: context.scaleHeight(10)),
+            _ConsentTile(
+              value: dataSharingConsent.value,
+              prefix: l10n.t(L10nKeys.faceScanDataSharingPrefix),
+              linkLabel: l10n.t(L10nKeys.faceScanDataSharingLink),
+              onChanged: flowState.isBusy
+                  ? null
+                  : (value) => dataSharingConsent.value = value,
+              onLinkTap: flowState.isBusy
+                  ? null
+                  : () => context.push(RouteNames.dataSharingConsent),
             ),
             SizedBox(height: context.scaleHeight(16)),
             AppButton(
               label: l10n.t(L10nKeys.faceScanStart),
               icon: Icons.camera_alt_outlined,
-              isEnabled: consent.value && !flowState.isBusy,
+              isEnabled:
+                  consent.value &&
+                  dataSharingConsent.value &&
+                  !flowState.isBusy,
               isLoading: flowState.isBusy,
               onPressed: () async {
                 final profiles = await ref.read(profilesProvider.future);
                 if (profiles.isEmpty) {
-                  ref.read(snackbarServiceProvider).showError(
-                        l10n.t(L10nKeys.faceRecognitionNoStoredFace),
-                      );
+                  ref
+                      .read(snackbarServiceProvider)
+                      .showError(l10n.t(L10nKeys.faceRecognitionNoStoredFace));
                   return;
                 }
                 final profile = _primaryProfile(profiles);
                 final storedEmbedding = profile.imageEmbedding;
                 if (storedEmbedding == null || storedEmbedding.trim().isEmpty) {
-                  ref.read(snackbarServiceProvider).showError(
-                        l10n.t(L10nKeys.faceRecognitionNoStoredFace),
-                      );
+                  ref
+                      .read(snackbarServiceProvider)
+                      .showError(l10n.t(L10nKeys.faceRecognitionNoStoredFace));
                   return;
                 }
 
@@ -157,16 +179,21 @@ class FaceScanPreScreen extends HookConsumerWidget {
                     .startScan();
                 if (!context.mounted) return;
                 if (result == FaceScanStartResult.needsPlan) {
-                  ref.read(snackbarServiceProvider).showError(
-                        l10n.t(L10nKeys.faceScanUrlFailedMessage),
-                      );
-                 // await openPlans();
+                  ref
+                      .read(snackbarServiceProvider)
+                      .showError(l10n.t(L10nKeys.faceScanUrlFailedMessage));
+                  // await openPlans();
                 }
               },
             ),
             SizedBox(height: context.scaleHeight(4)),
             TextButton(
-              onPressed: flowState.isBusy ? null : () => consent.value = false,
+              onPressed: flowState.isBusy
+                  ? null
+                  : () {
+                      consent.value = false;
+                      dataSharingConsent.value = true;
+                    },
               child: Text(
                 l10n.t(L10nKeys.mediaCancel),
                 style: TextStyle(
@@ -288,11 +315,7 @@ class _HeroCard extends StatelessWidget {
 }
 
 class _TipCard extends StatelessWidget {
-  const _TipCard({
-    required this.icon,
-    required this.title,
-    required this.body,
-  });
+  const _TipCard({required this.icon, required this.title, required this.body});
 
   final IconData icon;
   final String title;
@@ -353,18 +376,28 @@ class _TipCard extends StatelessWidget {
 class _ConsentTile extends StatelessWidget {
   const _ConsentTile({
     required this.value,
-    required this.label,
+    required this.prefix,
+    required this.linkLabel,
     required this.onChanged,
+    required this.onLinkTap,
   });
 
   final bool value;
-  final String label;
+  final String prefix;
+  final String linkLabel;
   final ValueChanged<bool>? onChanged;
+  final VoidCallback? onLinkTap;
 
   @override
   Widget build(BuildContext context) {
+    final baseStyle = TextStyle(
+      color: AppColors.textPrimary,
+      fontSize: context.fontSize,
+      height: 1.35,
+    );
+
     return InkWell(
-      onTap: onChanged == null ? null : () => onChanged!(!value),
+      //onTap: onChanged == null ? null : () => onChanged!(!value),
       borderRadius: BorderRadius.circular(context.scaleWidth(12)),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: context.scaleHeight(4)),
@@ -388,7 +421,9 @@ class _ConsentTile extends StatelessWidget {
                   return Colors.transparent;
                 }),
                 side: BorderSide(
-                  color: value ? AppColors.primaryContainer : AppColors.textHint,
+                  color: value
+                      ? AppColors.primaryContainer
+                      : AppColors.textHint,
                   width: 1.5,
                 ),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -396,12 +431,29 @@ class _ConsentTile extends StatelessWidget {
             ),
             SizedBox(width: context.scaleWidth(10)),
             Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: context.fontSize,
-                  height: 1.35,
+              child: Text.rich(
+                TextSpan(
+                  style: baseStyle,
+                  children: [
+                    TextSpan(text: prefix),
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.baseline,
+                      baseline: TextBaseline.alphabetic,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: onLinkTap,
+                        child: Text(
+                          linkLabel,
+                          style: baseStyle.copyWith(
+                            color: AppColors.primaryContainer,
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.underline,
+                            decorationColor: AppColors.primaryContainer,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

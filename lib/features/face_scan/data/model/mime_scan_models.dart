@@ -328,3 +328,45 @@ double? _asDouble(Object? value) {
   if (value is String) return double.tryParse(value);
   return null;
 }
+
+/// Response for `GET /api/v1/scans?profile_id=&per_page=`.
+class MimeScansListResponseModel {
+  const MimeScansListResponseModel({
+    required this.success,
+    required this.message,
+    this.items = const [],
+    this.errors = const [],
+  });
+
+  final bool success;
+  final String message;
+  final List<MimeScanStoredDataModel> items;
+  final List<String> errors;
+
+  factory MimeScansListResponseModel.fromJson(Map<String, dynamic> json) {
+    final dataRaw = json['data'];
+    final data = dataRaw is Map
+        ? Map<String, dynamic>.from(dataRaw)
+        : <String, dynamic>{};
+    final itemsRaw = data['items'];
+    final errorsRaw = json['errors'];
+
+    return MimeScansListResponseModel(
+      success: json['success'] == true,
+      message: json['message']?.toString() ?? '',
+      items: itemsRaw is List
+          ? itemsRaw
+              .whereType<Map>()
+              .map(
+                (e) => MimeScanStoredDataModel.fromJson(
+                  Map<String, dynamic>.from(e),
+                ),
+              )
+              .toList(growable: false)
+          : const [],
+      errors: errorsRaw is List
+          ? errorsRaw.map((e) => e.toString()).toList(growable: false)
+          : const [],
+    );
+  }
+}

@@ -141,4 +141,31 @@ class FaceScanRepositoryImpl extends BaseRepository
       return FaceScanMapper.toVitalsFromMimeScan(response.data!);
     });
   }
+
+  @override
+  Future<Result<List<FaceScanVitalsResult>>> getMimeScans({
+    required int profileId,
+    int perPage = 20,
+  }) {
+    return safeApiCall(() async {
+      final response = await _mimeRemote.getScans(
+        profileId: profileId,
+        perPage: perPage,
+      );
+      if (!response.success) {
+        final detail = response.errors.isEmpty
+            ? ''
+            : ' ${response.errors.join(', ')}';
+        throw ApiException(
+          (response.message.isEmpty
+                  ? 'Failed to load scans.'
+                  : response.message) +
+              detail,
+        );
+      }
+      return response.items
+          .map(FaceScanMapper.toVitalsFromMimeScan)
+          .toList(growable: false);
+    });
+  }
 }

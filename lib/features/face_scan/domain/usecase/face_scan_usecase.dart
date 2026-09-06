@@ -107,3 +107,17 @@ class GetLatestMimeScanUseCase {
     return _repository.getLatestMimeScan(profileId: profileId);
   }
 }
+
+/// Scan history for a profile (`GET /api/v1/scans`).
+class GetMimeScansUseCase {
+  GetMimeScansUseCase(this._repository);
+
+  final FaceScanRepository _repository;
+
+  Future<Result<List<FaceScanVitalsResult>>> call({
+    required int profileId,
+    int perPage = 20,
+  }) {
+    return _repository.getMimeScans(profileId: profileId, perPage: perPage);
+  }
+}

@@ -2,11 +2,14 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mime_health/core/extensions/context_extensions.dart';
+import 'package:mime_health/core/router/route_names.dart';
 import 'package:mime_health/core/theme/app_colors.dart';
 import 'package:mime_health/core/widgets/app_app_bar.dart';
 import 'package:mime_health/core/widgets/app_button.dart';
+import 'package:mime_health/core/widgets/app_warning_card.dart';
 
 import '../../../../core/localization/l10n_keys.dart';
 import '../../../language/presentation/provider/language_provider.dart';
@@ -19,6 +22,7 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
     required this.vitals,
     required this.displayName,
     this.showCloseAction = true,
+    this.profileId,
   });
 
   final FaceScanVitalsResult vitals;
@@ -26,6 +30,9 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
 
   /// When false (e.g. Health Hub tab), the AppBar close button is hidden.
   final bool showCloseAction;
+
+  /// Used by Health Hub "All scans" to open scan history.
+  final int? profileId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,6 +43,7 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
     final quality = (vitals.qualityStatus?.trim().isNotEmpty ?? false)
         ? vitals.qualityStatus!.toUpperCase()
         : 'GOOD';
+    final historyProfileId = profileId ?? vitals.profileId;
 
     return Scaffold(
       // backgroundColor: AppColors.background,
@@ -49,6 +57,26 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.close),
               tooltip: l10n.t(L10nKeys.mediaCancel),
+            ),
+          if (!showCloseAction && historyProfileId != null)
+            TextButton(
+              onPressed: () {
+                context.push(
+                  RouteNames.scanHistory,
+                  extra: {
+                    'profileId': historyProfileId,
+                    'displayName': displayName,
+                  },
+                );
+              },
+              child: Text(
+                l10n.t(L10nKeys.healthDashboardViewAllScans),
+                style: TextStyle(
+                  color: AppColors.primaryContainer,
+                  fontSize: context.smallFontSize,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
         ],
       ),
@@ -121,6 +149,10 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
                     badge: quality,
                   ),
                 ],
+              ),
+              SizedBox(height: context.scaleHeight(10)),
+              AppWarningCard(
+                message: l10n.t(L10nKeys.healthDashboardMedicalDisclaimer),
               ),
               // if (vitals.heartRateVariability != null) ...[
               //   SizedBox(height: context.scaleHeight(8)),

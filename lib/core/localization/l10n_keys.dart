@@ -113,6 +113,11 @@ class L10nKeys {
       'mobile.face_scan.tip_screen_on_title';
   static const faceScanTipScreenOnBody = 'mobile.face_scan.tip_screen_on_body';
   static const faceScanConsent = 'mobile.face_scan.consent';
+  static const faceScanConsentPrefix = 'mobile.face_scan.consent_prefix';
+  static const faceScanConsentLink = 'mobile.face_scan.consent_link';
+  static const faceScanDataSharingPrefix =
+      'mobile.face_scan.data_sharing_prefix';
+  static const faceScanDataSharingLink = 'mobile.face_scan.data_sharing_link';
   static const faceScanStart = 'mobile.face_scan.start';
   static const questionnaireTitle = 'mobile.face_scan.questionnaire_title';
   static const questionnaireProgress =
@@ -162,6 +167,8 @@ class L10nKeys {
   static const healthDashboardOverallScore =
       'mobile.health_dashboard.overall_score';
   static const healthDashboardBiomarkers = 'mobile.health_dashboard.biomarkers';
+  static const healthDashboardMedicalDisclaimer =
+      'mobile.health_dashboard.medical_disclaimer';
   static const healthDashboardHeartRate = 'mobile.health_dashboard.heart_rate';
   static const healthDashboardBloodPressure =
       'mobile.health_dashboard.blood_pressure';
@@ -180,6 +187,10 @@ class L10nKeys {
   static const healthDashboardLabTest = 'mobile.health_dashboard.book_lab_test';
   static const healthDashboardMedicine =
       'mobile.health_dashboard.order_medicine';
+  static const healthDashboardViewAllScans =
+      'mobile.health_dashboard.view_all_scans';
+  static const healthDashboardScanHistoryTitle =
+      'mobile.health_dashboard.scan_history_title';
 
   // Subscription
   static const subscriptionTitle = 'mobile.subscription.title';

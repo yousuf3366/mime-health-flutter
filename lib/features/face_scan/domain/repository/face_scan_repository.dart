@@ -43,4 +43,10 @@ abstract class FaceScanRepository {
   /// Latest scan for Health Hub (`GET /api/v1/scans/latest`).
   /// Returns `null` when the user has no scans yet.
   Future<Result<FaceScanVitalsResult?>> getLatestMimeScan({int? profileId});
+
+  /// Scan history for a profile (`GET /api/v1/scans`).
+  Future<Result<List<FaceScanVitalsResult>>> getMimeScans({
+    required int profileId,
+    int perPage = 20,
+  });
 }

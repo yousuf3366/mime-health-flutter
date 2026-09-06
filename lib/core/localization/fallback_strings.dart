@@ -102,6 +102,10 @@ class FallbackStrings {
         'Do not switch apps until the scan finishes.',
     L10nKeys.faceScanConsent:
         'I agree to the face scan and understand this is not a medical diagnosis.',
+    L10nKeys.faceScanConsentPrefix: 'I have read and agree to the\n',
+    L10nKeys.faceScanConsentLink: 'Terms and Conditions.',
+    L10nKeys.faceScanDataSharingPrefix: 'I agree to the\n',
+    L10nKeys.faceScanDataSharingLink: 'Data Sharing Consent & Revocation.',
     L10nKeys.faceScanStart: 'Start MiME face scan',
     L10nKeys.questionnaireTitle: 'Health Questionnaire',
     L10nKeys.questionnaireProgress: 'Question {current} of {total}',
@@ -137,6 +141,8 @@ class FallbackStrings {
     L10nKeys.healthDashboardTitle: 'Health Dashboard',
     L10nKeys.healthDashboardOverallScore: 'Overall health score',
     L10nKeys.healthDashboardBiomarkers: 'Biomarkers',
+    L10nKeys.healthDashboardMedicalDisclaimer:
+        'These results are for informational purposes only and are not medical advice or a diagnosis. Always consult a qualified healthcare professional.',
     L10nKeys.healthDashboardHeartRate: 'Heart Rate',
     L10nKeys.healthDashboardBloodPressure: 'Blood Pressure',
     L10nKeys.healthDashboardRespRate: 'Resp. Rate',
@@ -150,6 +156,8 @@ class FallbackStrings {
     L10nKeys.healthDashboardConsult: 'Consult Doctors',
     L10nKeys.healthDashboardLabTest: 'Book Lab Test',
     L10nKeys.healthDashboardMedicine: 'Order Medicine',
+    L10nKeys.healthDashboardViewAllScans: 'All scans',
+    L10nKeys.healthDashboardScanHistoryTitle: 'Scan history',
     L10nKeys.subscriptionTitle: 'Choose your plan',
     L10nKeys.subscriptionSubtitle:
         'Pick a plan to unlock face scans and health insights.',
@@ -284,6 +292,10 @@ class FallbackStrings {
         'স্ক্যান শেষ না হওয়া পর্যন্ত অন্য অ্যাপে যাবেন না।',
     L10nKeys.faceScanConsent:
         'আমি ফেস স্ক্যানে সম্মতি দিচ্ছি এবং বুঝতে পারছি এটি কোনো চিকিৎসা নির্ণয় নয়।',
+    L10nKeys.faceScanConsentPrefix: 'আমি পড়েছি এবং সম্মতি দিচ্ছি\n',
+    L10nKeys.faceScanConsentLink: 'শর্তাবলী ও নিয়মাবলী।',
+    L10nKeys.faceScanDataSharingPrefix: 'আমি সম্মতি দিচ্ছি\n',
+    L10nKeys.faceScanDataSharingLink: 'ডেটা শেয়ারিং সম্মতি ও প্রত্যাহার।',
     L10nKeys.faceScanStart: 'MiME ফেস স্ক্যান শুরু করুন',
     L10nKeys.questionnaireTitle: 'স্বাস্থ্য প্রশ্নমালা',
     L10nKeys.questionnaireProgress: 'প্রশ্ন {current} / {total}',
@@ -319,6 +331,8 @@ class FallbackStrings {
     L10nKeys.healthDashboardTitle: 'হেলথ ড্যাশবোর্ড',
     L10nKeys.healthDashboardOverallScore: 'সামগ্রিক স্বাস্থ্য স্কোর',
     L10nKeys.healthDashboardBiomarkers: 'বায়োমার্কার',
+    L10nKeys.healthDashboardMedicalDisclaimer:
+        'এই ফলাফল শুধুমাত্র তথ্যের জন্য এবং চিকিৎসা পরামর্শ বা নির্ণয় নয়। সর্বদা যোগ্য স্বাস্থ্যসেবা পেশাদারের সাথে পরামর্শ করুন।',
     L10nKeys.healthDashboardHeartRate: 'হার্ট রেট',
     L10nKeys.healthDashboardBloodPressure: 'ব্লাড প্রেসার',
     L10nKeys.healthDashboardRespRate: 'শ্বাসহার',
@@ -333,6 +347,8 @@ class FallbackStrings {
     L10nKeys.healthDashboardConsult: 'ডাক্তারের পরামর্শ',
     L10nKeys.healthDashboardLabTest: 'ল্যাব টেস্ট বুক করুন',
     L10nKeys.healthDashboardMedicine: 'ওষুধ অর্ডার করুন',
+    L10nKeys.healthDashboardViewAllScans: 'সব স্ক্যান',
+    L10nKeys.healthDashboardScanHistoryTitle: 'স্ক্যান ইতিহাস',
     L10nKeys.subscriptionTitle: 'আপনার প্ল্যান বেছে নিন',
     L10nKeys.subscriptionSubtitle:
         'ফেস স্ক্যান ও স্বাস্থ্য অন্তর্দৃষ্টি আনলক করতে একটি প্ল্যান বেছে নিন।',

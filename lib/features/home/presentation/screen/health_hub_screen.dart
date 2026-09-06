@@ -27,6 +27,10 @@ class HealthHubScreen extends ConsumerWidget {
       data: (profiles) => _primaryProfile(profiles)?.displayName ?? 'there',
       orElse: () => 'there',
     );
+    final profileId = profilesAsync.maybeWhen(
+      data: (profiles) => _primaryProfile(profiles)?.id,
+      orElse: () => null,
+    );
 
     return latestAsync.when(
       loading: () => const Center(
@@ -53,6 +57,7 @@ class HealthHubScreen extends ConsumerWidget {
           vitals: vitals,
           displayName: displayName,
           showCloseAction: false,
+          profileId: profileId,
         );
       },
     );
