@@ -15,9 +15,9 @@ import 'package:mime_health/core/widgets/app_network_image.dart';
 import '../../../../core/localization/l10n_keys.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../language/presentation/provider/language_provider.dart';
+import '../../data/mapper/profile_mapper.dart';
 import '../../domain/entity/profile_entity.dart';
 import '../provider/profile_provider.dart';
-import '../../data/mapper/profile_mapper.dart';
 
 /// Shows the signed-in user's primary profile details.
 class ProfileDetailsScreen extends ConsumerWidget {
@@ -182,18 +182,6 @@ class _ProfileDetailsBody extends ConsumerWidget {
                       _InfoCard(
                         rows: [
                           _InfoRowData(
-                            title: l10n.t(L10nKeys.profileAge),
-                            value: _age(profile.dateOfBirth),
-                          ),
-                          _InfoRowData(
-                            title: l10n.t(L10nKeys.homeGender),
-                            value: _sexLabel(l10n.t, profile.sex),
-                          ),
-                          _InfoRowData(
-                            title: l10n.t(L10nKeys.homeLifestyle),
-                            value: _lifestyleLabel(l10n.t, profile.lifeStyle),
-                          ),
-                          _InfoRowData(
                             title: l10n.t(L10nKeys.homeDisplayName),
                             value: profile.displayName,
                           ),
@@ -220,6 +208,18 @@ class _ProfileDetailsBody extends ConsumerWidget {
                           _InfoRowData(
                             title: l10n.t(L10nKeys.profileBloodGroup),
                             value: _orNotSet(l10n.t, profile.bloodGroup),
+                          ),
+                          _InfoRowData(
+                            title: l10n.t(L10nKeys.profileAge),
+                            value: _age(profile.dateOfBirth),
+                          ),
+                          _InfoRowData(
+                            title: l10n.t(L10nKeys.homeGender),
+                            value: _sexLabel(l10n.t, profile.sex),
+                          ),
+                          _InfoRowData(
+                            title: l10n.t(L10nKeys.homeLifestyle),
+                            value: _lifestyleLabel(l10n.t, profile.lifeStyle),
                           ),
                         ],
                       ),

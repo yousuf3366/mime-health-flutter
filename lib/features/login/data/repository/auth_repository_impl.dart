@@ -26,18 +26,20 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
   final DeviceInfoService _deviceInfoService;
 
   @override
-  Future<Result<OtpDispatchResult>> sendOtp({required String phone}) {
+  Future<Result<OtpDispatchResult>> sendOtp({required String identifier}) {
     return safeApiCall(() async {
-      final response = await _remote.sendOtp(SendOtpRequestModel(phone: phone));
+      final response = await _remote.sendOtp(
+        SendOtpRequestModel.fromIdentifier(identifier),
+      );
       return AuthMapper.toOtpDispatchResult(response);
     });
   }
 
   @override
-  Future<Result<OtpDispatchResult>> resendOtp({required String phone}) {
+  Future<Result<OtpDispatchResult>> resendOtp({required String identifier}) {
     return safeApiCall(() async {
       final response = await _remote.resendOtp(
-        SendOtpRequestModel(phone: phone),
+        SendOtpRequestModel.fromIdentifier(identifier),
       );
       return AuthMapper.toOtpDispatchResult(response);
     });
@@ -45,14 +47,14 @@ class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
 
   @override
   Future<Result<AuthSessionEntity>> verifyOtp({
-    required String phone,
+    required String identifier,
     required String otp,
   }) {
     return safeApiCall(() async {
       final device = await _deviceInfoService.getDeviceInfo();
       final response = await _remote.verifyOtp(
-        VerifyOtpRequestModel(
-          phone: phone,
+        VerifyOtpRequestModel.fromIdentifier(
+          identifier: identifier,
           otp: otp,
           deviceFingerprint: device.uniqueId,
           platform: device.platform,

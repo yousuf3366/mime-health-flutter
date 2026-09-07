@@ -8,6 +8,8 @@ class Validators {
     r"^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$",
   );
 
+  static bool looksLikeEmail(String value) => value.trim().contains('@');
+
   static String? phone(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
@@ -19,6 +21,37 @@ class Validators {
     return null;
   }
 
+  static String? email(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Email is required';
+    }
+    if (!_emailRegex.hasMatch(value.trim())) {
+      return 'Enter a valid email address';
+    }
+    return null;
+  }
+
+  /// Login identifier: phone number or email address.
+  static String? phoneOrEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Phone number or email is required';
+    }
+    final trimmed = value.trim();
+    if (looksLikeEmail(trimmed)) {
+      return email(trimmed);
+    }
+    return phone(trimmed);
+  }
+
+  /// Normalizes phone (strip spaces/dashes) or email (lowercase trim).
+  static String normalizeLoginIdentifier(String value) {
+    final trimmed = value.trim();
+    if (looksLikeEmail(trimmed)) {
+      return trimmed.toLowerCase();
+    }
+    return trimmed.replaceAll(RegExp(r'[\s-]'), '');
+  }
+
   static String? optionalPhone(String? value) {
     if (value == null || value.trim().isEmpty) return null;
     return phone(value);
@@ -26,10 +59,7 @@ class Validators {
 
   static String? optionalEmail(String? value) {
     if (value == null || value.trim().isEmpty) return null;
-    if (!_emailRegex.hasMatch(value.trim())) {
-      return 'Enter a valid email address';
-    }
-    return null;
+    return email(value);
   }
 
   static String? otp(String? value, {int length = 4}) {

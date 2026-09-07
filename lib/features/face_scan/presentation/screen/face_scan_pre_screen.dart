@@ -26,7 +26,6 @@ class FaceScanPreScreen extends HookConsumerWidget {
     final l10n = ref.watch(languageControllerProvider);
     final flowState = ref.watch(faceScanFlowNotifierProvider);
     final mySubscription = ref.watch(mySubscriptionProvider);
-    final consent = useState(false);
     final dataSharingConsent = useState(true);
 
     final hasPlan = mySubscription.maybeWhen(
@@ -43,7 +42,6 @@ class FaceScanPreScreen extends HookConsumerWidget {
 
     // Fresh UI whenever this tab/screen is shown again.
     useEffect(() {
-      consent.value = false;
       dataSharingConsent.value = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.invalidate(mySubscriptionProvider);
@@ -52,10 +50,9 @@ class FaceScanPreScreen extends HookConsumerWidget {
       return null;
     }, const []);
 
-    // After a finished/cancelled flow (e.g. questionnaire closed), clear consent.
+    // After a finished/cancelled flow (e.g. questionnaire closed), reset consent.
     ref.listen(faceScanFlowNotifierProvider, (previous, next) {
       if (previous?.isBusy == true && !next.isBusy) {
-        consent.value = false;
         dataSharingConsent.value = true;
       }
     });
@@ -115,18 +112,6 @@ class FaceScanPreScreen extends HookConsumerWidget {
             //   ),
             SizedBox(height: context.scaleHeight(16)),
             _ConsentTile(
-              value: consent.value,
-              prefix: l10n.t(L10nKeys.faceScanConsentPrefix),
-              linkLabel: l10n.t(L10nKeys.faceScanConsentLink),
-              onChanged: flowState.isBusy
-                  ? null
-                  : (value) => consent.value = value,
-              onLinkTap: flowState.isBusy
-                  ? null
-                  : () => context.push(RouteNames.termsAndConditions),
-            ),
-            SizedBox(height: context.scaleHeight(10)),
-            _ConsentTile(
               value: dataSharingConsent.value,
               prefix: l10n.t(L10nKeys.faceScanDataSharingPrefix),
               linkLabel: l10n.t(L10nKeys.faceScanDataSharingLink),
@@ -141,10 +126,7 @@ class FaceScanPreScreen extends HookConsumerWidget {
             AppButton(
               label: l10n.t(L10nKeys.faceScanStart),
               icon: Icons.camera_alt_outlined,
-              isEnabled:
-                  consent.value &&
-                  dataSharingConsent.value &&
-                  !flowState.isBusy,
+              isEnabled: dataSharingConsent.value && !flowState.isBusy,
               isLoading: flowState.isBusy,
               onPressed: () async {
                 final profiles = await ref.read(profilesProvider.future);
@@ -191,7 +173,6 @@ class FaceScanPreScreen extends HookConsumerWidget {
               onPressed: flowState.isBusy
                   ? null
                   : () {
-                      consent.value = false;
                       dataSharingConsent.value = true;
                     },
               child: Text(

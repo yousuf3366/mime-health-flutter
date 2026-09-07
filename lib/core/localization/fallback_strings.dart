@@ -7,10 +7,11 @@ class FallbackStrings {
   FallbackStrings._();
 
   static const Map<String, String> en = {
-    L10nKeys.loginTitle: 'Login with phone number',
+    L10nKeys.loginTitle: 'Login with phone or email',
     L10nKeys.nameLabel: 'Your name',
     L10nKeys.otpLabel: 'Enter 4-digit code',
     L10nKeys.phoneLabel: 'Phone number',
+    L10nKeys.phoneOrEmailLabel: 'Phone number or email',
     L10nKeys.resendOtp: 'Resend OTP',
     L10nKeys.sendOtp: 'Send OTP',
     L10nKeys.verifyOtp: 'Verify',
@@ -64,6 +65,7 @@ class FallbackStrings {
         'Microphone permission is required to record voice feedback.',
     L10nKeys.profileDetailsTitle: 'Profile',
     L10nKeys.profileEdit: 'Edit profile',
+    L10nKeys.profileSave: 'Save profile',
     L10nKeys.profileAddPhoto: 'Add photo',
     L10nKeys.profileUpdatePhoto: 'Update photo',
     L10nKeys.profileBloodGroup: 'Blood group',
@@ -104,14 +106,15 @@ class FallbackStrings {
         'I agree to the face scan and understand this is not a medical diagnosis.',
     L10nKeys.faceScanConsentPrefix: 'I have read and agree to the\n',
     L10nKeys.faceScanConsentLink: 'Terms and Conditions.',
-    L10nKeys.faceScanDataSharingPrefix: 'I agree to the\n',
+    L10nKeys.faceScanDataSharingPrefix: 'I have read and agree to the\n',
     L10nKeys.faceScanDataSharingLink: 'Data Sharing Consent & Revocation.',
     L10nKeys.faceScanStart: 'Start MiME face scan',
     L10nKeys.questionnaireTitle: 'Health Questionnaire',
     L10nKeys.questionnaireProgress: 'Question {current} of {total}',
     L10nKeys.questionnaireSkip: 'Skip for now',
     L10nKeys.faceScanChoosePlan: 'Choose a plan',
-    L10nKeys.faceScanUrlFailedMessage: 'Unable to provide the service at this moment. Please try again later.',
+    L10nKeys.faceScanUrlFailedMessage:
+        'Unable to provide the service at this moment. Please try again later.',
     L10nKeys.faceScanPlanRequired:
         'Select a subscription plan before starting a face scan.',
     L10nKeys.faceScanResultsLoadingTitle: 'Loading your results...',
@@ -177,7 +180,7 @@ class FallbackStrings {
     L10nKeys.languageEn: 'English',
     // Local-only
     L10nKeys.appName: 'Mime Health',
-    L10nKeys.changePhone: 'Change number',
+    L10nKeys.changePhone: 'Change',
     L10nKeys.otpSentTo: 'OTP sent to {phone}',
     L10nKeys.resendOtpIn: 'Resend OTP in {seconds}s',
     L10nKeys.logout: 'Logout',
@@ -193,13 +196,19 @@ class FallbackStrings {
     L10nKeys.signIn: 'Sign in',
     L10nKeys.orContinueWith: 'Or continue with',
     L10nKeys.continueWithGoogle: 'Continue with Google',
+    L10nKeys.continueWithApple: 'Continue with Apple',
+    L10nKeys.comingSoonTitle: 'Coming soon',
+    L10nKeys.comingSoonMessage:
+        'This feature will be available in a future update.',
+    L10nKeys.comingSoonOk: 'OK',
   };
 
   static const Map<String, String> bn = {
-    L10nKeys.loginTitle: 'ফোন নম্বর দিয়ে লগইন করুন',
+    L10nKeys.loginTitle: 'ফোন বা ইমেইল দিয়ে লগইন করুন',
     L10nKeys.nameLabel: 'আপনার নাম',
     L10nKeys.otpLabel: '৪ অঙ্কের কোড লিখুন',
     L10nKeys.phoneLabel: 'ফোন নম্বর',
+    L10nKeys.phoneOrEmailLabel: 'ফোন নম্বর বা ইমেইল',
     L10nKeys.resendOtp: 'আবার OTP পাঠান',
     L10nKeys.sendOtp: 'OTP পাঠান',
     L10nKeys.verifyOtp: 'যাচাই করুন',
@@ -254,6 +263,7 @@ class FallbackStrings {
         'ভয়েস মতামত রেকর্ড করতে মাইক্রোফোনের অনুমতি প্রয়োজন।',
     L10nKeys.profileDetailsTitle: 'প্রোফাইল',
     L10nKeys.profileEdit: 'প্রোফাইল সম্পাদনা',
+    L10nKeys.profileSave: 'প্রোফাইল সংরক্ষণ করুন',
     L10nKeys.profileAddPhoto: 'ছবি যোগ করুন',
     L10nKeys.profileUpdatePhoto: 'ছবি আপডেট করুন',
     L10nKeys.profileBloodGroup: 'রক্তের গ্রুপ',
@@ -301,7 +311,8 @@ class FallbackStrings {
     L10nKeys.questionnaireProgress: 'প্রশ্ন {current} / {total}',
     L10nKeys.questionnaireSkip: 'এখনকার জন্য এড়িয়ে যান',
     L10nKeys.faceScanChoosePlan: 'প্ল্যান বেছে নিন',
-    L10nKeys.faceScanUrlFailedMessage: 'এই মুহূর্তে সেবাটি প্রদান করা সম্ভব হচ্ছে না। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।',
+    L10nKeys.faceScanUrlFailedMessage:
+        'এই মুহূর্তে সেবাটি প্রদান করা সম্ভব হচ্ছে না। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।',
     L10nKeys.faceScanPlanRequired:
         'ফেস স্ক্যান শুরু করার আগে একটি সাবস্ক্রিপশন প্ল্যান বেছে নিন।',
     L10nKeys.faceScanResultsLoadingTitle: 'আপনার ফলাফল লোড হচ্ছে...',
@@ -368,7 +379,7 @@ class FallbackStrings {
     L10nKeys.languageEn: 'English',
     // Local-only
     L10nKeys.appName: 'মাইম হেলথ',
-    L10nKeys.changePhone: 'নম্বর পরিবর্তন করুন',
+    L10nKeys.changePhone: 'পরিবর্তন করুন',
     L10nKeys.otpSentTo: '{phone} এ OTP পাঠানো হয়েছে',
     L10nKeys.resendOtpIn: '{seconds} সে. পর আবার পাঠান',
     L10nKeys.logout: 'লগআউট',
@@ -384,6 +395,10 @@ class FallbackStrings {
     L10nKeys.signIn: 'সাইন ইন',
     L10nKeys.orContinueWith: 'অথবা চালিয়ে যান',
     L10nKeys.continueWithGoogle: 'Google দিয়ে চালিয়ে যান',
+    L10nKeys.continueWithApple: 'Apple দিয়ে চালিয়ে যান',
+    L10nKeys.comingSoonTitle: 'শীঘ্রই আসছে',
+    L10nKeys.comingSoonMessage: 'এই ফিচারটি ভবিষ্যতের আপডেটে পাওয়া যাবে।',
+    L10nKeys.comingSoonOk: 'ঠিক আছে',
   };
 
   static Map<String, String> forCode(String code) {

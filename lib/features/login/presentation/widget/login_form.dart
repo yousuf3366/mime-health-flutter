@@ -1,18 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mime_health/core/extensions/context_extensions.dart';
 import 'package:mime_health/core/widgets/app_otp_field.dart';
 import 'package:mime_health/core/widgets/app_text_field1.dart';
 
 import '../../../../core/localization/l10n_keys.dart';
 import '../../../../core/providers/core_providers.dart';
-import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/apple_sign_in_button.dart';
 import '../../../../core/widgets/google_sign_in_button.dart';
 import '../../../language/presentation/provider/language_provider.dart';
 import '../provider/login_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginForm extends ConsumerWidget {
   const LoginForm({super.key, required this.onSuccess});
@@ -34,17 +34,15 @@ class LoginForm extends ConsumerWidget {
       children: [
         if (!isOtpStep) ...[
           AppTextField1(
-            label: l10n.t(L10nKeys.phoneLabel),
+            label: l10n.t(L10nKeys.phoneOrEmailLabel),
             initialValue: formState.phoneState,
-            keyboardType: TextInputType.phone,
+            keyboardType: TextInputType.emailAddress,
             mandatory: true,
             errorText: formState.phoneErrorState,
             onChanged: (value) {
-              final error = Validators.phone(value);
               formNotifier.updateField(
                 phoneState: value,
-                phoneErrorState: error,
-                isValidate: error == null && value.trim().isNotEmpty,
+                phoneErrorState: null,
                 errorMessage: null,
               );
             },
@@ -75,12 +73,9 @@ class LoginForm extends ConsumerWidget {
             errorText: formState.otpErrorState,
             enabled: !isLoading,
             onChanged: (value) {
-              final isComplete = value.length == 4;
-              final error = isComplete ? Validators.otp(value) : null;
               formNotifier.updateField(
                 otpTextState: value,
-                otpErrorState: error,
-                isValidate: isComplete && error == null,
+                otpErrorState: null,
                 errorMessage: null,
               );
             },
@@ -131,12 +126,12 @@ class LoginForm extends ConsumerWidget {
         ),
         SizedBox(height: context.scaleHeight(24)),
         if (!isOtpStep) ...[
-          AppButton(
-            label: l10n.t(L10nKeys.signInAsGuest, fallback: 'Sign in as Guest'),
-            isLoading: isLoading,
-            btnStyle: AppButtonStyle.secondary,
-            onPressed: () => _submit(context, ref),
-          ),
+          // AppButton(
+          //   label: l10n.t(L10nKeys.signInAsGuest, fallback: 'Sign in as Guest'),
+          //   isLoading: isLoading,
+          //   btnStyle: AppButtonStyle.secondary,
+          //   onPressed: () => _submit(context, ref),
+          // ),
           SizedBox(height: context.scaleHeight(24)),
           Text(
             l10n.t(L10nKeys.orContinueWith, fallback: 'Or continue with'),
@@ -147,10 +142,10 @@ class LoginForm extends ConsumerWidget {
             ),
           ),
           SizedBox(height: context.defaultPaddingSc),
-          Visibility(
-            visible: true,
-            child: Center(
-              child: Tooltip(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Tooltip(
                 message: l10n.t(
                   L10nKeys.continueWithGoogle,
                   fallback: 'Continue with Google',
@@ -160,11 +155,33 @@ class LoginForm extends ConsumerWidget {
                   onPressed: () => _onGoogleSignIn(context, ref),
                 ),
               ),
-            ),
+              SizedBox(width: context.scaleWidth(16)),
+              Tooltip(
+                message: l10n.t(
+                  L10nKeys.continueWithApple,
+                  fallback: 'Continue with Apple',
+                ),
+                child: AppleSignInButton(
+                  enabled: !isLoading,
+                  onPressed: () => _onAppleSignIn(ref),
+                ),
+              ),
+            ],
           ),
         ],
       ],
     );
+  }
+
+  void _onAppleSignIn(WidgetRef ref) {
+    final l10n = ref.read(languageControllerProvider);
+    ref
+        .read(dialogServiceProvider)
+        .showComingSoon(
+          title: l10n.t(L10nKeys.comingSoonTitle),
+          message: l10n.t(L10nKeys.comingSoonMessage),
+          okLabel: l10n.t(L10nKeys.comingSoonOk),
+        );
   }
 
   Future<void> _onGoogleSignIn(BuildContext context, WidgetRef ref) async {

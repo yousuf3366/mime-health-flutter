@@ -7,8 +7,8 @@ class SendOtpUseCase {
 
   final AuthRepository _repository;
 
-  Future<Result<OtpDispatchResult>> call({required String phone}) {
-    return _repository.sendOtp(phone: phone);
+  Future<Result<OtpDispatchResult>> call({required String identifier}) {
+    return _repository.sendOtp(identifier: identifier);
   }
 }
 
@@ -17,8 +17,8 @@ class ResendOtpUseCase {
 
   final AuthRepository _repository;
 
-  Future<Result<OtpDispatchResult>> call({required String phone}) {
-    return _repository.resendOtp(phone: phone);
+  Future<Result<OtpDispatchResult>> call({required String identifier}) {
+    return _repository.resendOtp(identifier: identifier);
   }
 }
 
@@ -28,10 +28,10 @@ class VerifyOtpUseCase {
   final AuthRepository _repository;
 
   Future<Result<AuthSessionEntity>> call({
-    required String phone,
+    required String identifier,
     required String otp,
   }) {
-    return _repository.verifyOtp(phone: phone, otp: otp);
+    return _repository.verifyOtp(identifier: identifier, otp: otp);
   }
 }
 

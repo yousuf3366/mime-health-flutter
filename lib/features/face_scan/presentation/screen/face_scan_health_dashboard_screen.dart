@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mime_health/core/extensions/context_extensions.dart';
+import 'package:mime_health/core/providers/core_providers.dart';
 import 'package:mime_health/core/router/route_names.dart';
 import 'package:mime_health/core/theme/app_colors.dart';
 import 'package:mime_health/core/widgets/app_app_bar.dart';
@@ -181,30 +182,37 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
                 title: l10n.t(L10nKeys.healthDashboardUpgradeTitle),
                 body: l10n.t(L10nKeys.healthDashboardUpgradeBody),
                 cta: l10n.t(L10nKeys.healthDashboardUpgradeCta),
-                onUpgrade: () {
-                  // Placeholder until paywall is wired.
-                },
+                onUpgrade: () => _showComingSoon(ref),
               ),
               SizedBox(height: context.scaleHeight(20)),
               AppButton(
                 label: l10n.t(L10nKeys.healthDashboardConsult),
-                onPressed: () {},
+                onPressed: () => _showComingSoon(ref),
               ),
               SizedBox(height: context.scaleHeight(10)),
               AppButton(
                 label: l10n.t(L10nKeys.healthDashboardLabTest),
-                onPressed: () {},
+                onPressed: () => _showComingSoon(ref),
               ),
               SizedBox(height: context.scaleHeight(10)),
               AppButton(
                 label: l10n.t(L10nKeys.healthDashboardMedicine),
-                onPressed: () {},
+                onPressed: () => _showComingSoon(ref),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _showComingSoon(WidgetRef ref) {
+    final l10n = ref.read(languageControllerProvider);
+    ref.read(dialogServiceProvider).showComingSoon(
+          title: l10n.t(L10nKeys.comingSoonTitle),
+          message: l10n.t(L10nKeys.comingSoonMessage),
+          okLabel: l10n.t(L10nKeys.comingSoonOk),
+        );
   }
 
   static String _firstName(String name) {

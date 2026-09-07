@@ -9,6 +9,7 @@ class L10nKeys {
   static const nameLabel = 'mobile.auth.name_label';
   static const otpLabel = 'mobile.auth.otp_label';
   static const phoneLabel = 'mobile.auth.phone_label';
+  static const phoneOrEmailLabel = 'mobile.auth.phone_or_email_label';
   static const resendOtp = 'mobile.auth.resend_otp';
   static const sendOtp = 'mobile.auth.send_otp';
   static const verifyOtp = 'mobile.auth.verify_otp';
@@ -16,6 +17,10 @@ class L10nKeys {
   static const signIn = 'mobile.auth.sign_in';
   static const orContinueWith = 'mobile.auth.or_continue_with';
   static const continueWithGoogle = 'mobile.auth.continue_with_google';
+  static const continueWithApple = 'mobile.auth.continue_with_apple';
+  static const comingSoonTitle = 'mobile.common.coming_soon_title';
+  static const comingSoonMessage = 'mobile.common.coming_soon_message';
+  static const comingSoonOk = 'mobile.common.coming_soon_ok';
 
   // Errors
   static const genericError = 'mobile.errors.generic_error';
@@ -74,6 +79,7 @@ class L10nKeys {
   // Profile details
   static const profileDetailsTitle = 'mobile.profile.details_title';
   static const profileEdit = 'mobile.profile.edit';
+  static const profileSave = 'mobile.profile.save';
   static const profileAddPhoto = 'mobile.profile.add_photo';
   static const profileUpdatePhoto = 'mobile.profile.update_photo';
   static const profileBloodGroup = 'mobile.profile.blood_group';
