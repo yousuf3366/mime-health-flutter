@@ -149,24 +149,19 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
                     value: '${spo2.toStringAsFixed(0)}%',
                     badge: quality,
                   ),
+                  if (vitals.heartRateVariability != null)
+                    _BiomarkerCard(
+                      iconAsset: 'assets/images/heart_rate_Icon.svg',
+                      title: l10n.t(L10nKeys.healthDashboardHrv),
+                      value:
+                          '${vitals.heartRateVariability!.toStringAsFixed(0)} ms',
+                    ),
                 ],
               ),
               SizedBox(height: context.scaleHeight(10)),
               AppWarningCard(
                 message: l10n.t(L10nKeys.healthDashboardMedicalDisclaimer),
               ),
-              // if (vitals.heartRateVariability != null) ...[
-              //   SizedBox(height: context.scaleHeight(8)),
-              //   SizedBox(
-              //     height: context.scaleHeight(72),
-              //     child: _BiomarkerCard(
-              //       icon: Icons.show_chart,
-              //       title: l10n.t(L10nKeys.healthDashboardHrv),
-              //       value:
-              //           '${vitals.heartRateVariability!.toStringAsFixed(0)} ms',
-              //     ),
-              //   ),
-              // ],
               SizedBox(height: context.defaultPaddingSc),
               Text(
                 l10n.t(L10nKeys.healthDashboardMetrics),
@@ -182,7 +177,10 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
                 title: l10n.t(L10nKeys.healthDashboardUpgradeTitle),
                 body: l10n.t(L10nKeys.healthDashboardUpgradeBody),
                 cta: l10n.t(L10nKeys.healthDashboardUpgradeCta),
-                onUpgrade: () => _showComingSoon(ref),
+                onUpgrade: () => context.push(
+                  RouteNames.scanMetrics,
+                  extra: vitals,
+                ),
               ),
               SizedBox(height: context.scaleHeight(20)),
               AppButton(

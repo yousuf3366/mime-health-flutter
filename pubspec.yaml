@@ -1,7 +1,7 @@
 name: mime_health
 description: Production-ready Mime Health Flutter application with Clean Architecture.
 publish_to: 'none'
-version: 1.0.2+2
+version: 1.0.3+3
 
 environment:
   sdk: ^3.11.5

@@ -72,7 +72,7 @@ class VerifyOtpRequestModel {
 
   Map<String, dynamic> toJson() => {
     if (phone != null) 'phone': phone,
-    if (email != null) 'email': email,
+    if (email != null) 'phone': email,
     'otp': otp,
     'device_fingerprint': deviceFingerprint,
     'platform': platform,

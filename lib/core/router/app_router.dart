@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../features/face_scan/domain/entity/face_scan_entity.dart';
 import '../../features/face_scan/presentation/screen/face_scan_history_screen.dart';
+import '../../features/face_scan/presentation/screen/face_scan_metrics_screen.dart';
 import '../../features/home/presentation/page/home_page.dart';
 import '../../features/language/presentation/provider/language_provider.dart';
 import '../../features/login/presentation/page/login_page.dart';
@@ -96,6 +98,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             profileId: profileId,
             displayName: displayName,
           );
+        },
+      ),
+      GoRoute(
+        path: RouteNames.scanMetrics,
+        name: 'scanMetrics',
+        builder: (context, state) {
+          final vitals = state.extra;
+          if (vitals is! FaceScanVitalsResult) {
+            return const _NotFoundPage();
+          }
+          return FaceScanMetricsScreen(vitals: vitals);
         },
       ),
       GoRoute(

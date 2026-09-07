@@ -182,6 +182,30 @@ class L10nKeys {
   static const healthDashboardSpo2 = 'mobile.health_dashboard.spo2';
   static const healthDashboardHrv = 'mobile.health_dashboard.hrv';
   static const healthDashboardMetrics = 'mobile.health_dashboard.metrics';
+  static const healthDashboardMetricConfidence =
+      'mobile.health_dashboard.metric_confidence';
+  static const healthDashboardMetricEnergyBalance =
+      'mobile.health_dashboard.metric_energy_balance';
+  static const healthDashboardMetricGeneralFitness =
+      'mobile.health_dashboard.metric_general_fitness';
+  static const healthDashboardMetricHypertension =
+      'mobile.health_dashboard.metric_hypertension';
+  static const healthDashboardMetricMentalHealthRisk =
+      'mobile.health_dashboard.metric_mental_health_risk';
+  static const healthDashboardMetricMentalStress =
+      'mobile.health_dashboard.metric_mental_stress';
+  static const healthDashboardMetricSleepQuality =
+      'mobile.health_dashboard.metric_sleep_quality';
+  static const healthDashboardWellbeing =
+      'mobile.health_dashboard.wellbeing';
+  static const healthDashboardWellbeingMental =
+      'mobile.health_dashboard.wellbeing_mental';
+  static const healthDashboardWellbeingPhysical =
+      'mobile.health_dashboard.wellbeing_physical';
+  static const healthDashboardWellbeingEnergySleep =
+      'mobile.health_dashboard.wellbeing_energy_sleep';
+  static const healthDashboardWellbeingStatus =
+      'mobile.health_dashboard.wellbeing_status';
   static const healthDashboardUpgradeTitle =
       'mobile.health_dashboard.upgrade_title';
   static const healthDashboardUpgradeBody =
