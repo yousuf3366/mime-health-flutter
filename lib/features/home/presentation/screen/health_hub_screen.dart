@@ -27,32 +27,46 @@ class HealthHubScreen extends ConsumerWidget {
       data: (profiles) => _primaryProfile(profiles)?.displayName ?? 'there',
       orElse: () => 'there',
     );
+    final profileId = profilesAsync.maybeWhen(
+      data: (profiles) => _primaryProfile(profiles)?.id,
+      orElse: () => null,
+    );
 
     return latestAsync.when(
       loading: () => const Center(
         child: CircularProgressIndicator(color: AppColors.primaryContainer),
       ),
-      error: (error, _) => _HubMessageBody(
-        icon: Icons.error_outline,
-        message: error is AppException
-            ? error.message
-            : l10n.t(L10nKeys.genericError),
-        actionLabel: l10n.t(L10nKeys.retry),
-        onAction: () => ref.invalidate(latestMimeScanProvider),
-      ),
+      error: (error, _) {
+        final isNotFound = error is ApiException &&
+            (error.statusCode == 404 ||
+                error.message.toLowerCase().contains('scan not found'));
+        if (isNotFound) {
+          return _HubMessageBody(
+            icon: Icons.monitor_heart_outlined,
+            message: l10n.t(L10nKeys.healthHubNoScan),
+          );
+        }
+        return _HubMessageBody(
+          icon: Icons.error_outline,
+          message: error is AppException
+              ? error.message
+              : l10n.t(L10nKeys.genericError),
+          actionLabel: l10n.t(L10nKeys.retry),
+          onAction: () => ref.invalidate(latestMimeScanProvider),
+        );
+      },
       data: (vitals) {
         if (vitals == null) {
           return _HubMessageBody(
             icon: Icons.monitor_heart_outlined,
             message: l10n.t(L10nKeys.healthHubNoScan),
-            actionLabel: l10n.t(L10nKeys.retry),
-            onAction: () => ref.invalidate(latestMimeScanProvider),
           );
         }
         return FaceScanHealthDashboardScreen(
           vitals: vitals,
           displayName: displayName,
           showCloseAction: false,
+          profileId: profileId,
         );
       },
     );
@@ -73,14 +87,14 @@ class _HubMessageBody extends StatelessWidget {
   const _HubMessageBody({
     required this.icon,
     required this.message,
-    required this.actionLabel,
-    required this.onAction,
+    this.actionLabel,
+    this.onAction,
   });
 
   final IconData icon;
   final String message;
-  final String actionLabel;
-  final VoidCallback onAction;
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -102,12 +116,14 @@ class _HubMessageBody extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: context.scaleHeight(16)),
-              AppButton(
-                expand: false,
-                label: actionLabel,
-                onPressed: onAction,
-              ),
+              if (onAction != null && actionLabel != null) ...[
+                SizedBox(height: context.scaleHeight(16)),
+                AppButton(
+                  expand: false,
+                  label: actionLabel!,
+                  onPressed: onAction,
+                ),
+              ],
             ],
           ),
         ),

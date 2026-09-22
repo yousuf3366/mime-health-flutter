@@ -123,8 +123,8 @@ class FaceScanRepositoryImpl extends BaseRepository
   }
 
   @override
-  Future<Result<FaceScanVitalsResult?>> getLatestMimeScan({int? profileId}) {
-    return safeApiCall(() async {
+  Future<Result<FaceScanVitalsResult?>> getLatestMimeScan({int? profileId}) async {
+    final result = await safeApiCall(() async {
       final response = await _mimeRemote.getLatestScan(profileId: profileId);
       if (!response.success) {
         final detail = response.errors.isEmpty
@@ -139,6 +139,50 @@ class FaceScanRepositoryImpl extends BaseRepository
       }
       if (response.data == null) return null;
       return FaceScanMapper.toVitalsFromMimeScan(response.data!);
+    });
+
+    return result.when(
+      success: Success.new,
+      failure: (error) {
+        // No scans yet — treat as empty, not a hard failure.
+        if (_isScanNotFound(error)) {
+          return const Success(null);
+        }
+        return Failure(error);
+      },
+    );
+  }
+
+  bool _isScanNotFound(AppException error) {
+    if (error is ApiException && error.statusCode == 404) return true;
+    final message = error.message.toLowerCase();
+    return message.contains('scan not found') || error.code == 'NOT_FOUND';
+  }
+
+  @override
+  Future<Result<List<FaceScanVitalsResult>>> getMimeScans({
+    required int profileId,
+    int perPage = 20,
+  }) {
+    return safeApiCall(() async {
+      final response = await _mimeRemote.getScans(
+        profileId: profileId,
+        perPage: perPage,
+      );
+      if (!response.success) {
+        final detail = response.errors.isEmpty
+            ? ''
+            : ' ${response.errors.join(', ')}';
+        throw ApiException(
+          (response.message.isEmpty
+                  ? 'Failed to load scans.'
+                  : response.message) +
+              detail,
+        );
+      }
+      return response.items
+          .map(FaceScanMapper.toVitalsFromMimeScan)
+          .toList(growable: false);
     });
   }
 }

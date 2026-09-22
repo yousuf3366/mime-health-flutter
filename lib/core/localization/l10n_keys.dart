@@ -9,6 +9,7 @@ class L10nKeys {
   static const nameLabel = 'mobile.auth.name_label';
   static const otpLabel = 'mobile.auth.otp_label';
   static const phoneLabel = 'mobile.auth.phone_label';
+  static const phoneOrEmailLabel = 'mobile.auth.phone_or_email_label';
   static const resendOtp = 'mobile.auth.resend_otp';
   static const sendOtp = 'mobile.auth.send_otp';
   static const verifyOtp = 'mobile.auth.verify_otp';
@@ -16,6 +17,10 @@ class L10nKeys {
   static const signIn = 'mobile.auth.sign_in';
   static const orContinueWith = 'mobile.auth.or_continue_with';
   static const continueWithGoogle = 'mobile.auth.continue_with_google';
+  static const continueWithApple = 'mobile.auth.continue_with_apple';
+  static const comingSoonTitle = 'mobile.common.coming_soon_title';
+  static const comingSoonMessage = 'mobile.common.coming_soon_message';
+  static const comingSoonOk = 'mobile.common.coming_soon_ok';
 
   // Errors
   static const genericError = 'mobile.errors.generic_error';
@@ -74,6 +79,7 @@ class L10nKeys {
   // Profile details
   static const profileDetailsTitle = 'mobile.profile.details_title';
   static const profileEdit = 'mobile.profile.edit';
+  static const profileSave = 'mobile.profile.save';
   static const profileAddPhoto = 'mobile.profile.add_photo';
   static const profileUpdatePhoto = 'mobile.profile.update_photo';
   static const profileBloodGroup = 'mobile.profile.blood_group';
@@ -113,6 +119,11 @@ class L10nKeys {
       'mobile.face_scan.tip_screen_on_title';
   static const faceScanTipScreenOnBody = 'mobile.face_scan.tip_screen_on_body';
   static const faceScanConsent = 'mobile.face_scan.consent';
+  static const faceScanConsentPrefix = 'mobile.face_scan.consent_prefix';
+  static const faceScanConsentLink = 'mobile.face_scan.consent_link';
+  static const faceScanDataSharingPrefix =
+      'mobile.face_scan.data_sharing_prefix';
+  static const faceScanDataSharingLink = 'mobile.face_scan.data_sharing_link';
   static const faceScanStart = 'mobile.face_scan.start';
   static const questionnaireTitle = 'mobile.face_scan.questionnaire_title';
   static const questionnaireProgress =
@@ -162,6 +173,8 @@ class L10nKeys {
   static const healthDashboardOverallScore =
       'mobile.health_dashboard.overall_score';
   static const healthDashboardBiomarkers = 'mobile.health_dashboard.biomarkers';
+  static const healthDashboardMedicalDisclaimer =
+      'mobile.health_dashboard.medical_disclaimer';
   static const healthDashboardHeartRate = 'mobile.health_dashboard.heart_rate';
   static const healthDashboardBloodPressure =
       'mobile.health_dashboard.blood_pressure';
@@ -169,6 +182,30 @@ class L10nKeys {
   static const healthDashboardSpo2 = 'mobile.health_dashboard.spo2';
   static const healthDashboardHrv = 'mobile.health_dashboard.hrv';
   static const healthDashboardMetrics = 'mobile.health_dashboard.metrics';
+  static const healthDashboardMetricConfidence =
+      'mobile.health_dashboard.metric_confidence';
+  static const healthDashboardMetricEnergyBalance =
+      'mobile.health_dashboard.metric_energy_balance';
+  static const healthDashboardMetricGeneralFitness =
+      'mobile.health_dashboard.metric_general_fitness';
+  static const healthDashboardMetricHypertension =
+      'mobile.health_dashboard.metric_hypertension';
+  static const healthDashboardMetricMentalHealthRisk =
+      'mobile.health_dashboard.metric_mental_health_risk';
+  static const healthDashboardMetricMentalStress =
+      'mobile.health_dashboard.metric_mental_stress';
+  static const healthDashboardMetricSleepQuality =
+      'mobile.health_dashboard.metric_sleep_quality';
+  static const healthDashboardWellbeing =
+      'mobile.health_dashboard.wellbeing';
+  static const healthDashboardWellbeingMental =
+      'mobile.health_dashboard.wellbeing_mental';
+  static const healthDashboardWellbeingPhysical =
+      'mobile.health_dashboard.wellbeing_physical';
+  static const healthDashboardWellbeingEnergySleep =
+      'mobile.health_dashboard.wellbeing_energy_sleep';
+  static const healthDashboardWellbeingStatus =
+      'mobile.health_dashboard.wellbeing_status';
   static const healthDashboardUpgradeTitle =
       'mobile.health_dashboard.upgrade_title';
   static const healthDashboardUpgradeBody =
@@ -180,6 +217,10 @@ class L10nKeys {
   static const healthDashboardLabTest = 'mobile.health_dashboard.book_lab_test';
   static const healthDashboardMedicine =
       'mobile.health_dashboard.order_medicine';
+  static const healthDashboardViewAllScans =
+      'mobile.health_dashboard.view_all_scans';
+  static const healthDashboardScanHistoryTitle =
+      'mobile.health_dashboard.scan_history_title';
 
   // Subscription
   static const subscriptionTitle = 'mobile.subscription.title';

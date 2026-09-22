@@ -75,10 +75,26 @@ final getLatestMimeScanUseCaseProvider = Provider<GetLatestMimeScanUseCase>(
   (ref) => GetLatestMimeScanUseCase(ref.watch(faceScanRepositoryProvider)),
 );
 
+final getMimeScansUseCaseProvider = Provider<GetMimeScansUseCase>(
+  (ref) => GetMimeScansUseCase(ref.watch(faceScanRepositoryProvider)),
+);
+
 /// Latest Mime scan for the Health Hub tab.
 final latestMimeScanProvider =
     FutureProvider.autoDispose<FaceScanVitalsResult?>((ref) async {
   final result = await ref.watch(getLatestMimeScanUseCaseProvider).call();
+  return result.when(
+    success: (data) => data,
+    failure: (error) => throw error,
+  );
+});
+
+/// Scan history for [profileId] (`GET /api/v1/scans`).
+final mimeScanHistoryProvider = FutureProvider.autoDispose
+    .family<List<FaceScanVitalsResult>, int>((ref, profileId) async {
+  final result = await ref.watch(getMimeScansUseCaseProvider).call(
+        profileId: profileId,
+      );
   return result.when(
     success: (data) => data,
     failure: (error) => throw error,

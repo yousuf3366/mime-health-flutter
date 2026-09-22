@@ -90,4 +90,32 @@ class DialogService {
 
     return result ?? false;
   }
+
+  /// Reusable “feature coming soon” dialog for unfinished flows app-wide.
+  Future<void> showComingSoon({
+    String title = 'Coming soon',
+    String message = 'This feature will be available in a future update.',
+    String okLabel = 'OK',
+  }) async {
+    final context = _context;
+    if (context == null) return;
+
+    await showDialog<void>(
+      context: context,
+      useRootNavigator: true,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            AppButton(
+              label: okLabel,
+              expand: false,
+              onPressed: () => Navigator.of(dialogContext).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

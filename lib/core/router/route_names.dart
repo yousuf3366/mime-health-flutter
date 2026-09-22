@@ -8,5 +8,9 @@ class RouteNames {
   static const String faceScan = '/home?tab=face-scan';
   static const String createProfile = '/create-profile';
   static const String subscriptionPlans = '/subscription/plans';
+  static const String termsAndConditions = '/terms-and-conditions';
+  static const String dataSharingConsent = '/data-sharing-consent';
+  static const String scanHistory = '/scan-history';
+  static const String scanMetrics = '/scan-metrics';
   static const String notFound = '/404';
 }

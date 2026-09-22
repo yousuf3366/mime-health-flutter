@@ -8,10 +8,10 @@ import 'package:mime_health/core/widgets/app_date_picker.dart';
 import 'package:mime_health/core/widgets/app_dropdown_field.dart';
 import 'package:mime_health/core/widgets/app_text_field1.dart';
 
-import '../../../face_scan/presentation/screen/face_camera_screen.dart';
 import '../../../../core/localization/l10n_keys.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../face_scan/presentation/screen/face_camera_screen.dart';
 import '../../../language/presentation/provider/language_provider.dart';
 import '../../../login/domain/entity/user_entity.dart';
 import '../../domain/entity/profile_entity.dart';
@@ -29,6 +29,7 @@ class CreateProfileForm extends HookConsumerWidget {
     final formNotifier = ref.read(createProfileFormNotifierProvider.notifier);
     final userAsync = ref.watch(currentUserProvider);
     final isEditing = profile != null;
+    final tosConsent = useState(false);
 
     useEffect(() {
       Future.microtask(() {
@@ -40,6 +41,7 @@ class CreateProfileForm extends HookConsumerWidget {
         } else {
           formNotifier.resetState();
           formNotifier.seedFromUser(userAsync.asData?.value);
+          tosConsent.value = false;
         }
       });
       return null;
@@ -359,29 +361,46 @@ class CreateProfileForm extends HookConsumerWidget {
                         SizedBox(height: context.defaultPaddingSc),
                         _FaceCaptureCard(
                           title: l10n.t(L10nKeys.faceRecognitionRegisterFace),
-                          registeredLabel:
-                              l10n.t(L10nKeys.faceRecognitionRegistered),
+                          registeredLabel: l10n.t(
+                            L10nKeys.faceRecognitionRegistered,
+                          ),
                           hint: l10n.t(L10nKeys.faceRecognitionCaptureHint),
-                          captureLabel:
-                              l10n.t(L10nKeys.faceRecognitionCaptureButton),
+                          captureLabel: l10n.t(
+                            L10nKeys.faceRecognitionCaptureButton,
+                          ),
                           retakeLabel: l10n.t(L10nKeys.faceRecognitionRetake),
                           hasFace: (formState.imageEmbedding ?? '').isNotEmpty,
                           mandatory: !isEditing,
                           errorText: formState.imageEmbeddingError,
                           onCapture: () async {
-                            final embedding =
-                                await Navigator.of(context).push<String>(
-                              MaterialPageRoute(
-                                builder: (_) => const FaceCameraScreen(
-                                  mode: FaceCameraMode.capture,
-                                ),
-                              ),
-                            );
+                            final embedding = await Navigator.of(context)
+                                .push<String>(
+                                  MaterialPageRoute(
+                                    builder: (_) => const FaceCameraScreen(
+                                      mode: FaceCameraMode.capture,
+                                    ),
+                                  ),
+                                );
                             if (embedding != null) {
                               formNotifier.setImageEmbedding(embedding);
                             }
                           },
                         ),
+                        if (!isEditing) ...[
+                          SizedBox(height: context.defaultPaddingSc),
+                          _ConsentTile(
+                            value: tosConsent.value,
+                            prefix: l10n.t(L10nKeys.faceScanConsentPrefix),
+                            linkLabel: l10n.t(L10nKeys.faceScanConsentLink),
+                            onChanged: formState.isLoading
+                                ? null
+                                : (value) => tosConsent.value = value,
+                            onLinkTap: formState.isLoading
+                                ? null
+                                : () =>
+                                    context.push(RouteNames.termsAndConditions),
+                          ),
+                        ],
                         if (formState.errorMessage != null) ...[
                           SizedBox(height: context.scaleHeight(12)),
                           Text(
@@ -407,11 +426,12 @@ class CreateProfileForm extends HookConsumerWidget {
               MediaQuery.paddingOf(context).bottom + context.defaultPaddingSc,
           child: AppButton(
             label: l10n.t(
-              isEditing ? L10nKeys.profileEdit : L10nKeys.homeStartScan,
+              isEditing ? L10nKeys.profileSave : L10nKeys.homeStartScan,
             ),
             btnStyle: AppButtonStyle.primary,
             isLoading: formState.isLoading,
-            onPressed: formState.isLoading
+            isEnabled: isEditing || tosConsent.value,
+            onPressed: formState.isLoading || (!isEditing && !tosConsent.value)
                 ? null
                 : () async {
                     final ok = await formNotifier.submit(profile: profile);
@@ -691,7 +711,9 @@ class _FaceCaptureCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                hasFace ? Icons.verified_outlined : Icons.face_retouching_natural,
+                hasFace
+                    ? Icons.verified_outlined
+                    : Icons.face_retouching_natural,
                 color: hasFace
                     ? AppColors.primaryContainer
                     : AppColors.textSecondary,
@@ -742,8 +764,9 @@ class _FaceCaptureCard extends StatelessWidget {
           AppButton(
             label: hasFace ? retakeLabel : captureLabel,
             icon: Icons.camera_alt_outlined,
-            btnStyle:
-                hasFace ? AppButtonStyle.secondary : AppButtonStyle.primary,
+            btnStyle: hasFace
+                ? AppButtonStyle.secondary
+                : AppButtonStyle.primary,
             onPressed: onCapture,
           ),
         ],
@@ -811,6 +834,93 @@ class _LifestyleCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ConsentTile extends StatelessWidget {
+  const _ConsentTile({
+    required this.value,
+    required this.prefix,
+    required this.linkLabel,
+    required this.onChanged,
+    required this.onLinkTap,
+  });
+
+  final bool value;
+  final String prefix;
+  final String linkLabel;
+  final ValueChanged<bool>? onChanged;
+  final VoidCallback? onLinkTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final baseStyle = TextStyle(
+      color: AppColors.textPrimary,
+      fontSize: context.fontSize,
+      height: 1.35,
+    );
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: context.scaleHeight(4)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: context.scaleWidth(24),
+            height: context.scaleWidth(24),
+            child: Checkbox(
+              value: value,
+              onChanged: onChanged == null
+                  ? null
+                  : (v) => onChanged!(v ?? false),
+              activeColor: AppColors.primaryContainer,
+              checkColor: AppColors.onPrimary,
+              fillColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return AppColors.primaryContainer;
+                }
+                return Colors.transparent;
+              }),
+              side: BorderSide(
+                color: value
+                    ? AppColors.primaryContainer
+                    : AppColors.textHint,
+                width: 1.5,
+              ),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+          ),
+          SizedBox(width: context.scaleWidth(10)),
+          Expanded(
+            child: Text.rich(
+              TextSpan(
+                style: baseStyle,
+                children: [
+                  TextSpan(text: prefix),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: onLinkTap,
+                      child: Text(
+                        linkLabel,
+                        style: baseStyle.copyWith(
+                          color: AppColors.primaryContainer,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.primaryContainer,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,23 +1,68 @@
 class SendOtpRequestModel {
-  const SendOtpRequestModel({required this.phone});
+  SendOtpRequestModel({this.phone, this.email})
+    : assert(
+        (phone != null && phone.isNotEmpty) ||
+            (email != null && email.isNotEmpty),
+        'Either phone or email is required',
+      );
 
-  final String phone;
+  /// Builds the OTP request from the login identifier (phone or email).
+  factory SendOtpRequestModel.fromIdentifier(String identifier) {
+    if (identifier.contains('@')) {
+      return SendOtpRequestModel(email: identifier);
+    }
+    return SendOtpRequestModel(phone: identifier);
+  }
 
-  Map<String, dynamic> toJson() => {'phone': phone};
+  final String? phone;
+  final String? email;
+
+  Map<String, dynamic> toJson() => {
+    if (phone != null) 'phone': phone,
+    if (email != null) 'phone': email,
+  };
 }
 
 class VerifyOtpRequestModel {
-  const VerifyOtpRequestModel({
-    required this.phone,
+  VerifyOtpRequestModel({
+    this.phone,
+    this.email,
     required this.otp,
     required this.deviceFingerprint,
     required this.platform,
     required this.deviceName,
     required this.appVersion,
     required this.osVersion,
-  });
+  }) : assert(
+         (phone != null && phone.isNotEmpty) ||
+             (email != null && email.isNotEmpty),
+         'Either phone or email is required',
+       );
 
-  final String phone;
+  factory VerifyOtpRequestModel.fromIdentifier({
+    required String identifier,
+    required String otp,
+    required String deviceFingerprint,
+    required String platform,
+    required String deviceName,
+    required String appVersion,
+    required String osVersion,
+  }) {
+    final isEmail = identifier.contains('@');
+    return VerifyOtpRequestModel(
+      phone: isEmail ? null : identifier,
+      email: isEmail ? identifier : null,
+      otp: otp,
+      deviceFingerprint: deviceFingerprint,
+      platform: platform,
+      deviceName: deviceName,
+      appVersion: appVersion,
+      osVersion: osVersion,
+    );
+  }
+
+  final String? phone;
+  final String? email;
   final String otp;
   final String deviceFingerprint;
   final String platform;
@@ -26,7 +71,8 @@ class VerifyOtpRequestModel {
   final String osVersion;
 
   Map<String, dynamic> toJson() => {
-    'phone': phone,
+    if (phone != null) 'phone': phone,
+    if (email != null) 'phone': email,
     'otp': otp,
     'device_fingerprint': deviceFingerprint,
     'platform': platform,

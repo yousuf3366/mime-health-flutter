@@ -7,10 +7,11 @@ class FallbackStrings {
   FallbackStrings._();
 
   static const Map<String, String> en = {
-    L10nKeys.loginTitle: 'Login with phone number',
+    L10nKeys.loginTitle: 'Login with phone or email',
     L10nKeys.nameLabel: 'Your name',
     L10nKeys.otpLabel: 'Enter 4-digit code',
     L10nKeys.phoneLabel: 'Phone number',
+    L10nKeys.phoneOrEmailLabel: 'Phone number or email',
     L10nKeys.resendOtp: 'Resend OTP',
     L10nKeys.sendOtp: 'Send OTP',
     L10nKeys.verifyOtp: 'Verify',
@@ -64,6 +65,7 @@ class FallbackStrings {
         'Microphone permission is required to record voice feedback.',
     L10nKeys.profileDetailsTitle: 'Profile',
     L10nKeys.profileEdit: 'Edit profile',
+    L10nKeys.profileSave: 'Save profile',
     L10nKeys.profileAddPhoto: 'Add photo',
     L10nKeys.profileUpdatePhoto: 'Update photo',
     L10nKeys.profileBloodGroup: 'Blood group',
@@ -102,12 +104,17 @@ class FallbackStrings {
         'Do not switch apps until the scan finishes.',
     L10nKeys.faceScanConsent:
         'I agree to the face scan and understand this is not a medical diagnosis.',
+    L10nKeys.faceScanConsentPrefix: 'I have read and agree to the\n',
+    L10nKeys.faceScanConsentLink: 'Terms and Conditions.',
+    L10nKeys.faceScanDataSharingPrefix: 'I have read and agree to the\n',
+    L10nKeys.faceScanDataSharingLink: 'Data Sharing Consent & Revocation.',
     L10nKeys.faceScanStart: 'Start MiME face scan',
     L10nKeys.questionnaireTitle: 'Health Questionnaire',
     L10nKeys.questionnaireProgress: 'Question {current} of {total}',
     L10nKeys.questionnaireSkip: 'Skip for now',
     L10nKeys.faceScanChoosePlan: 'Choose a plan',
-    L10nKeys.faceScanUrlFailedMessage: 'Unable to provide the service at this moment. Please try again later.',
+    L10nKeys.faceScanUrlFailedMessage:
+        'Unable to provide the service at this moment. Please try again later.',
     L10nKeys.faceScanPlanRequired:
         'Select a subscription plan before starting a face scan.',
     L10nKeys.faceScanResultsLoadingTitle: 'Loading your results...',
@@ -137,12 +144,26 @@ class FallbackStrings {
     L10nKeys.healthDashboardTitle: 'Health Dashboard',
     L10nKeys.healthDashboardOverallScore: 'Overall health score',
     L10nKeys.healthDashboardBiomarkers: 'Biomarkers',
+    L10nKeys.healthDashboardMedicalDisclaimer:
+        'These results are for informational purposes only and are not medical advice or a diagnosis. Always consult a qualified healthcare professional.',
     L10nKeys.healthDashboardHeartRate: 'Heart Rate',
     L10nKeys.healthDashboardBloodPressure: 'Blood Pressure',
     L10nKeys.healthDashboardRespRate: 'Resp. Rate',
     L10nKeys.healthDashboardSpo2: 'SpO2',
     L10nKeys.healthDashboardHrv: 'Heart Rate Variability',
     L10nKeys.healthDashboardMetrics: 'Metrics',
+    L10nKeys.healthDashboardMetricConfidence: 'Confidence',
+    L10nKeys.healthDashboardMetricEnergyBalance: 'Energy Balance',
+    L10nKeys.healthDashboardMetricGeneralFitness: 'General Fitness',
+    L10nKeys.healthDashboardMetricHypertension: 'Hypertension',
+    L10nKeys.healthDashboardMetricMentalHealthRisk: 'Mental Health Risk',
+    L10nKeys.healthDashboardMetricMentalStress: 'Mental Stress',
+    L10nKeys.healthDashboardMetricSleepQuality: 'Sleep Quality',
+    L10nKeys.healthDashboardWellbeing: 'Wellbeing',
+    L10nKeys.healthDashboardWellbeingMental: 'Mental',
+    L10nKeys.healthDashboardWellbeingPhysical: 'Physical',
+    L10nKeys.healthDashboardWellbeingEnergySleep: 'Energy & Sleep',
+    L10nKeys.healthDashboardWellbeingStatus: 'Status',
     L10nKeys.healthDashboardUpgradeTitle: 'Unlock Your Full Health Potential',
     L10nKeys.healthDashboardUpgradeBody:
         'Gain access to exclusive insights and predictive analytics',
@@ -150,6 +171,8 @@ class FallbackStrings {
     L10nKeys.healthDashboardConsult: 'Consult Doctors',
     L10nKeys.healthDashboardLabTest: 'Book Lab Test',
     L10nKeys.healthDashboardMedicine: 'Order Medicine',
+    L10nKeys.healthDashboardViewAllScans: 'All scans',
+    L10nKeys.healthDashboardScanHistoryTitle: 'Scan history',
     L10nKeys.subscriptionTitle: 'Choose your plan',
     L10nKeys.subscriptionSubtitle:
         'Pick a plan to unlock face scans and health insights.',
@@ -169,7 +192,7 @@ class FallbackStrings {
     L10nKeys.languageEn: 'English',
     // Local-only
     L10nKeys.appName: 'Mime Health',
-    L10nKeys.changePhone: 'Change number',
+    L10nKeys.changePhone: 'Change',
     L10nKeys.otpSentTo: 'OTP sent to {phone}',
     L10nKeys.resendOtpIn: 'Resend OTP in {seconds}s',
     L10nKeys.logout: 'Logout',
@@ -185,13 +208,19 @@ class FallbackStrings {
     L10nKeys.signIn: 'Sign in',
     L10nKeys.orContinueWith: 'Or continue with',
     L10nKeys.continueWithGoogle: 'Continue with Google',
+    L10nKeys.continueWithApple: 'Continue with Apple',
+    L10nKeys.comingSoonTitle: 'Coming soon',
+    L10nKeys.comingSoonMessage:
+        'This feature will be available in a future update.',
+    L10nKeys.comingSoonOk: 'OK',
   };
 
   static const Map<String, String> bn = {
-    L10nKeys.loginTitle: 'ফোন নম্বর দিয়ে লগইন করুন',
+    L10nKeys.loginTitle: 'ফোন বা ইমেইল দিয়ে লগইন করুন',
     L10nKeys.nameLabel: 'আপনার নাম',
     L10nKeys.otpLabel: '৪ অঙ্কের কোড লিখুন',
     L10nKeys.phoneLabel: 'ফোন নম্বর',
+    L10nKeys.phoneOrEmailLabel: 'ফোন নম্বর বা ইমেইল',
     L10nKeys.resendOtp: 'আবার OTP পাঠান',
     L10nKeys.sendOtp: 'OTP পাঠান',
     L10nKeys.verifyOtp: 'যাচাই করুন',
@@ -246,6 +275,7 @@ class FallbackStrings {
         'ভয়েস মতামত রেকর্ড করতে মাইক্রোফোনের অনুমতি প্রয়োজন।',
     L10nKeys.profileDetailsTitle: 'প্রোফাইল',
     L10nKeys.profileEdit: 'প্রোফাইল সম্পাদনা',
+    L10nKeys.profileSave: 'প্রোফাইল সংরক্ষণ করুন',
     L10nKeys.profileAddPhoto: 'ছবি যোগ করুন',
     L10nKeys.profileUpdatePhoto: 'ছবি আপডেট করুন',
     L10nKeys.profileBloodGroup: 'রক্তের গ্রুপ',
@@ -284,12 +314,17 @@ class FallbackStrings {
         'স্ক্যান শেষ না হওয়া পর্যন্ত অন্য অ্যাপে যাবেন না।',
     L10nKeys.faceScanConsent:
         'আমি ফেস স্ক্যানে সম্মতি দিচ্ছি এবং বুঝতে পারছি এটি কোনো চিকিৎসা নির্ণয় নয়।',
+    L10nKeys.faceScanConsentPrefix: 'আমি পড়েছি এবং সম্মতি দিচ্ছি\n',
+    L10nKeys.faceScanConsentLink: 'শর্তাবলী ও নিয়মাবলী।',
+    L10nKeys.faceScanDataSharingPrefix: 'আমি সম্মতি দিচ্ছি\n',
+    L10nKeys.faceScanDataSharingLink: 'ডেটা শেয়ারিং সম্মতি ও প্রত্যাহার।',
     L10nKeys.faceScanStart: 'MiME ফেস স্ক্যান শুরু করুন',
     L10nKeys.questionnaireTitle: 'স্বাস্থ্য প্রশ্নমালা',
     L10nKeys.questionnaireProgress: 'প্রশ্ন {current} / {total}',
     L10nKeys.questionnaireSkip: 'এখনকার জন্য এড়িয়ে যান',
     L10nKeys.faceScanChoosePlan: 'প্ল্যান বেছে নিন',
-    L10nKeys.faceScanUrlFailedMessage: 'এই মুহূর্তে সেবাটি প্রদান করা সম্ভব হচ্ছে না। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।',
+    L10nKeys.faceScanUrlFailedMessage:
+        'এই মুহূর্তে সেবাটি প্রদান করা সম্ভব হচ্ছে না। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।',
     L10nKeys.faceScanPlanRequired:
         'ফেস স্ক্যান শুরু করার আগে একটি সাবস্ক্রিপশন প্ল্যান বেছে নিন।',
     L10nKeys.faceScanResultsLoadingTitle: 'আপনার ফলাফল লোড হচ্ছে...',
@@ -319,12 +354,26 @@ class FallbackStrings {
     L10nKeys.healthDashboardTitle: 'হেলথ ড্যাশবোর্ড',
     L10nKeys.healthDashboardOverallScore: 'সামগ্রিক স্বাস্থ্য স্কোর',
     L10nKeys.healthDashboardBiomarkers: 'বায়োমার্কার',
+    L10nKeys.healthDashboardMedicalDisclaimer:
+        'এই ফলাফল শুধুমাত্র তথ্যের জন্য এবং চিকিৎসা পরামর্শ বা নির্ণয় নয়। সর্বদা যোগ্য স্বাস্থ্যসেবা পেশাদারের সাথে পরামর্শ করুন।',
     L10nKeys.healthDashboardHeartRate: 'হার্ট রেট',
     L10nKeys.healthDashboardBloodPressure: 'ব্লাড প্রেসার',
     L10nKeys.healthDashboardRespRate: 'শ্বাসহার',
     L10nKeys.healthDashboardSpo2: 'SpO2',
     L10nKeys.healthDashboardHrv: 'হার্ট রেট ভ্যারিয়েবিলিটি',
     L10nKeys.healthDashboardMetrics: 'মেট্রিক্স',
+    L10nKeys.healthDashboardMetricConfidence: 'আত্মবিশ্বাস',
+    L10nKeys.healthDashboardMetricEnergyBalance: 'এনার্জি ব্যালেন্স',
+    L10nKeys.healthDashboardMetricGeneralFitness: 'সাধারণ ফিটনেস',
+    L10nKeys.healthDashboardMetricHypertension: 'হাইপারটেনশন',
+    L10nKeys.healthDashboardMetricMentalHealthRisk: 'মানসিক স্বাস্থ্য ঝুঁকি',
+    L10nKeys.healthDashboardMetricMentalStress: 'মানসিক চাপ',
+    L10nKeys.healthDashboardMetricSleepQuality: 'ঘুমের মান',
+    L10nKeys.healthDashboardWellbeing: 'সুস্থতা',
+    L10nKeys.healthDashboardWellbeingMental: 'মানসিক',
+    L10nKeys.healthDashboardWellbeingPhysical: 'শারীরিক',
+    L10nKeys.healthDashboardWellbeingEnergySleep: 'শক্তি ও ঘুম',
+    L10nKeys.healthDashboardWellbeingStatus: 'স্ট্যাটাস',
     L10nKeys.healthDashboardUpgradeTitle:
         'সম্পূর্ণ স্বাস্থ্য সম্ভাবনা আনলক করুন',
     L10nKeys.healthDashboardUpgradeBody:
@@ -333,6 +382,8 @@ class FallbackStrings {
     L10nKeys.healthDashboardConsult: 'ডাক্তারের পরামর্শ',
     L10nKeys.healthDashboardLabTest: 'ল্যাব টেস্ট বুক করুন',
     L10nKeys.healthDashboardMedicine: 'ওষুধ অর্ডার করুন',
+    L10nKeys.healthDashboardViewAllScans: 'সব স্ক্যান',
+    L10nKeys.healthDashboardScanHistoryTitle: 'স্ক্যান ইতিহাস',
     L10nKeys.subscriptionTitle: 'আপনার প্ল্যান বেছে নিন',
     L10nKeys.subscriptionSubtitle:
         'ফেস স্ক্যান ও স্বাস্থ্য অন্তর্দৃষ্টি আনলক করতে একটি প্ল্যান বেছে নিন।',
@@ -352,7 +403,7 @@ class FallbackStrings {
     L10nKeys.languageEn: 'English',
     // Local-only
     L10nKeys.appName: 'মাইম হেলথ',
-    L10nKeys.changePhone: 'নম্বর পরিবর্তন করুন',
+    L10nKeys.changePhone: 'পরিবর্তন করুন',
     L10nKeys.otpSentTo: '{phone} এ OTP পাঠানো হয়েছে',
     L10nKeys.resendOtpIn: '{seconds} সে. পর আবার পাঠান',
     L10nKeys.logout: 'লগআউট',
@@ -368,6 +419,10 @@ class FallbackStrings {
     L10nKeys.signIn: 'সাইন ইন',
     L10nKeys.orContinueWith: 'অথবা চালিয়ে যান',
     L10nKeys.continueWithGoogle: 'Google দিয়ে চালিয়ে যান',
+    L10nKeys.continueWithApple: 'Apple দিয়ে চালিয়ে যান',
+    L10nKeys.comingSoonTitle: 'শীঘ্রই আসছে',
+    L10nKeys.comingSoonMessage: 'এই ফিচারটি ভবিষ্যতের আপডেটে পাওয়া যাবে।',
+    L10nKeys.comingSoonOk: 'ঠিক আছে',
   };
 
   static Map<String, String> forCode(String code) {

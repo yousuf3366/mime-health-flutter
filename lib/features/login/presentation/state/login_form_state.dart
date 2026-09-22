@@ -29,7 +29,7 @@ class LoginFormState extends Equatable {
   final LoginStatus status;
   final AuthSessionEntity? session;
 
-  /// Phone value for the text field and OTP/resend API calls.
+  /// Login identifier (phone or email) for OTP/resend API calls.
   final String? phoneState;
   final String? phoneErrorState;
   final String? otpTextState;

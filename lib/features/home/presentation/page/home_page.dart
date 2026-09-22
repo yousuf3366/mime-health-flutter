@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:mime_health/core/providers/core_providers.dart';
 import 'package:mime_health/core/theme/app_colors.dart';
 import 'package:mime_health/core/widgets/app_bottom_nav_bar.dart';
 
@@ -60,7 +61,16 @@ class HomePage extends HookConsumerWidget {
           AppBottomNavBar(
             destinations: destinations,
             selected: selectedTab.value,
-            onSelected: (item) => selectedTab.value = item,
+            onSelected: (item) {
+              if (item == AppBottomNavItem.trends) {
+                ref.read(dialogServiceProvider).showComingSoon(
+                      title: l10n.t(L10nKeys.comingSoonTitle),
+                      message: l10n.t(L10nKeys.comingSoonMessage),
+                      okLabel: l10n.t(L10nKeys.comingSoonOk),
+                    );
+              }
+              selectedTab.value = item;
+            },
           ),
         ],
       ),
@@ -76,9 +86,9 @@ class HomePage extends HookConsumerWidget {
       case AppBottomNavItem.faceScan:
         return const FaceScanPreScreen();
       case AppBottomNavItem.trends:
-        return const _PlaceholderBody(
+        return const _ComingSoonBody(
           icon: Icons.show_chart,
-          labelKey: L10nKeys.homeNavTrends,
+          titleKey: L10nKeys.homeNavTrends,
         );
       case AppBottomNavItem.profile:
         return const ProfileDetailsScreen();
@@ -86,30 +96,53 @@ class HomePage extends HookConsumerWidget {
   }
 }
 
-class _PlaceholderBody extends ConsumerWidget {
-  const _PlaceholderBody({required this.icon, required this.labelKey});
+class _ComingSoonBody extends ConsumerWidget {
+  const _ComingSoonBody({required this.icon, required this.titleKey});
 
   final IconData icon;
-  final String labelKey;
+  final String titleKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final label = ref.watch(languageControllerProvider).t(labelKey);
+    final l10n = ref.watch(languageControllerProvider);
 
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 48, color: AppColors.primaryContainer),
-          const SizedBox(height: 12),
-          Text(
-            label,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w600,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 48, color: AppColors.primaryContainer),
+            const SizedBox(height: 12),
+            Text(
+              l10n.t(titleKey),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              l10n.t(L10nKeys.comingSoonTitle),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: AppColors.primaryContainer,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.t(L10nKeys.comingSoonMessage),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                height: 1.35,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

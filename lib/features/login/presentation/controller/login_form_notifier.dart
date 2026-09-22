@@ -59,7 +59,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
 
   bool validateInfo() {
     if (state.step == LoginStep.phone) {
-      final error = Validators.phone(state.phoneState);
+      final error = Validators.phoneOrEmail(state.phoneState);
       updateField(
         phoneErrorState: error,
         isValidate: error == null && (state.phoneState ?? '').trim().isNotEmpty,
@@ -112,9 +112,8 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
   }
 
   Future<bool> sendOtp() async {
-    final normalized = (state.phoneState ?? '').trim().replaceAll(
-      RegExp(r'[\s-]'),
-      '',
+    final normalized = Validators.normalizeLoginIdentifier(
+      state.phoneState ?? '',
     );
     updateField(
       status: LoginStatus.loading,
@@ -123,7 +122,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
     );
     _dialog.showLoading();
 
-    final result = await _sendOtp(phone: normalized);
+    final result = await _sendOtp(identifier: normalized);
     _dialog.hideLoading();
 
     return result.when(
@@ -136,7 +135,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
           errorMessage: null,
           isValidate: false,
         );
-        _startResendCooldown(dispatch.expiresInSeconds);
+        _startResendCountdown(dispatch.expiresInSeconds);
         _snackbar.showSuccess(dispatch.message);
         return true;
       },
@@ -149,19 +148,19 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
   }
 
   Future<bool> resendOtp() async {
-    final phone = state.phoneState ?? '';
-    if (!state.canResend || phone.isEmpty) return false;
+    final identifier = state.phoneState ?? '';
+    if (!state.canResend || identifier.isEmpty) return false;
 
     updateField(status: LoginStatus.loading, errorMessage: null);
     _dialog.showLoading();
 
-    final result = await _resendOtp(phone: phone);
+    final result = await _resendOtp(identifier: identifier);
     _dialog.hideLoading();
 
     return result.when(
       success: (dispatch) {
         updateField(status: LoginStatus.initial, errorMessage: null);
-        _startResendCooldown(dispatch.expiresInSeconds);
+        _startResendCountdown(dispatch.expiresInSeconds);
         _snackbar.showSuccess(dispatch.message);
         return true;
       },
@@ -178,7 +177,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
     _dialog.showLoading();
 
     final result = await _verifyOtp(
-      phone: state.phoneState ?? '',
+      identifier: state.phoneState ?? '',
       otp: otp.trim(),
     );
     _dialog.hideLoading();
@@ -228,7 +227,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
     );
   }
 
-  void _startResendCooldown(int seconds) {
+  void _startResendCountdown(int seconds) {
     _resendTimer?.cancel();
     updateField(resendCooldownSeconds: seconds);
 

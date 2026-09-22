@@ -28,4 +28,8 @@ class ApiEndpoints {
   static const String feedback = '/api/v1/feedback';
   static const String subscriptionSelectPlan =
       '/api/v1/subscription/select-plan';
+
+  /// e.g. `/api/v1/consent-documents/tos`
+  static String consentDocument(String code) =>
+      '/api/v1/consent-documents/$code';
 }
