@@ -177,10 +177,11 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
                 title: l10n.t(L10nKeys.healthDashboardUpgradeTitle),
                 body: l10n.t(L10nKeys.healthDashboardUpgradeBody),
                 cta: l10n.t(L10nKeys.healthDashboardUpgradeCta),
-                onUpgrade: () => context.push(
-                  RouteNames.scanMetrics,
-                  extra: vitals,
-                ),
+                // onUpgrade: () => context.push(
+                //   RouteNames.scanMetrics,
+                //   extra: vitals,
+                // ),
+                onUpgrade: () => _showComingSoon(ref),
               ),
               SizedBox(height: context.scaleHeight(20)),
               AppButton(
@@ -206,7 +207,9 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
 
   void _showComingSoon(WidgetRef ref) {
     final l10n = ref.read(languageControllerProvider);
-    ref.read(dialogServiceProvider).showComingSoon(
+    ref
+        .read(dialogServiceProvider)
+        .showComingSoon(
           title: l10n.t(L10nKeys.comingSoonTitle),
           message: l10n.t(L10nKeys.comingSoonMessage),
           okLabel: l10n.t(L10nKeys.comingSoonOk),
