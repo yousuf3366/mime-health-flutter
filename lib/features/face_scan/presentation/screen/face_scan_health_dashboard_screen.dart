@@ -40,10 +40,10 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
     final l10n = ref.watch(languageControllerProvider);
     final score = _overallScore(vitals);
     final scoreLabel = _scoreLabel(vitals);
-    final spo2 = vitals.spo2 > 0 ? vitals.spo2 : 98.0;
-    final quality = (vitals.qualityStatus?.trim().isNotEmpty ?? false)
-        ? vitals.qualityStatus!.toUpperCase()
-        : 'GOOD';
+    // final spo2 = vitals.spo2 > 0 ? vitals.spo2 : 98.0;
+    // final quality = (vitals.qualityStatus?.trim().isNotEmpty ?? false)
+    //     ? vitals.qualityStatus!.toUpperCase()
+    //     : 'GOOD';
     final historyProfileId = profileId ?? vitals.profileId;
 
     return Scaffold(
@@ -145,9 +145,10 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
                   ),
                   _BiomarkerCard(
                     iconAsset: 'assets/images/spo2_icon.svg',
-                    title: l10n.t(L10nKeys.healthDashboardSpo2),
-                    value: '${spo2.toStringAsFixed(0)}%',
-                    badge: quality,
+                    title: l10n.t(L10nKeys.healthResonantBreathingScore),
+                    value: '${vitals.resonantBreathingScore}',
+                   // badge: quality,
+                    badge: null,
                   ),
                   if (vitals.heartRateVariability != null)
                     _BiomarkerCard(

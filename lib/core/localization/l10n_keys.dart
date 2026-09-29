@@ -180,6 +180,7 @@ class L10nKeys {
       'mobile.health_dashboard.blood_pressure';
   static const healthDashboardRespRate = 'mobile.health_dashboard.resp_rate';
   static const healthDashboardSpo2 = 'mobile.health_dashboard.spo2';
+  static const healthResonantBreathingScore = 'mobile.health_dashboard.health_resonant_breathing_score';
   static const healthDashboardHrv = 'mobile.health_dashboard.hrv';
   static const healthDashboardMetrics = 'mobile.health_dashboard.metrics';
   static const healthDashboardMetricConfidence =
