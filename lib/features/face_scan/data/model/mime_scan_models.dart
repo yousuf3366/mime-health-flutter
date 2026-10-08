@@ -356,13 +356,13 @@ class MimeScansListResponseModel {
       message: json['message']?.toString() ?? '',
       items: itemsRaw is List
           ? itemsRaw
-              .whereType<Map>()
-              .map(
-                (e) => MimeScanStoredDataModel.fromJson(
-                  Map<String, dynamic>.from(e),
-                ),
-              )
-              .toList(growable: false)
+                .whereType<Map>()
+                .map(
+                  (e) => MimeScanStoredDataModel.fromJson(
+                    Map<String, dynamic>.from(e),
+                  ),
+                )
+                .toList(growable: false)
           : const [],
       errors: errorsRaw is List
           ? errorsRaw.map((e) => e.toString()).toList(growable: false)

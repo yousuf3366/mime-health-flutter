@@ -42,31 +42,11 @@ abstract final class MimeQuestionCatalog {
       questionEn: 'How stressed have you felt in the last month?',
       questionBn: 'গত এক মাসে আপনি কতটা চাপ অনুভব করেছেন?',
       options: [
-        MimeQuestionOption(
-          value: 1,
-          labelEn: 'Not at all',
-          labelBn: 'একদম না',
-        ),
-        MimeQuestionOption(
-          value: 2,
-          labelEn: 'Slightly',
-          labelBn: 'সামান্য',
-        ),
-        MimeQuestionOption(
-          value: 3,
-          labelEn: 'Moderately',
-          labelBn: 'মাঝারি',
-        ),
-        MimeQuestionOption(
-          value: 4,
-          labelEn: 'Very',
-          labelBn: 'বেশি',
-        ),
-        MimeQuestionOption(
-          value: 5,
-          labelEn: 'Extremely',
-          labelBn: 'খুব বেশি',
-        ),
+        MimeQuestionOption(value: 1, labelEn: 'Not at all', labelBn: 'একদম না'),
+        MimeQuestionOption(value: 2, labelEn: 'Slightly', labelBn: 'সামান্য'),
+        MimeQuestionOption(value: 3, labelEn: 'Moderately', labelBn: 'মাঝারি'),
+        MimeQuestionOption(value: 4, labelEn: 'Very', labelBn: 'বেশি'),
+        MimeQuestionOption(value: 5, labelEn: 'Extremely', labelBn: 'খুব বেশি'),
       ],
     ),
     MimeQuestion(
@@ -74,31 +54,11 @@ abstract final class MimeQuestionCatalog {
       questionEn: 'How is your energy for daily activities?',
       questionBn: 'দৈনন্দিন কাজকর্মে আপনার শক্তি কেমন?',
       options: [
-        MimeQuestionOption(
-          value: 1,
-          labelEn: 'Very low',
-          labelBn: 'খুব কম',
-        ),
-        MimeQuestionOption(
-          value: 2,
-          labelEn: 'Low',
-          labelBn: 'কম',
-        ),
-        MimeQuestionOption(
-          value: 3,
-          labelEn: 'Moderate',
-          labelBn: 'মাঝারি',
-        ),
-        MimeQuestionOption(
-          value: 4,
-          labelEn: 'Good',
-          labelBn: 'ভালো',
-        ),
-        MimeQuestionOption(
-          value: 5,
-          labelEn: 'Very good',
-          labelBn: 'খুব ভালো',
-        ),
+        MimeQuestionOption(value: 1, labelEn: 'Very low', labelBn: 'খুব কম'),
+        MimeQuestionOption(value: 2, labelEn: 'Low', labelBn: 'কম'),
+        MimeQuestionOption(value: 3, labelEn: 'Moderate', labelBn: 'মাঝারি'),
+        MimeQuestionOption(value: 4, labelEn: 'Good', labelBn: 'ভালো'),
+        MimeQuestionOption(value: 5, labelEn: 'Very good', labelBn: 'খুব ভালো'),
       ],
     ),
     MimeQuestion(
@@ -106,11 +66,7 @@ abstract final class MimeQuestionCatalog {
       questionEn: 'How many hours of physical activity do you do per week?',
       questionBn: 'সপ্তাহে কত ঘণ্টা শারীরিক কার্যকলাপ করেন?',
       options: [
-        MimeQuestionOption(
-          value: 1,
-          labelEn: 'None',
-          labelBn: 'কিছুই না',
-        ),
+        MimeQuestionOption(value: 1, labelEn: 'None', labelBn: 'কিছুই না'),
         MimeQuestionOption(
           value: 2,
           labelEn: 'Less than 1 hour',
@@ -138,26 +94,10 @@ abstract final class MimeQuestionCatalog {
       questionEn: 'How often do you wake up during the night?',
       questionBn: 'রাতে ঘুমের মাঝে কতবার জেগে ওঠেন?',
       options: [
-        MimeQuestionOption(
-          value: 1,
-          labelEn: 'Never',
-          labelBn: 'কখনো না',
-        ),
-        MimeQuestionOption(
-          value: 2,
-          labelEn: 'Once',
-          labelBn: '১ বার',
-        ),
-        MimeQuestionOption(
-          value: 3,
-          labelEn: 'Twice',
-          labelBn: '২ বার',
-        ),
-        MimeQuestionOption(
-          value: 4,
-          labelEn: '3 times',
-          labelBn: '৩ বার',
-        ),
+        MimeQuestionOption(value: 1, labelEn: 'Never', labelBn: 'কখনো না'),
+        MimeQuestionOption(value: 2, labelEn: 'Once', labelBn: '১ বার'),
+        MimeQuestionOption(value: 3, labelEn: 'Twice', labelBn: '২ বার'),
+        MimeQuestionOption(value: 4, labelEn: '3 times', labelBn: '৩ বার'),
         MimeQuestionOption(
           value: 5,
           labelEn: 'More than 3 times',

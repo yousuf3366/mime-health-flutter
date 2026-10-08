@@ -44,7 +44,9 @@ class FaceScanFlowNotifier extends Notifier<FaceScanFlowState> {
   ///
   /// Flow: Mime face-scan URL → native plugin → loading → store → dashboard.
   /// Questionnaire is temporarily skipped (code kept commented below).
-  Future<FaceScanStartResult> startScan() async {
+  ///
+  /// Scans for [forProfile] when given, otherwise the user's own (self) profile.
+  Future<FaceScanStartResult> startScan({ProfileEntity? forProfile}) async {
     if (state.isBusy) return FaceScanStartResult.aborted;
 
     final session = ++_session;
@@ -54,11 +56,28 @@ class FaceScanFlowNotifier extends Notifier<FaceScanFlowState> {
     final snackbar = ref.read(snackbarServiceProvider);
 
     late final ProfileEntity profile;
-    try {
-      final profiles = await ref.read(profilesProvider.future);
-      if (!isActive()) return FaceScanStartResult.aborted;
-      if (profiles.isEmpty) {
-        const message = 'Create a health profile before starting a face scan.';
+    if (forProfile != null) {
+      profile = forProfile;
+    } else {
+      try {
+        final profiles = await ref.read(profilesProvider.future);
+        if (!isActive()) return FaceScanStartResult.aborted;
+        if (profiles.isEmpty) {
+          const message =
+              'Create a health profile before starting a face scan.';
+          state = state.copyWith(
+            status: FaceScanFlowStatus.error,
+            errorMessage: message,
+          );
+          snackbar.showError(message);
+          return FaceScanStartResult.aborted;
+        }
+        profile = _primaryProfile(profiles);
+      } catch (error) {
+        if (!isActive()) return FaceScanStartResult.aborted;
+        final message = error is AppException
+            ? error.message
+            : 'Unable to load profile for face scan.';
         state = state.copyWith(
           status: FaceScanFlowStatus.error,
           errorMessage: message,
@@ -66,18 +85,6 @@ class FaceScanFlowNotifier extends Notifier<FaceScanFlowState> {
         snackbar.showError(message);
         return FaceScanStartResult.aborted;
       }
-      profile = _primaryProfile(profiles);
-    } catch (error) {
-      if (!isActive()) return FaceScanStartResult.aborted;
-      final message = error is AppException
-          ? error.message
-          : 'Unable to load profile for face scan.';
-      state = state.copyWith(
-        status: FaceScanFlowStatus.error,
-        errorMessage: message,
-      );
-      snackbar.showError(message);
-      return FaceScanStartResult.aborted;
     }
 
     state = state.copyWith(

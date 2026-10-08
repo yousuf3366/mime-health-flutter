@@ -22,9 +22,7 @@ class FaceScanMetricsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppAppBar(
-        title: l10n.t(L10nKeys.healthDashboardMetrics),
-      ),
+      appBar: AppAppBar(title: l10n.t(L10nKeys.healthDashboardMetrics)),
       body: SafeArea(
         top: false,
         child: scoreMetrics.isEmpty && wellbeing.isEmpty
@@ -317,11 +315,7 @@ class _DashboardMetricCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
-                icon,
-                size: iconSize,
-                color: AppColors.primaryContainer,
-              ),
+              Icon(icon, size: iconSize, color: AppColors.primaryContainer),
               const Spacer(),
               if (badge != null)
                 Container(

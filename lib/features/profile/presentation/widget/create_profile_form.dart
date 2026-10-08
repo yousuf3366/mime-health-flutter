@@ -8,6 +8,7 @@ import 'package:mime_health/core/widgets/app_date_picker.dart';
 import 'package:mime_health/core/widgets/app_dropdown_field.dart';
 import 'package:mime_health/core/widgets/app_text_field1.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/localization/l10n_keys.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -29,10 +30,11 @@ class CreateProfileForm extends HookConsumerWidget {
     final formNotifier = ref.read(createProfileFormNotifierProvider.notifier);
     final userAsync = ref.watch(currentUserProvider);
     final isEditing = profile != null;
+    final isSelf = formState.profileKind == ProfileKind.self;
     final tosConsent = useState(false);
 
     useEffect(() {
-      Future.microtask(() {
+      Future.microtask(() async {
         if (profile != null) {
           formNotifier.seedFromProfile(
             profile!,
@@ -42,6 +44,18 @@ class CreateProfileForm extends HookConsumerWidget {
           formNotifier.resetState();
           formNotifier.seedFromUser(userAsync.asData?.value);
           tosConsent.value = false;
+
+          try {
+            final profiles = await ref.read(profilesProvider.future);
+            final hasSelf = profiles.any(
+              (p) => p.profileKind == AppConstants.profileKindSelf,
+            );
+            if (hasSelf && context.mounted) {
+              formNotifier.setProfileKind(ProfileKind.family);
+            }
+          } catch (_) {
+            // Keep the Self default if profiles can't be loaded.
+          }
         }
       });
       return null;
@@ -116,22 +130,24 @@ class CreateProfileForm extends HookConsumerWidget {
                           errorText: formState.displayNameError,
                           onChanged: formNotifier.setDisplayName,
                         ),
-                        SizedBox(height: context.defaultPaddingSc),
-                        AppTextField1(
-                          label: l10n.t(L10nKeys.profilePhone),
-                          initialValue: formState.phone,
-                          keyboardType: TextInputType.phone,
-                          errorText: formState.phoneError,
-                          onChanged: formNotifier.setPhone,
-                        ),
-                        SizedBox(height: context.defaultPaddingSc),
-                        AppTextField1(
-                          label: l10n.t(L10nKeys.profileEmail),
-                          initialValue: formState.email,
-                          keyboardType: TextInputType.emailAddress,
-                          errorText: formState.emailError,
-                          onChanged: formNotifier.setEmail,
-                        ),
+                        if (isSelf) ...[
+                          SizedBox(height: context.defaultPaddingSc),
+                          AppTextField1(
+                            label: l10n.t(L10nKeys.profilePhone),
+                            initialValue: formState.phone,
+                            keyboardType: TextInputType.phone,
+                            errorText: formState.phoneError,
+                            onChanged: formNotifier.setPhone,
+                          ),
+                          SizedBox(height: context.defaultPaddingSc),
+                          AppTextField1(
+                            label: l10n.t(L10nKeys.profileEmail),
+                            initialValue: formState.email,
+                            keyboardType: TextInputType.emailAddress,
+                            errorText: formState.emailError,
+                            onChanged: formNotifier.setEmail,
+                          ),
+                        ],
                         SizedBox(height: context.defaultPaddingSc),
                         AppDropdownField<BloodGroup>(
                           label: l10n.t(L10nKeys.profileBloodGroup),
@@ -310,18 +326,6 @@ class CreateProfileForm extends HookConsumerWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(width: context.defaultPaddingSc),
-                            Expanded(
-                              child: _PillOption(
-                                label: l10n.t(L10nKeys.homeOther),
-                                selected:
-                                    formState.profileKind == ProfileKind.other,
-                                emphasizeSelected: true,
-                                onTap: () => formNotifier.setProfileKind(
-                                  ProfileKind.other,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                         SizedBox(height: context.defaultPaddingSc),
@@ -358,34 +362,37 @@ class CreateProfileForm extends HookConsumerWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: context.defaultPaddingSc),
-                        _FaceCaptureCard(
-                          title: l10n.t(L10nKeys.faceRecognitionRegisterFace),
-                          registeredLabel: l10n.t(
-                            L10nKeys.faceRecognitionRegistered,
-                          ),
-                          hint: l10n.t(L10nKeys.faceRecognitionCaptureHint),
-                          captureLabel: l10n.t(
-                            L10nKeys.faceRecognitionCaptureButton,
-                          ),
-                          retakeLabel: l10n.t(L10nKeys.faceRecognitionRetake),
-                          hasFace: (formState.imageEmbedding ?? '').isNotEmpty,
-                          mandatory: !isEditing,
-                          errorText: formState.imageEmbeddingError,
-                          onCapture: () async {
-                            final embedding = await Navigator.of(context)
-                                .push<String>(
-                                  MaterialPageRoute(
-                                    builder: (_) => const FaceCameraScreen(
-                                      mode: FaceCameraMode.capture,
+                        if (isSelf) ...[
+                          SizedBox(height: context.defaultPaddingSc),
+                          _FaceCaptureCard(
+                            title: l10n.t(L10nKeys.faceRecognitionRegisterFace),
+                            registeredLabel: l10n.t(
+                              L10nKeys.faceRecognitionRegistered,
+                            ),
+                            hint: l10n.t(L10nKeys.faceRecognitionCaptureHint),
+                            captureLabel: l10n.t(
+                              L10nKeys.faceRecognitionCaptureButton,
+                            ),
+                            retakeLabel: l10n.t(L10nKeys.faceRecognitionRetake),
+                            hasFace:
+                                (formState.imageEmbedding ?? '').isNotEmpty,
+                            mandatory: !isEditing,
+                            errorText: formState.imageEmbeddingError,
+                            onCapture: () async {
+                              final embedding = await Navigator.of(context)
+                                  .push<String>(
+                                    MaterialPageRoute(
+                                      builder: (_) => const FaceCameraScreen(
+                                        mode: FaceCameraMode.capture,
+                                      ),
                                     ),
-                                  ),
-                                );
-                            if (embedding != null) {
-                              formNotifier.setImageEmbedding(embedding);
-                            }
-                          },
-                        ),
+                                  );
+                              if (embedding != null) {
+                                formNotifier.setImageEmbedding(embedding);
+                              }
+                            },
+                          ),
+                        ],
                         if (!isEditing) ...[
                           SizedBox(height: context.defaultPaddingSc),
                           _ConsentTile(
@@ -397,8 +404,9 @@ class CreateProfileForm extends HookConsumerWidget {
                                 : (value) => tosConsent.value = value,
                             onLinkTap: formState.isLoading
                                 ? null
-                                : () =>
-                                    context.push(RouteNames.termsAndConditions),
+                                : () => context.push(
+                                    RouteNames.termsAndConditions,
+                                  ),
                           ),
                         ],
                         if (formState.errorMessage != null) ...[
@@ -884,9 +892,7 @@ class _ConsentTile extends StatelessWidget {
                 return Colors.transparent;
               }),
               side: BorderSide(
-                color: value
-                    ? AppColors.primaryContainer
-                    : AppColors.textHint,
+                color: value ? AppColors.primaryContainer : AppColors.textHint,
                 width: 1.5,
               ),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

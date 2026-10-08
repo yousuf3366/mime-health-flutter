@@ -80,7 +80,7 @@ class ProfileDetailsScreen extends ConsumerWidget {
 
         final profile = _primaryProfile(profiles);
         final user = ref.watch(currentUserProvider).asData?.value;
-        return _ProfileDetailsBody(
+        return ProfileDetailsBody(
           profile: profile,
           phoneNumber:
               (profile.phone != null && profile.phone!.trim().isNotEmpty)
@@ -105,16 +105,20 @@ class ProfileDetailsScreen extends ConsumerWidget {
   }
 }
 
-class _ProfileDetailsBody extends ConsumerWidget {
-  const _ProfileDetailsBody({
+/// Profile info, avatar upload and edit action for a single [profile].
+class ProfileDetailsBody extends ConsumerWidget {
+  const ProfileDetailsBody({
+    super.key,
     required this.profile,
     required this.phoneNumber,
     required this.emailAddress,
+    this.showAddAnother = true,
   });
 
   final ProfileEntity profile;
   final String? phoneNumber;
   final String? emailAddress;
+  final bool showAddAnother;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -149,7 +153,7 @@ class _ProfileDetailsBody extends ConsumerWidget {
                     context.defaultPaddingSc,
                     context.scaleHeight(16),
                     context.defaultPaddingSc,
-                    context.scaleHeight(140),
+                    context.scaleHeight(210),
                   ),
                   child: Column(
                     children: [
@@ -238,6 +242,12 @@ class _ProfileDetailsBody extends ConsumerWidget {
             label: l10n.t(L10nKeys.profileEdit),
             onPressed: () =>
                 context.push(RouteNames.createProfile, extra: profile),
+            secondaryLabel: showAddAnother
+                ? l10n.t(L10nKeys.profileAddAnother)
+                : null,
+            onSecondaryPressed: showAddAnother
+                ? () => context.push(RouteNames.createProfile)
+                : null,
           ),
         ),
       ],
@@ -466,10 +476,17 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _BottomCta extends StatelessWidget {
-  const _BottomCta({required this.label, required this.onPressed});
+  const _BottomCta({
+    required this.label,
+    required this.onPressed,
+    this.secondaryLabel,
+    this.onSecondaryPressed,
+  });
 
   final String label;
   final VoidCallback onPressed;
+  final String? secondaryLabel;
+  final VoidCallback? onSecondaryPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -493,10 +510,24 @@ class _BottomCta extends StatelessWidget {
       //     ],
       //   ),
       // ),
-      child: AppButton(
-        label: label,
-        onPressed: onPressed,
-        btnStyle: AppButtonStyle.primary,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AppButton(
+            label: label,
+            onPressed: onPressed,
+            btnStyle: AppButtonStyle.primary,
+          ),
+          if (secondaryLabel != null && onSecondaryPressed != null) ...[
+            SizedBox(height: context.scaleHeight(12)),
+            AppButton(
+              label: secondaryLabel!,
+              icon: Icons.person_add_alt_1_outlined,
+              onPressed: onSecondaryPressed,
+              btnStyle: AppButtonStyle.primary,
+            ),
+          ],
+        ],
       ),
     );
   }

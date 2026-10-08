@@ -47,7 +47,8 @@ class IntelliProvePostMessageParser {
             ? dataMap['hasResults'] as bool
             : null,
         cameraStatus: dataMap['status']?.toString(),
-        uuid: map['uuid']?.toString() ??
+        uuid:
+            map['uuid']?.toString() ??
             dataMap['face_scan_id']?.toString() ??
             dataMap['faceScanId']?.toString(),
         raw: map,

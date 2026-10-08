@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mime_health/core/config/app_config.dart';
 import 'package:mime_health/core/extensions/context_extensions.dart';
 import 'package:mime_health/core/theme/app_colors.dart';
 import 'package:mime_health/core/widgets/app_button.dart';
+import 'package:mime_health/core/widgets/app_dropdown_field.dart';
 import 'package:mime_health/core/widgets/app_network_image.dart';
 
 import '../../../../core/localization/l10n_keys.dart';
@@ -12,8 +14,10 @@ import '../../../language/presentation/provider/language_provider.dart';
 import '../../domain/entity/subscription_entity.dart';
 import '../provider/subscription_provider.dart';
 
+enum _PlansTab { selectPlan, addOns }
+
 /// Lists Mime subscription plans and submits the user's selection.
-class SubscriptionPlansScreen extends ConsumerWidget {
+class SubscriptionPlansScreen extends HookConsumerWidget {
   const SubscriptionPlansScreen({super.key});
 
   @override
@@ -21,6 +25,7 @@ class SubscriptionPlansScreen extends ConsumerWidget {
     final l10n = ref.watch(languageControllerProvider);
     final state = ref.watch(subscriptionPlansNotifierProvider);
     final notifier = ref.read(subscriptionPlansNotifierProvider.notifier);
+    final tab = useState(_PlansTab.selectPlan);
 
     Future<void> selectAndSubmit(SubscriptionPlanEntity plan) async {
       notifier.selectPlanCode(plan.code);
@@ -39,6 +44,20 @@ class SubscriptionPlansScreen extends ConsumerWidget {
               onBack: () => context.pop(),
               onClose: () => context.pop(false),
             ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                context.defaultPaddingSc,
+                context.scaleHeight(4),
+                context.defaultPaddingSc,
+                context.scaleHeight(12),
+              ),
+              child: _PlansTabSwitcher(
+                value: tab.value,
+                selectPlanLabel: l10n.t(L10nKeys.subscriptionSelectPlanTab),
+                addOnsLabel: l10n.t(L10nKeys.subscriptionAddOnsTab),
+                onChanged: (value) => tab.value = value,
+              ),
+            ),
             if (!state.isLoading &&
                 !(state.errorMessage != null && state.plans.isEmpty))
               Padding(
@@ -48,15 +67,28 @@ class SubscriptionPlansScreen extends ConsumerWidget {
                   context.defaultPaddingSc,
                   context.scaleHeight(12),
                 ),
-                child: _BillingToggle(
+                child: AppDropdownField<BillingInterval>(
+                  label: l10n.t(L10nKeys.subscriptionBillingPeriod),
                   value: state.billingInterval,
-                  monthlyLabel: l10n.t(L10nKeys.subscriptionMonthly),
-                  annualLabel: l10n.t(L10nKeys.subscriptionAnnual),
-                  onChanged: notifier.setBillingInterval,
+                  items: BillingInterval.values,
+                  itemLabelBuilder: (interval) => l10n.t(
+                    interval == BillingInterval.annual
+                        ? L10nKeys.subscriptionAnnual
+                        : L10nKeys.subscriptionMonthly,
+                  ),
+                  enabled: !state.isSubmitting,
+                  onChanged: (value) {
+                    if (value != null) notifier.setBillingInterval(value);
+                  },
                 ),
               ),
             Expanded(
-              child: state.isLoading
+              child: tab.value == _PlansTab.addOns
+                  ? const ColoredBox(
+                      color: Colors.white,
+                      child: SizedBox.expand(),
+                    )
+                  : state.isLoading
                   ? const Center(
                       child: CircularProgressIndicator(
                         color: AppColors.primaryContainer,
@@ -150,18 +182,18 @@ class _PackagesTopBar extends StatelessWidget {
   }
 }
 
-class _BillingToggle extends StatelessWidget {
-  const _BillingToggle({
+class _PlansTabSwitcher extends StatelessWidget {
+  const _PlansTabSwitcher({
     required this.value,
-    required this.monthlyLabel,
-    required this.annualLabel,
+    required this.selectPlanLabel,
+    required this.addOnsLabel,
     required this.onChanged,
   });
 
-  final BillingInterval value;
-  final String monthlyLabel;
-  final String annualLabel;
-  final ValueChanged<BillingInterval> onChanged;
+  final _PlansTab value;
+  final String selectPlanLabel;
+  final String addOnsLabel;
+  final ValueChanged<_PlansTab> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -176,16 +208,16 @@ class _BillingToggle extends StatelessWidget {
         children: [
           Expanded(
             child: _Segment(
-              label: monthlyLabel,
-              selected: value == BillingInterval.monthly,
-              onTap: () => onChanged(BillingInterval.monthly),
+              label: selectPlanLabel,
+              selected: value == _PlansTab.selectPlan,
+              onTap: () => onChanged(_PlansTab.selectPlan),
             ),
           ),
           Expanded(
             child: _Segment(
-              label: annualLabel,
-              selected: value == BillingInterval.annual,
-              onTap: () => onChanged(BillingInterval.annual),
+              label: addOnsLabel,
+              selected: value == _PlansTab.addOns,
+              onTap: () => onChanged(_PlansTab.addOns),
             ),
           ),
         ],

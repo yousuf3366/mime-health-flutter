@@ -123,7 +123,9 @@ class FaceScanRepositoryImpl extends BaseRepository
   }
 
   @override
-  Future<Result<FaceScanVitalsResult?>> getLatestMimeScan({int? profileId}) async {
+  Future<Result<FaceScanVitalsResult?>> getLatestMimeScan({
+    int? profileId,
+  }) async {
     final result = await safeApiCall(() async {
       final response = await _mimeRemote.getLatestScan(profileId: profileId);
       if (!response.success) {

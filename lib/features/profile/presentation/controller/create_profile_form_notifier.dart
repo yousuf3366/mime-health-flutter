@@ -143,8 +143,8 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
         _ => ProfileLifestyle.moderate,
       },
       profileKind: switch (profile.profileKind.toLowerCase()) {
-        AppConstants.profileKindFamily => ProfileKind.family,
-        AppConstants.profileKindOther => ProfileKind.other,
+        AppConstants.profileKindFamily ||
+        AppConstants.profileKindOther => ProfileKind.family,
         _ => ProfileKind.self,
       },
       currentSmoker: profile.currentSmoker,
@@ -229,7 +229,13 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
   }
 
   void setProfileKind(ProfileKind value) {
-    updateField(profileKind: value, errorMessage: null);
+    updateField(
+      profileKind: value,
+      phoneError: null,
+      emailError: null,
+      imageEmbeddingError: null,
+      errorMessage: null,
+    );
   }
 
   void setCurrentSmoker(bool value) {
@@ -263,12 +269,13 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
   }
 
   bool validate({required bool requireFace}) {
+    final isSelf = state.profileKind == ProfileKind.self;
     final displayName = (state.displayName ?? '').trim();
     final displayNameError = displayName.isEmpty
         ? 'Display name is required'
         : null;
-    final phoneError = Validators.optionalPhone(state.phone);
-    final emailError = Validators.optionalEmail(state.email);
+    final phoneError = isSelf ? Validators.optionalPhone(state.phone) : null;
+    final emailError = isSelf ? Validators.optionalEmail(state.email) : null;
     final bloodGroupError = state.bloodGroup == null
         ? 'Blood group is required'
         : null;
@@ -279,8 +286,11 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
         ? 'Date of birth is required'
         : null;
     final sexError = state.sex == null ? 'Sex is required' : null;
-    final imageEmbeddingError = requireFace &&
-            (state.imageEmbedding == null || state.imageEmbedding!.trim().isEmpty)
+    final imageEmbeddingError =
+        requireFace &&
+            isSelf &&
+            (state.imageEmbedding == null ||
+                state.imageEmbedding!.trim().isEmpty)
         ? 'Face registration is required'
         : null;
 
@@ -351,18 +361,20 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
     if (dob == null || sex == null || displayName.isEmpty) return null;
 
     final dateOfBirth = AppDatePicker.formatForServer(dob)!;
+    final isSelf = state.profileKind == ProfileKind.self;
 
     return ProfileDraftEntity(
       profileKind: switch (state.profileKind) {
         ProfileKind.self => AppConstants.profileKindSelf,
         ProfileKind.family => AppConstants.profileKindFamily,
-        ProfileKind.other => AppConstants.profileKindOther,
       },
       displayName: displayName,
-      phone: (state.phone ?? '').trim().isEmpty
+      phone: !isSelf || (state.phone ?? '').trim().isEmpty
           ? null
           : state.phone!.trim().replaceAll(RegExp(r'[\s-]'), ''),
-      email: (state.email ?? '').trim().isEmpty ? null : state.email!.trim(),
+      email: !isSelf || (state.email ?? '').trim().isEmpty
+          ? null
+          : state.email!.trim(),
       dateOfBirth: dateOfBirth,
       sex: switch (sex) {
         ProfileSex.male => AppConstants.profileSexMale,
@@ -382,7 +394,7 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
       historyOfHypertension: state.historyOfHypertension,
       historyOfHighGlucoseLevels: state.historyOfHighGlucoseLevels,
       privacyLevel: AppConstants.profilePrivacyFullSharing,
-      imageEmbedding: state.imageEmbedding,
+      imageEmbedding: isSelf ? state.imageEmbedding : null,
     );
   }
 

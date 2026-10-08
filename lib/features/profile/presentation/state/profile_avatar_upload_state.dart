@@ -54,10 +54,10 @@ class ProfileAvatarUploadState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        pickedMedia,
-        uploadedAvatarPath,
-        successMessage,
-        errorMessage,
-      ];
+    status,
+    pickedMedia,
+    uploadedAvatarPath,
+    successMessage,
+    errorMessage,
+  ];
 }

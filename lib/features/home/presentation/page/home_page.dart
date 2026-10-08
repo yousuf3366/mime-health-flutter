@@ -6,7 +6,9 @@ import 'package:mime_health/core/theme/app_colors.dart';
 import 'package:mime_health/core/widgets/app_bottom_nav_bar.dart';
 
 import '../../../../core/localization/l10n_keys.dart';
+import '../../../face_scan/presentation/provider/face_scan_provider.dart';
 import '../../../face_scan/presentation/screen/face_scan_pre_screen.dart';
+import '../../../face_scan/presentation/screen/face_scan_profile_select_screen.dart';
 import '../../../language/presentation/provider/language_provider.dart';
 import '../../../profile/presentation/screen/profile_details_screen.dart';
 import '../screen/health_hub_screen.dart';
@@ -63,11 +65,16 @@ class HomePage extends HookConsumerWidget {
             selected: selectedTab.value,
             onSelected: (item) {
               if (item == AppBottomNavItem.trends) {
-                ref.read(dialogServiceProvider).showComingSoon(
+                ref
+                    .read(dialogServiceProvider)
+                    .showComingSoon(
                       title: l10n.t(L10nKeys.comingSoonTitle),
                       message: l10n.t(L10nKeys.comingSoonMessage),
                       okLabel: l10n.t(L10nKeys.comingSoonOk),
                     );
+              }
+              if (item == AppBottomNavItem.faceScan) {
+                ref.read(faceScanSelectedProfileProvider.notifier).state = null;
               }
               selectedTab.value = item;
             },
@@ -84,7 +91,7 @@ class HomePage extends HookConsumerWidget {
       case AppBottomNavItem.healthHub:
         return const HealthHubScreen();
       case AppBottomNavItem.faceScan:
-        return const FaceScanPreScreen();
+        return const _FaceScanTab();
       case AppBottomNavItem.trends:
         return const _ComingSoonBody(
           icon: Icons.show_chart,
@@ -93,6 +100,18 @@ class HomePage extends HookConsumerWidget {
       case AppBottomNavItem.profile:
         return const ProfileDetailsScreen();
     }
+  }
+}
+
+class _FaceScanTab extends ConsumerWidget {
+  const _FaceScanTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected = ref.watch(faceScanSelectedProfileProvider);
+    return selected == null
+        ? const FaceScanProfileSelectScreen()
+        : FaceScanPreScreen(key: ValueKey(selected.id));
   }
 }
 

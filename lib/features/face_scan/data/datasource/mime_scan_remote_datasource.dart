@@ -49,7 +49,7 @@ class MimeScanRemoteDatasource {
       data: request.toJson(),
     );
     return MimeScanStoreResponseModel.fromJson(_asJsonMap(response.data));
-  //  return MimeScanStoreResponseModel.fromJson(_vitalsFromSampleScanJson());
+    //  return MimeScanStoreResponseModel.fromJson(_vitalsFromSampleScanJson());
   }
 
   /// GET `/api/v1/scans/latest` — same `data` shape as store-scan response.
@@ -67,10 +67,7 @@ class MimeScanRemoteDatasource {
   }) async {
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.scans,
-      queryParameters: {
-        'profile_id': profileId,
-        'per_page': perPage,
-      },
+      queryParameters: {'profile_id': profileId, 'per_page': perPage},
     );
     return MimeScansListResponseModel.fromJson(_asJsonMap(response.data));
   }

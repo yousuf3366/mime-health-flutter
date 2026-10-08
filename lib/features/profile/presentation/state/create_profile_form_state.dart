@@ -8,7 +8,7 @@ enum ProfileSex { male, female }
 
 enum ProfileLifestyle { active, moderate, inactive }
 
-enum ProfileKind { self, family, other }
+enum ProfileKind { self, family }
 
 class CreateProfileFormState extends Equatable {
   const CreateProfileFormState({

@@ -76,8 +76,9 @@ class FaceScanHistoryScreen extends ConsumerWidget {
                 return _ScanHistoryCard(
                   scan: scan,
                   heartRateLabel: l10n.t(L10nKeys.healthDashboardHeartRate),
-                  bloodPressureLabel:
-                      l10n.t(L10nKeys.healthDashboardBloodPressure),
+                  bloodPressureLabel: l10n.t(
+                    L10nKeys.healthDashboardBloodPressure,
+                  ),
                   respRateLabel: l10n.t(L10nKeys.healthDashboardRespRate),
                   onTap: () {
                     Navigator.of(context).push(
@@ -120,9 +121,9 @@ class _ScanHistoryCard extends StatelessWidget {
     final quality = (scan.qualityStatus?.trim().isNotEmpty ?? false)
         ? scan.qualityStatus!.toUpperCase()
         : '—';
-    final dateText = DateFormat('MMM d, yyyy · HH:mm').format(
-      scan.timestamp.toLocal(),
-    );
+    final dateText = DateFormat(
+      'MMM d, yyyy · HH:mm',
+    ).format(scan.timestamp.toLocal());
 
     return Material(
       color: Colors.transparent,
@@ -276,11 +277,7 @@ class _HistoryMessageBody extends StatelessWidget {
               ),
             ),
             SizedBox(height: context.scaleHeight(16)),
-            AppButton(
-              expand: false,
-              label: actionLabel,
-              onPressed: onAction,
-            ),
+            AppButton(expand: false, label: actionLabel, onPressed: onAction),
           ],
         ),
       ),

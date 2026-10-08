@@ -13,8 +13,8 @@ import '../../domain/usecase/face_scan_usecase.dart';
 
 final intelliProveRemoteDatasourceProvider =
     Provider<IntelliProveRemoteDatasource>(
-  (ref) => IntelliProveRemoteDatasource(ref.watch(intelliProveDioProvider)),
-);
+      (ref) => IntelliProveRemoteDatasource(ref.watch(intelliProveDioProvider)),
+    );
 
 final mimeScanRemoteDatasourceProvider = Provider<MimeScanRemoteDatasource>(
   (ref) => MimeScanRemoteDatasource(ref.watch(dioProvider)),
@@ -25,9 +25,8 @@ final intelliProveWebViewBridgeProvider = Provider<IntelliProveWebViewBridge>(
 );
 
 final faceScanPluginGatewayProvider = Provider<FaceScanPluginGateway>(
-  (ref) => IntelliProvePluginGateway(
-    ref.watch(intelliProveWebViewBridgeProvider),
-  ),
+  (ref) =>
+      IntelliProvePluginGateway(ref.watch(intelliProveWebViewBridgeProvider)),
 );
 
 final faceScanRepositoryProvider = Provider<FaceScanRepository>(
@@ -40,8 +39,9 @@ final faceScanRepositoryProvider = Provider<FaceScanRepository>(
 
 final ensureIntelliProveUserUseCaseProvider =
     Provider<EnsureIntelliProveUserUseCase>(
-  (ref) => EnsureIntelliProveUserUseCase(ref.watch(faceScanRepositoryProvider)),
-);
+      (ref) =>
+          EnsureIntelliProveUserUseCase(ref.watch(faceScanRepositoryProvider)),
+    );
 
 final getFaceScanUrlUseCaseProvider = Provider<GetFaceScanUrlUseCase>(
   (ref) => GetFaceScanUrlUseCase(ref.watch(faceScanRepositoryProvider)),
@@ -49,23 +49,23 @@ final getFaceScanUrlUseCaseProvider = Provider<GetFaceScanUrlUseCase>(
 
 final getIntelliProveUserIdUseCaseProvider =
     Provider<GetIntelliProveUserIdUseCase>(
-  (ref) =>
-      GetIntelliProveUserIdUseCase(ref.watch(faceScanRepositoryProvider)),
-);
+      (ref) =>
+          GetIntelliProveUserIdUseCase(ref.watch(faceScanRepositoryProvider)),
+    );
 
 final saveFaceScanQuestionAnswersManyUseCaseProvider =
     Provider<SaveFaceScanQuestionAnswersManyUseCase>(
-  (ref) => SaveFaceScanQuestionAnswersManyUseCase(
-    ref.watch(faceScanRepositoryProvider),
-  ),
-);
+      (ref) => SaveFaceScanQuestionAnswersManyUseCase(
+        ref.watch(faceScanRepositoryProvider),
+      ),
+    );
 
 final saveFaceScanQuestionAnswersUseCaseProvider =
     Provider<SaveFaceScanQuestionAnswersUseCase>(
-  (ref) => SaveFaceScanQuestionAnswersUseCase(
-    ref.watch(faceScanRepositoryProvider),
-  ),
-);
+      (ref) => SaveFaceScanQuestionAnswersUseCase(
+        ref.watch(faceScanRepositoryProvider),
+      ),
+    );
 
 final storeMimeFaceScanUseCaseProvider = Provider<StoreMimeFaceScanUseCase>(
   (ref) => StoreMimeFaceScanUseCase(ref.watch(faceScanRepositoryProvider)),
@@ -82,21 +82,21 @@ final getMimeScansUseCaseProvider = Provider<GetMimeScansUseCase>(
 /// Latest Mime scan for the Health Hub tab.
 final latestMimeScanProvider =
     FutureProvider.autoDispose<FaceScanVitalsResult?>((ref) async {
-  final result = await ref.watch(getLatestMimeScanUseCaseProvider).call();
-  return result.when(
-    success: (data) => data,
-    failure: (error) => throw error,
-  );
-});
+      final result = await ref.watch(getLatestMimeScanUseCaseProvider).call();
+      return result.when(
+        success: (data) => data,
+        failure: (error) => throw error,
+      );
+    });
 
 /// Scan history for [profileId] (`GET /api/v1/scans`).
 final mimeScanHistoryProvider = FutureProvider.autoDispose
     .family<List<FaceScanVitalsResult>, int>((ref, profileId) async {
-  final result = await ref.watch(getMimeScansUseCaseProvider).call(
-        profileId: profileId,
+      final result = await ref
+          .watch(getMimeScansUseCaseProvider)
+          .call(profileId: profileId);
+      return result.when(
+        success: (data) => data,
+        failure: (error) => throw error,
       );
-  return result.when(
-    success: (data) => data,
-    failure: (error) => throw error,
-  );
-});
+    });

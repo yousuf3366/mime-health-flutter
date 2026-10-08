@@ -7,6 +7,7 @@ class RouteNames {
   static const String home = '/home';
   static const String faceScan = '/home?tab=face-scan';
   static const String createProfile = '/create-profile';
+  static const String profileView = '/profile/view';
   static const String subscriptionPlans = '/subscription/plans';
   static const String termsAndConditions = '/terms-and-conditions';
   static const String dataSharingConsent = '/data-sharing-consent';

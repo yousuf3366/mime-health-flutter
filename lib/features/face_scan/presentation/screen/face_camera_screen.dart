@@ -13,11 +13,7 @@ enum FaceCameraMode { capture, verify }
 
 /// Camera screen for registering or verifying a face embedding.
 class FaceCameraScreen extends ConsumerStatefulWidget {
-  const FaceCameraScreen({
-    super.key,
-    required this.mode,
-    this.storedEmbedding,
-  });
+  const FaceCameraScreen({super.key, required this.mode, this.storedEmbedding});
 
   final FaceCameraMode mode;
   final String? storedEmbedding;
@@ -208,7 +204,9 @@ class _FaceCameraScreenState extends ConsumerState<FaceCameraScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: _processing ? null : () => Navigator.pop(context),
+                    onPressed: _processing
+                        ? null
+                        : () => Navigator.pop(context),
                     icon: const Icon(Icons.arrow_back),
                     color: AppColors.primaryContainer,
                   ),
@@ -224,7 +222,9 @@ class _FaceCameraScreenState extends ConsumerState<FaceCameraScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: _processing || _initializing ? null : _switchCamera,
+                    onPressed: _processing || _initializing
+                        ? null
+                        : _switchCamera,
                     icon: const Icon(Icons.cameraswitch_outlined),
                     color: AppColors.primaryContainer,
                   ),
@@ -260,14 +260,16 @@ class _FaceCameraScreenState extends ConsumerState<FaceCameraScreen> {
                         width: double.infinity,
                         padding: EdgeInsets.all(context.scaleWidth(12)),
                         decoration: BoxDecoration(
-                          color: (_verifyFailed == true
-                                  ? AppColors.error
-                                  : AppColors.glass)
-                              .withValues(
-                            alpha: _verifyFailed == true ? 0.15 : 1,
+                          color:
+                              (_verifyFailed == true
+                                      ? AppColors.error
+                                      : AppColors.glass)
+                                  .withValues(
+                                    alpha: _verifyFailed == true ? 0.15 : 1,
+                                  ),
+                          borderRadius: BorderRadius.circular(
+                            context.scaleWidth(12),
                           ),
-                          borderRadius:
-                              BorderRadius.circular(context.scaleWidth(12)),
                           border: Border.all(
                             color: _verifyFailed == true
                                 ? AppColors.error.withValues(alpha: 0.5)
@@ -307,7 +309,8 @@ class _FaceCameraScreenState extends ConsumerState<FaceCameraScreen> {
                       label: actionLabel,
                       icon: Icons.face_retouching_natural,
                       isLoading: _processing,
-                      isEnabled: !_initializing &&
+                      isEnabled:
+                          !_initializing &&
                           _controller?.value.isInitialized == true,
                       onPressed: _capture,
                     ),
@@ -344,7 +347,8 @@ class _CameraPreviewCard extends StatelessWidget {
         border: Border.all(color: AppColors.glassBorder),
       ),
       clipBehavior: Clip.antiAlias,
-      child: initializing || controller == null || !controller!.value.isInitialized
+      child:
+          initializing || controller == null || !controller!.value.isInitialized
           ? Center(
               child: CircularProgressIndicator(
                 color: AppColors.primaryContainer,
@@ -360,7 +364,9 @@ class _CameraPreviewCard extends StatelessWidget {
                     height: context.scaleWidth(280),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: AppColors.primaryContainer.withValues(alpha: 0.8),
+                        color: AppColors.primaryContainer.withValues(
+                          alpha: 0.8,
+                        ),
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(radius),

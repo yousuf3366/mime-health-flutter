@@ -45,10 +45,7 @@ class _FaceScanQuestionnaireScreenState
 
   void _select(int value) {
     _answers.add(
-      FaceScanQuestionAnswer(
-        lookupKey: _current.lookupKey,
-        value: value,
-      ),
+      FaceScanQuestionAnswer(lookupKey: _current.lookupKey, value: value),
     );
     _goNext();
   }
@@ -111,7 +108,7 @@ class _FaceScanQuestionnaireScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: context.defaultPaddingSc,),
+              SizedBox(height: context.defaultPaddingSc),
               Center(
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -163,9 +160,7 @@ class _FaceScanQuestionnaireScreenState
               ...List.generate(_current.options.length, (i) {
                 final option = _current.options[i];
                 return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: context.scaleHeight(10),
-                  ),
+                  padding: EdgeInsets.only(bottom: context.scaleHeight(10)),
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(

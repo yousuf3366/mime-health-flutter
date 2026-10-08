@@ -16,6 +16,7 @@ import '../../../profile/presentation/provider/profile_provider.dart';
 import '../../../subscription/presentation/provider/subscription_provider.dart';
 import '../../presentation/screen/face_camera_screen.dart';
 import '../provider/face_scan_provider.dart';
+import 'face_scan_profile_select_screen.dart';
 
 /// Consent + tips shown before opening the face-scan camera.
 class FaceScanPreScreen extends HookConsumerWidget {
@@ -27,6 +28,7 @@ class FaceScanPreScreen extends HookConsumerWidget {
     final flowState = ref.watch(faceScanFlowNotifierProvider);
     final mySubscription = ref.watch(mySubscriptionProvider);
     final dataSharingConsent = useState(true);
+    final selectedProfile = ref.watch(faceScanSelectedProfileProvider);
 
     final hasPlan = mySubscription.maybeWhen(
       data: (data) => data?.hasActivePlan == true,
@@ -75,6 +77,22 @@ class FaceScanPreScreen extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (selectedProfile != null) ...[
+              _SelectedProfileBar(
+                profile: selectedProfile,
+                changeLabel: l10n.t(L10nKeys.faceScanChangeProfile),
+                onChange: flowState.isBusy
+                    ? null
+                    : () =>
+                          ref
+                                  .read(
+                                    faceScanSelectedProfileProvider.notifier,
+                                  )
+                                  .state =
+                              null,
+              ),
+              SizedBox(height: context.scaleHeight(12)),
+            ],
             _HeroCard(
               title: l10n.t(L10nKeys.faceScanTitle),
               intro: l10n.t(L10nKeys.faceScanIntro),
@@ -129,36 +147,49 @@ class FaceScanPreScreen extends HookConsumerWidget {
               isEnabled: dataSharingConsent.value && !flowState.isBusy,
               isLoading: flowState.isBusy,
               onPressed: () async {
-                final profiles = await ref.read(profilesProvider.future);
-                if (profiles.isEmpty) {
+                final profile =
+                    selectedProfile ??
+                    await () async {
+                      final profiles = await ref.read(profilesProvider.future);
+                      return profiles.isEmpty
+                          ? null
+                          : _primaryProfile(profiles);
+                    }();
+                if (profile == null) {
                   ref
                       .read(snackbarServiceProvider)
                       .showError(l10n.t(L10nKeys.faceRecognitionNoStoredFace));
                   return;
                 }
-                final profile = _primaryProfile(profiles);
-                final storedEmbedding = profile.imageEmbedding;
-                if (storedEmbedding == null || storedEmbedding.trim().isEmpty) {
+                final storedEmbedding = profile.imageEmbedding?.trim() ?? '';
+                final isSelf =
+                    profile.profileKind == AppConstants.profileKindSelf;
+
+                // Family/other profiles are created without a face, so only
+                // verify when a face is on file; self profiles always need one.
+                if (storedEmbedding.isEmpty && isSelf) {
                   ref
                       .read(snackbarServiceProvider)
                       .showError(l10n.t(L10nKeys.faceRecognitionNoStoredFace));
                   return;
                 }
 
-                if (!context.mounted) return;
-                final verified = await Navigator.of(context).push<bool>(
-                  MaterialPageRoute(
-                    builder: (_) => FaceCameraScreen(
-                      mode: FaceCameraMode.verify,
-                      storedEmbedding: storedEmbedding,
+                if (storedEmbedding.isNotEmpty) {
+                  if (!context.mounted) return;
+                  final verified = await Navigator.of(context).push<bool>(
+                    MaterialPageRoute(
+                      builder: (_) => FaceCameraScreen(
+                        mode: FaceCameraMode.verify,
+                        storedEmbedding: storedEmbedding,
+                      ),
                     ),
-                  ),
-                );
-                if (verified != true || !context.mounted) return;
+                  );
+                  if (verified != true || !context.mounted) return;
+                }
 
                 final result = await ref
                     .read(faceScanFlowNotifierProvider.notifier)
-                    .startScan();
+                    .startScan(forProfile: profile);
                 if (!context.mounted) return;
                 if (result == FaceScanStartResult.needsPlan) {
                   ref
@@ -198,6 +229,61 @@ ProfileEntity _primaryProfile(List<ProfileEntity> profiles) {
     }
   }
   return profiles.first;
+}
+
+class _SelectedProfileBar extends StatelessWidget {
+  const _SelectedProfileBar({
+    required this.profile,
+    required this.changeLabel,
+    required this.onChange,
+  });
+
+  final ProfileEntity profile;
+  final String changeLabel;
+  final VoidCallback? onChange;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          onPressed: onChange,
+          icon: const Icon(Icons.arrow_back),
+          color: AppColors.primaryContainer,
+          tooltip: changeLabel,
+        ),
+        ProfileAvatar(
+          name: profile.displayName,
+          url: profile.avatarPath,
+          size: context.scaleWidth(36),
+        ),
+        SizedBox(width: context.scaleWidth(10)),
+        Expanded(
+          child: Text(
+            profile.displayName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: context.bodyFontSize,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: onChange,
+          child: Text(
+            changeLabel,
+            style: TextStyle(
+              color: AppColors.primaryContainer,
+              fontSize: context.smallFontSize,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class _PlanBanner extends StatelessWidget {

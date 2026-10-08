@@ -147,7 +147,7 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
                     iconAsset: 'assets/images/spo2_icon.svg',
                     title: l10n.t(L10nKeys.healthResonantBreathingScore),
                     value: '${vitals.resonantBreathingScore}',
-                   // badge: quality,
+                    // badge: quality,
                     badge: null,
                   ),
                   if (vitals.heartRateVariability != null)
@@ -182,7 +182,8 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
                 //   RouteNames.scanMetrics,
                 //   extra: vitals,
                 // ),
-                onUpgrade: () => _showComingSoon(ref),
+                // onUpgrade: () => _showComingSoon(ref),
+                onUpgrade: () => context.push(RouteNames.subscriptionPlans),
               ),
               SizedBox(height: context.scaleHeight(20)),
               AppButton(

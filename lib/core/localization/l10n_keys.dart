@@ -79,6 +79,8 @@ class L10nKeys {
   // Profile details
   static const profileDetailsTitle = 'mobile.profile.details_title';
   static const profileEdit = 'mobile.profile.edit';
+  static const profileAddAnother = 'mobile.profile.add_another';
+  static const profileView = 'mobile.profile.view';
   static const profileSave = 'mobile.profile.save';
   static const profileAddPhoto = 'mobile.profile.add_photo';
   static const profileUpdatePhoto = 'mobile.profile.update_photo';
@@ -136,6 +138,14 @@ class L10nKeys {
       'mobile.face_scan.results_loading_title';
   static const faceScanResultsLoadingSubtitle =
       'mobile.face_scan.results_loading_subtitle';
+  static const faceScanSelectProfileTitle =
+      'mobile.face_scan.select_profile_title';
+  static const faceScanSelectProfileSubtitle =
+      'mobile.face_scan.select_profile_subtitle';
+  static const faceScanSelectProfileEmpty =
+      'mobile.face_scan.select_profile_empty';
+  static const faceScanChangeProfile = 'mobile.face_scan.change_profile';
+  static const profileDateOfBirth = 'mobile.profile.date_of_birth';
 
   // Face recognition
   static const faceRecognitionCaptureTitle =
@@ -237,6 +247,9 @@ class L10nKeys {
   static const subscriptionDevices = 'mobile.subscription.devices';
   static const subscriptionPayNow = 'mobile.subscription.pay_now';
   static const subscriptionHealthCheckup = 'mobile.subscription.health_checkup';
+  static const subscriptionSelectPlanTab = 'mobile.subscription.select_plan_tab';
+  static const subscriptionAddOnsTab = 'mobile.subscription.add_ons_tab';
+  static const subscriptionBillingPeriod = 'mobile.subscription.billing_period';
 
   // Settings
   static const language = 'mobile.settings.language';

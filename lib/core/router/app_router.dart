@@ -11,6 +11,7 @@ import '../../features/login/presentation/page/login_page.dart';
 import '../../features/login/presentation/provider/login_provider.dart';
 import '../../features/profile/presentation/page/create_profile_page.dart';
 import '../../features/profile/domain/entity/profile_entity.dart';
+import '../../features/profile/presentation/screen/profile_view_screen.dart';
 import '../../features/splash/presentation/page/splash_page.dart';
 import '../../features/subscription/presentation/screen/subscription_plans_screen.dart';
 import '../../features/terms_and_condition/domain/entity/consent_document_codes.dart';
@@ -60,6 +61,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               ? state.extra! as ProfileEntity
               : null,
         ),
+      ),
+      GoRoute(
+        path: RouteNames.profileView,
+        name: 'profileView',
+        builder: (context, state) => state.extra is ProfileEntity
+            ? ProfileViewScreen(profile: state.extra! as ProfileEntity)
+            : const _NotFoundPage(),
       ),
       GoRoute(
         path: RouteNames.subscriptionPlans,
