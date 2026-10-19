@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:mime_health/core/config/app_config.dart';
 import 'package:mime_health/core/extensions/context_extensions.dart';
 import 'package:mime_health/core/theme/app_colors.dart';
 import 'package:mime_health/core/widgets/app_button.dart';
 import 'package:mime_health/core/widgets/app_dropdown_field.dart';
-import 'package:mime_health/core/widgets/app_network_image.dart';
-
 import '../../../../core/localization/l10n_keys.dart';
+import '../../../../core/router/route_names.dart';
 import '../../../language/presentation/provider/language_provider.dart';
 import '../../domain/entity/subscription_entity.dart';
 import '../provider/subscription_provider.dart';
+import '../widget/plan_artwork.dart';
+import 'subscription_payment_screen.dart' show addonsTotal;
 
 enum _PlansTab { selectPlan, addOns }
 
@@ -25,12 +25,58 @@ class SubscriptionPlansScreen extends HookConsumerWidget {
     final l10n = ref.watch(languageControllerProvider);
     final state = ref.watch(subscriptionPlansNotifierProvider);
     final notifier = ref.read(subscriptionPlansNotifierProvider.notifier);
+    // Watched here (not only in the Add-ons tab) so the auto-disposed add-ons
+    // selection survives tab switches and the payment screen.
+    ref.watch(subscriptionAddonsNotifierProvider);
+    final addonsNotifier = ref.read(
+      subscriptionAddonsNotifierProvider.notifier,
+    );
     final tab = useState(_PlansTab.selectPlan);
+    final busy = state.isStartingTrial;
 
-    Future<void> selectAndSubmit(SubscriptionPlanEntity plan) async {
+    useEffect(() {
+      Future.microtask(() {
+        notifier.loadPlans();
+        addonsNotifier.load();
+      });
+      return null;
+    }, const []);
+
+    Future<void> openAddonPayment(
+      List<SubscriptionServiceOfferEntity> addons,
+    ) async {
+      final paid = await context.push<bool>(
+        RouteNames.subscriptionPayment,
+        extra: addons,
+      );
+      if (paid == true && context.mounted) {
+        addonsNotifier.clearSelection();
+        context.pop(true);
+      }
+    }
+
+    Future<void> openPayment(SubscriptionPlanEntity plan) async {
       notifier.selectPlanCode(plan.code);
-      final ok = await notifier.submitSelectedPlan();
-      if (ok && context.mounted) {
+      final paid = await context.push<bool>(
+        RouteNames.subscriptionPayment,
+        extra: plan.code,
+      );
+      if (paid == true && context.mounted) {
+        context.pop(true);
+      }
+    }
+
+    Future<void> startTrial(SubscriptionPlanEntity plan) async {
+      final ok = await notifier.startTrial(plan);
+      if (ok && context.mounted) context.pop(true);
+    }
+
+    Future<void> openDetails(SubscriptionPlanEntity plan) async {
+      final paid = await context.push<bool>(
+        RouteNames.subscriptionPlanDetails,
+        extra: plan,
+      );
+      if (paid == true && context.mounted) {
         context.pop(true);
       }
     }
@@ -58,8 +104,9 @@ class SubscriptionPlansScreen extends HookConsumerWidget {
                 onChanged: (value) => tab.value = value,
               ),
             ),
-            if (!state.isLoading &&
-                !(state.errorMessage != null && state.plans.isEmpty))
+            if (tab.value == _PlansTab.addOns ||
+                (!state.isLoading &&
+                    !(state.errorMessage != null && state.plans.isEmpty)))
               Padding(
                 padding: EdgeInsets.fromLTRB(
                   context.defaultPaddingSc,
@@ -76,7 +123,7 @@ class SubscriptionPlansScreen extends HookConsumerWidget {
                         ? L10nKeys.subscriptionAnnual
                         : L10nKeys.subscriptionMonthly,
                   ),
-                  enabled: !state.isSubmitting,
+                  enabled: !busy,
                   onChanged: (value) {
                     if (value != null) notifier.setBillingInterval(value);
                   },
@@ -84,9 +131,9 @@ class SubscriptionPlansScreen extends HookConsumerWidget {
               ),
             Expanded(
               child: tab.value == _PlansTab.addOns
-                  ? const ColoredBox(
-                      color: Colors.white,
-                      child: SizedBox.expand(),
+                  ? _AddonsTab(
+                      billingInterval: state.billingInterval,
+                      onCheckout: openAddonPayment,
                     )
                   : state.isLoading
                   ? const Center(
@@ -100,45 +147,61 @@ class SubscriptionPlansScreen extends HookConsumerWidget {
                       onRetry: notifier.loadPlans,
                       retryLabel: l10n.t(L10nKeys.retry),
                     )
-                  : ListView.separated(
-                      padding: EdgeInsets.fromLTRB(
-                        context.defaultPaddingSc,
-                        context.scaleHeight(4),
-                        context.defaultPaddingSc,
-                        context.scaleHeight(28),
+                  : RefreshIndicator(
+                      color: AppColors.primaryContainer,
+                      onRefresh: () => notifier.loadPlans(showLoading: false),
+                      child: ListView.separated(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.fromLTRB(
+                          context.defaultPaddingSc,
+                          context.scaleHeight(4),
+                          context.defaultPaddingSc,
+                          context.scaleHeight(28),
+                        ),
+                        itemCount: state.plans.length,
+                        separatorBuilder: (_, _) =>
+                            SizedBox(height: context.scaleHeight(24)),
+                        itemBuilder: (context, index) {
+                          final plan = state.plans[index];
+                          final selected = plan.code == state.selectedPlanCode;
+                          return _PackageSection(
+                            plan: plan,
+                            selected: selected,
+                            billingInterval: state.billingInterval,
+                            unlimitedLabel: l10n.t(
+                              L10nKeys.subscriptionUnlimited,
+                            ),
+                            profilesLabel: l10n.t(
+                              L10nKeys.subscriptionProfiles,
+                            ),
+                            scansLabel: l10n.t(L10nKeys.subscriptionScans),
+                            trialLabel: l10n.t(L10nKeys.subscriptionTrial),
+                            biomarkersLabel: l10n.t(
+                              L10nKeys.subscriptionBiomarkers,
+                            ),
+                            devicesLabel: l10n.t(L10nKeys.subscriptionDevices),
+                            payNowLabel: l10n.t(L10nKeys.subscriptionPayNow),
+                            headingTemplate: l10n.t(
+                              L10nKeys.subscriptionHealthCheckup,
+                            ),
+                            monthlyLabel: l10n.t(L10nKeys.subscriptionMonthly),
+                            annualLabel: l10n.t(L10nKeys.subscriptionAnnual),
+                            onTap: busy ? null : () => openPayment(plan),
+                            freeTrialLabel: l10n.t(
+                              L10nKeys.subscriptionFreeTrial,
+                            ),
+                            isStartingTrial: state.trialPlanCode == plan.code,
+                            onFreeTrial: !state.canStartTrial(plan)
+                                ? null
+                                : busy
+                                ? () {}
+                                : () => startTrial(plan),
+                            onOpenDetails: busy
+                                ? null
+                                : () => openDetails(plan),
+                          );
+                        },
                       ),
-                      itemCount: state.plans.length,
-                      separatorBuilder: (_, _) =>
-                          SizedBox(height: context.scaleHeight(24)),
-                      itemBuilder: (context, index) {
-                        final plan = state.plans[index];
-                        final selected = plan.code == state.selectedPlanCode;
-                        return _PackageSection(
-                          plan: plan,
-                          selected: selected,
-                          billingInterval: state.billingInterval,
-                          unlimitedLabel: l10n.t(
-                            L10nKeys.subscriptionUnlimited,
-                          ),
-                          profilesLabel: l10n.t(L10nKeys.subscriptionProfiles),
-                          scansLabel: l10n.t(L10nKeys.subscriptionScans),
-                          trialLabel: l10n.t(L10nKeys.subscriptionTrial),
-                          biomarkersLabel: l10n.t(
-                            L10nKeys.subscriptionBiomarkers,
-                          ),
-                          devicesLabel: l10n.t(L10nKeys.subscriptionDevices),
-                          payNowLabel: l10n.t(L10nKeys.subscriptionPayNow),
-                          headingTemplate: l10n.t(
-                            L10nKeys.subscriptionHealthCheckup,
-                          ),
-                          monthlyLabel: l10n.t(L10nKeys.subscriptionMonthly),
-                          annualLabel: l10n.t(L10nKeys.subscriptionAnnual),
-                          isSubmitting: state.isSubmitting && selected,
-                          onTap: state.isSubmitting
-                              ? null
-                              : () => selectAndSubmit(plan),
-                        );
-                      },
                     ),
             ),
           ],
@@ -280,8 +343,11 @@ class _PackageSection extends StatelessWidget {
     required this.headingTemplate,
     required this.monthlyLabel,
     required this.annualLabel,
-    required this.isSubmitting,
     required this.onTap,
+    required this.onOpenDetails,
+    required this.freeTrialLabel,
+    required this.isStartingTrial,
+    required this.onFreeTrial,
   });
 
   final SubscriptionPlanEntity plan;
@@ -297,8 +363,18 @@ class _PackageSection extends StatelessWidget {
   final String headingTemplate;
   final String monthlyLabel;
   final String annualLabel;
-  final bool isSubmitting;
+
+  /// "Pay Now" on the card.
   final VoidCallback? onTap;
+
+  final String freeTrialLabel;
+  final bool isStartingTrial;
+
+  /// `null` hides the "Free Trial" button (trial not available).
+  final VoidCallback? onFreeTrial;
+
+  /// Tapping anywhere else on the card.
+  final VoidCallback? onOpenDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -348,94 +424,123 @@ class _PackageSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: context.scaleHeight(10)),
-        Container(
-          width: double.infinity,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: selected ? AppColors.primaryContainer : Colors.transparent,
-              width: selected ? 2 : 0,
-            ),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x33000000),
-                blurRadius: 14,
-                offset: Offset(0, 7),
+        GestureDetector(
+          onTap: onOpenDetails,
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            width: double.infinity,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: selected
+                    ? AppColors.primaryContainer
+                    : Colors.transparent,
+                width: selected ? 2 : 0,
               ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              Positioned.fill(child: _PackageArtwork(imageUrl: plan.image)),
-              const Positioned.fill(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        Colors.white,
-                        Colors.white,
-                        Color(0xE6FFFFFF),
-                        Color(0x00FFFFFF),
-                      ],
-                      stops: [0, 0.46, 0.68, 0.9],
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x33000000),
+                  blurRadius: 14,
+                  offset: Offset(0, 7),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                Positioned.fill(child: PlanArtwork(imageUrl: plan.image)),
+                const Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.white,
+                          Colors.white,
+                          Color(0xE6FFFFFF),
+                          Color(0x00FFFFFF),
+                        ],
+                        stops: [0, 0.46, 0.68, 0.9],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(context.scaleWidth(18)),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 64,
-                      child: Column(
+                Padding(
+                  padding: EdgeInsets.all(context.scaleWidth(18)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            plan.name,
-                            style: TextStyle(
-                              color: const Color(0xFF0F172A),
-                              fontSize: context.titleFontSize,
-                              fontWeight: FontWeight.w800,
+                          Expanded(
+                            flex: 64,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  plan.name,
+                                  style: TextStyle(
+                                    color: const Color(0xFF0F172A),
+                                    fontSize: context.titleFontSize,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                SizedBox(height: context.scaleHeight(4)),
+                                Text(
+                                  '৳$price / ${period.toLowerCase()}',
+                                  style: TextStyle(
+                                    color: const Color(0xFF334155),
+                                    fontSize: context.smallFontSize,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                SizedBox(height: context.scaleHeight(12)),
+                                ...features.map(
+                                  (feature) => Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: context.scaleHeight(4),
+                                    ),
+                                    child: _PackageFeature(feature: feature),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: context.scaleHeight(4)),
-                          Text(
-                            '৳$price / ${period.toLowerCase()}',
-                            style: TextStyle(
-                              color: const Color(0xFF334155),
-                              fontSize: context.smallFontSize,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          SizedBox(height: context.scaleHeight(12)),
-                          ...features.map(
-                            (feature) => Padding(
-                              padding: EdgeInsets.only(
-                                bottom: context.scaleHeight(4),
-                              ),
-                              child: _PackageFeature(feature: feature),
-                            ),
-                          ),
-                          SizedBox(height: context.scaleHeight(14)),
-                          _PayNowButton(
-                            label: payNowLabel,
-                            isLoading: isSubmitting,
-                            onPressed: onTap,
-                          ),
+                          const Expanded(flex: 36, child: SizedBox.shrink()),
                         ],
                       ),
-                    ),
-                    const Expanded(flex: 36, child: SizedBox.shrink()),
-                  ],
+                      SizedBox(height: context.scaleHeight(14)),
+                      // Full card width so both labels keep the same size.
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _PayNowButton(
+                              label: payNowLabel,
+                              isLoading: false,
+                              onPressed: onTap,
+                            ),
+                          ),
+                          if (onFreeTrial != null) ...[
+                            SizedBox(width: context.scaleWidth(10)),
+                            Expanded(
+                              child: _FreeTrialButton(
+                                label: freeTrialLabel,
+                                isLoading: isStartingTrial,
+                                onPressed: onFreeTrial!,
+                              ),
+                            ),
+                          ] else
+                            Expanded(child: const SizedBox.shrink()),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -495,39 +600,53 @@ class _PackageFeature extends StatelessWidget {
   }
 }
 
-class _PackageArtwork extends StatelessWidget {
-  const _PackageArtwork({required this.imageUrl});
+/// Outlined companion to [_PayNowButton] on the white plan card.
+class _FreeTrialButton extends StatelessWidget {
+  const _FreeTrialButton({
+    required this.label,
+    required this.isLoading,
+    required this.onPressed,
+  });
 
-  static const _fallbackAsset = 'assets/images/health_plan_default.png';
+  final String label;
+  final bool isLoading;
+  final VoidCallback onPressed;
 
-  final String? imageUrl;
+  static const _color = Color(0xFF1775E1);
 
   @override
   Widget build(BuildContext context) {
-    Widget fallback() => Image.asset(
-      _fallbackAsset,
-      width: double.infinity,
-      height: double.infinity,
-      fit: BoxFit.cover,
-    );
-
-    final url = imageUrl?.trim();
-    if (url == null || url.isEmpty) return fallback();
-    final uri = Uri.tryParse(url);
-    final resolvedUrl = uri?.hasScheme == true
-        ? url
-        : '${AppConfig.baseUrl.replaceAll(RegExp(r'/+$'), '')}/'
-              '${url.replaceFirst(RegExp(r'^/+'), '')}';
-
-    return AppNetworkImage(
-      resolvedUrl,
-      width: double.infinity,
-      height: double.infinity,
-      fit: BoxFit.cover,
-      errorBuilder: (_, _, _) => fallback(),
-      loadingBuilder: (context, child, progress) {
-        return progress == null ? child : fallback();
-      },
+    final radius = BorderRadius.circular(context.scaleWidth(50));
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: isLoading ? null : onPressed,
+        borderRadius: radius,
+        child: Container(
+          height: _cardButtonHeight(context),
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: context.scaleWidth(10)),
+          decoration: BoxDecoration(
+            borderRadius: radius,
+            border: Border.all(color: _color, width: 1.2),
+          ),
+          child: isLoading
+              ? SizedBox(
+                  width: context.scaleWidth(18),
+                  height: context.scaleWidth(18),
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: _color,
+                  ),
+                )
+              : Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: _cardButtonTextStyle(context, _color),
+                ),
+        ),
+      ),
     );
   }
 }
@@ -568,15 +687,14 @@ class _PayNowButton extends StatelessWidget {
                 : null,
             color: enabled || isLoading ? null : AppColors.surfaceElevated,
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.scaleWidth(20),
-              vertical: context.scaleHeight(5),
-            ),
+          child: Container(
+            height: _cardButtonHeight(context),
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: context.scaleWidth(10)),
             child: isLoading
                 ? SizedBox(
-                    width: context.scaleWidth(16),
-                    height: context.scaleWidth(16),
+                    width: context.scaleWidth(18),
+                    height: context.scaleWidth(18),
                     child: const CircularProgressIndicator(
                       strokeWidth: 2,
                       color: Colors.white,
@@ -584,14 +702,302 @@ class _PayNowButton extends StatelessWidget {
                   )
                 : Text(
                     label,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: context.bodyFontSize,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: _cardButtonTextStyle(context, Colors.white),
                   ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Standard tap-target height for the plan card's Pay Now / Free Trial.
+double _cardButtonHeight(BuildContext context) => context.scaleHeight(44);
+
+/// Shared label style so Pay Now and Free Trial always match.
+TextStyle _cardButtonTextStyle(BuildContext context, Color color) => TextStyle(
+  color: color,
+  fontSize: context.fontSize,
+  fontWeight: FontWeight.w700,
+);
+
+/// Add-on services from `GET /subscription/services`, grouped by type, with
+/// multi-select and a sticky checkout bar.
+class _AddonsTab extends ConsumerWidget {
+  const _AddonsTab({required this.billingInterval, required this.onCheckout});
+
+  final BillingInterval billingInterval;
+  final ValueChanged<List<SubscriptionServiceOfferEntity>> onCheckout;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = ref.watch(languageControllerProvider);
+    final addons = ref.watch(subscriptionAddonsNotifierProvider);
+    final addonsNotifier = ref.read(
+      subscriptionAddonsNotifierProvider.notifier,
+    );
+    final period = l10n
+        .t(
+          billingInterval == BillingInterval.annual
+              ? L10nKeys.subscriptionAnnual
+              : L10nKeys.subscriptionMonthly,
+        )
+        .toLowerCase();
+
+    if (addons.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(color: AppColors.primaryContainer),
+      );
+    }
+    if (addons.errorMessage != null && addons.services.isEmpty) {
+      return _ErrorBody(
+        message: addons.errorMessage!,
+        onRetry: addonsNotifier.load,
+        retryLabel: l10n.t(L10nKeys.retry),
+      );
+    }
+
+    return Builder(
+      builder: (context) {
+        final services = addons.services;
+        if (services.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.all(context.defaultPaddingSc),
+              child: Text(
+                l10n.t(L10nKeys.subscriptionAddonsEmpty),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: context.fontSize,
+                ),
+              ),
+            ),
+          );
+        }
+
+        final groups = <String, List<SubscriptionServiceOfferEntity>>{};
+        for (final service in services) {
+          groups.putIfAbsent(service.type, () => []).add(service);
+        }
+        final selected = addons.selectedServices;
+
+        String groupTitle(String type) => switch (type) {
+          'biomarker' => l10n.t(L10nKeys.mySubscriptionBiomarkers),
+          'metric' => l10n.t(L10nKeys.mySubscriptionMetrics),
+          _ => _humanize(type),
+        };
+
+        return Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                color: AppColors.primaryContainer,
+                onRefresh: () => addonsNotifier.load(showLoading: false),
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.fromLTRB(
+                    context.defaultPaddingSc,
+                    context.scaleHeight(4),
+                    context.defaultPaddingSc,
+                    context.scaleHeight(16),
+                  ),
+                  children: [
+                    for (final MapEntry(key: type, value: items)
+                        in groups.entries) ...[
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          context.scaleWidth(4),
+                          context.scaleHeight(12),
+                          0,
+                          context.scaleHeight(8),
+                        ),
+                        child: Text(
+                          '${groupTitle(type)} (${items.length})'.toUpperCase(),
+                          style: TextStyle(
+                            color: AppColors.primaryContainer,
+                            fontSize: context.smallFontSize,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1.1,
+                          ),
+                        ),
+                      ),
+                      for (final service in items)
+                        Padding(
+                          padding: EdgeInsets.only(
+                            bottom: context.scaleHeight(8),
+                          ),
+                          child: _AddonServiceTile(
+                            service: service,
+                            priceLabel:
+                                '৳${service.priceFor(billingInterval)} / $period',
+                            selected: addons.isSelected(service.code),
+                            onTap: () => addonsNotifier.toggle(service.code),
+                          ),
+                        ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            _AddonsCheckoutBar(
+              summary: selected.isEmpty
+                  ? l10n.t(L10nKeys.subscriptionAddonsNoneSelected)
+                  : '${l10n.t(L10nKeys.subscriptionAddonsSelected).replaceAll('{count}', '${selected.length}')}'
+                        ' · ৳${addonsTotal(selected, billingInterval)} / $period',
+              checkoutLabel: l10n.t(L10nKeys.paymentCheckout),
+              onCheckout: selected.isEmpty ? null : () => onCheckout(selected),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static String _humanize(String code) => code
+      .split(RegExp(r'[_\s]+'))
+      .where((w) => w.isNotEmpty)
+      .map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase())
+      .join(' ');
+}
+
+class _AddonServiceTile extends StatelessWidget {
+  const _AddonServiceTile({
+    required this.service,
+    required this.priceLabel,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final SubscriptionServiceOfferEntity service;
+  final String priceLabel;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(14);
+    final description = service.description;
+
+    return Material(
+      color: selected ? AppColors.pillSelected : AppColors.glass,
+      borderRadius: radius,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: radius,
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.scaleWidth(8),
+            vertical: context.scaleHeight(8),
+          ),
+          decoration: BoxDecoration(
+            borderRadius: radius,
+            border: Border.all(
+              color: selected
+                  ? AppColors.primaryContainer
+                  : AppColors.glassBorder,
+              width: selected ? 1.2 : 0.5,
+            ),
+          ),
+          child: Row(
+            children: [
+              Checkbox(
+                value: selected,
+                onChanged: (_) => onTap(),
+                activeColor: AppColors.primaryContainer,
+                checkColor: AppColors.onPrimary,
+                side: const BorderSide(color: AppColors.textSecondary),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      service.name,
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: context.fontSize,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    if (description != null) ...[
+                      SizedBox(height: context.scaleHeight(2)),
+                      Text(
+                        description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: context.smallFontSize,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              SizedBox(width: context.scaleWidth(8)),
+              Text(
+                priceLabel,
+                style: TextStyle(
+                  color: AppColors.primaryContainer,
+                  fontSize: context.smallFontSize,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              SizedBox(width: context.scaleWidth(6)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AddonsCheckoutBar extends StatelessWidget {
+  const _AddonsCheckoutBar({
+    required this.summary,
+    required this.checkoutLabel,
+    required this.onCheckout,
+  });
+
+  final String summary;
+  final String checkoutLabel;
+  final VoidCallback? onCheckout;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        context.defaultPaddingSc,
+        context.scaleHeight(12),
+        context.defaultPaddingSc,
+        context.scaleHeight(12),
+      ),
+      decoration: const BoxDecoration(
+        color: AppColors.backgroundDeep,
+        border: Border(top: BorderSide(color: AppColors.glassBorder)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            summary,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: context.fontSize,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: context.scaleHeight(10)),
+          AppButton(
+            label: checkoutLabel,
+            isEnabled: onCheckout != null,
+            onPressed: onCheckout,
+          ),
+        ],
       ),
     );
   }

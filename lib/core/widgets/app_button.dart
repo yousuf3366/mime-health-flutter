@@ -47,20 +47,14 @@ class AppButton extends StatelessWidget {
               ),
             )
           : icon == null
-          ? Text(
-              label,
-              style: TextStyle(fontSize: context.titleFontSize),
-            )
+          ? Text(label, style: TextStyle(fontSize: context.titleFontSize))
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(icon, size: context.scaleWidth(20)),
                 SizedBox(width: context.scaleWidth(8)),
-                Text(
-                  label,
-                  style: TextStyle(fontSize: context.scaleWidth(15)),
-                ),
+                Text(label, style: TextStyle(fontSize: context.scaleWidth(15))),
               ],
             ),
     );

@@ -1,20 +1,27 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/localization/l10n_keys.dart';
 import '../../../../core/providers/core_providers.dart';
+import '../../../language/presentation/provider/language_provider.dart';
 import '../../domain/entity/subscription_entity.dart';
 import '../provider/subscription_di.dart';
 import '../state/subscription_plans_state.dart';
 
+/// Plans tab: `GET /subscription/plans`, plan selection, billing period and
+/// free trial (`POST /subscription/select-plan` with `use_trial`).
 class SubscriptionPlansNotifier extends Notifier<SubscriptionPlansState> {
+  /// Starts in a loading state; the plans screen calls [loadPlans] every time
+  /// it opens so plans and trial eligibility are always fresh.
   @override
   SubscriptionPlansState build() {
-    Future.microtask(loadPlans);
     return const SubscriptionPlansState(isLoading: true);
   }
 
-  Future<void> loadPlans() async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
+  /// [showLoading] is false for pull-to-refresh, which keeps the current list
+  /// on screen under the refresh indicator.
+  Future<void> loadPlans({bool showLoading = true}) async {
+    state = state.copyWith(isLoading: showLoading, errorMessage: null);
 
     // Prefill selection from server subscription when available.
     String? serverPlanCode;
@@ -22,9 +29,10 @@ class SubscriptionPlansNotifier extends Notifier<SubscriptionPlansState> {
     final mySub = await ref.read(getMySubscriptionUseCaseProvider).call();
     mySub.when(
       success: (data) {
-        if (data?.hasActivePlan == true) {
-          serverPlanCode = data!.subscription.plan.code;
-          serverInterval = data.subscription.billingInterval;
+        final subscription = data?.subscription;
+        if (data?.hasActivePlan == true && subscription != null) {
+          serverPlanCode = subscription.plan.code;
+          serverInterval = subscription.billingInterval;
         }
       },
       failure: (_) {},
@@ -32,11 +40,13 @@ class SubscriptionPlansNotifier extends Notifier<SubscriptionPlansState> {
 
     final result = await ref.read(getSubscriptionPlansUseCaseProvider).call();
     result.when(
-      success: (plans) {
-        final initialCode = serverPlanCode ??
-            (plans.isNotEmpty ? plans.first.code : null);
+      success: (data) {
+        final plans = data.plans;
+        final initialCode =
+            serverPlanCode ?? (plans.isNotEmpty ? plans.first.code : null);
         state = state.copyWith(
           plans: plans,
+          eligibility: data.eligibility,
           selectedPlanCode: initialCode,
           billingInterval: serverInterval,
           isLoading: false,
@@ -44,10 +54,7 @@ class SubscriptionPlansNotifier extends Notifier<SubscriptionPlansState> {
         );
       },
       failure: (error) {
-        state = state.copyWith(
-          isLoading: false,
-          errorMessage: error.message,
-        );
+        state = state.copyWith(isLoading: false, errorMessage: error.message);
       },
     );
   }
@@ -60,39 +67,46 @@ class SubscriptionPlansNotifier extends Notifier<SubscriptionPlansState> {
     state = state.copyWith(billingInterval: interval);
   }
 
-  /// Returns `true` when the plan was saved successfully on the server.
-  Future<bool> submitSelectedPlan() async {
-    final plan = state.selectedPlan;
-    if (plan == null || state.isSubmitting) return false;
-
-    state = state.copyWith(isSubmitting: true, errorMessage: null);
+  /// Starts [plan]'s free trial via `select-plan` with `use_trial: true` (no
+  /// payment). Returns `true` on success.
+  Future<bool> startTrial(SubscriptionPlanEntity plan) async {
+    if (state.isStartingTrial) return false;
+    state = state.copyWith(
+      trialPlanCode: plan.code,
+      selectedPlanCode: plan.code,
+      errorMessage: null,
+    );
     final snackbar = ref.read(snackbarServiceProvider);
 
-    final result = await ref.read(selectSubscriptionPlanUseCaseProvider).call(
+    final result = await ref
+        .read(selectSubscriptionPlanUseCaseProvider)
+        .call(
           planCode: plan.code,
           billingInterval: state.billingInterval,
+          useTrial: true,
         );
 
     return result.when(
       success: (selected) {
         state = state.copyWith(
-          isSubmitting: false,
-          selectedPlanCode: selected.plan.code,
-          billingInterval: selected.billingInterval,
+          trialPlanCode: null,
+          // The trial is now consumed; hide trial buttons until reload.
+          eligibility: null,
         );
         ref.invalidate(mySubscriptionProvider);
+        final name = selected.plan.name.isEmpty
+            ? plan.name
+            : selected.plan.name;
         snackbar.showSuccess(
-          selected.status.isEmpty
-              ? 'Subscription saved successfully.'
-              : 'Plan “${selected.plan.name}” is ${selected.status}.',
+          ref
+              .read(languageControllerProvider)
+              .t(L10nKeys.subscriptionTrialStarted)
+              .replaceAll('{name}', name),
         );
         return true;
       },
       failure: (AppException error) {
-        state = state.copyWith(
-          isSubmitting: false,
-          errorMessage: error.message,
-        );
+        state = state.copyWith(trialPlanCode: null);
         snackbar.showError(error.message);
         return false;
       },
@@ -102,5 +116,5 @@ class SubscriptionPlansNotifier extends Notifier<SubscriptionPlansState> {
 
 final subscriptionPlansNotifierProvider =
     NotifierProvider<SubscriptionPlansNotifier, SubscriptionPlansState>(
-  SubscriptionPlansNotifier.new,
-);
+      SubscriptionPlansNotifier.new,
+    );

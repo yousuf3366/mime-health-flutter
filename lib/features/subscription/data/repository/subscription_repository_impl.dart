@@ -17,7 +17,7 @@ class SubscriptionRepositoryImpl extends BaseRepository
   final SubscriptionRemoteDatasource _remote;
 
   @override
-  Future<Result<List<SubscriptionPlanEntity>>> getPlans() {
+  Future<Result<SubscriptionPlansResultEntity>> getPlans() {
     return safeApiCall(() async {
       final response = await _remote.getPlans();
       if (!response.success) {
@@ -27,7 +27,13 @@ class SubscriptionRepositoryImpl extends BaseRepository
               : response.message,
         );
       }
-      return SubscriptionMapper.toPlanEntities(response.plans);
+      final eligibility = response.eligibility;
+      return SubscriptionPlansResultEntity(
+        plans: SubscriptionMapper.toPlanEntities(response.plans),
+        eligibility: eligibility == null
+            ? null
+            : SubscriptionMapper.toEligibilityEntity(eligibility),
+      );
     });
   }
 
@@ -35,12 +41,14 @@ class SubscriptionRepositoryImpl extends BaseRepository
   Future<Result<SelectedSubscriptionEntity>> selectPlan({
     required String planCode,
     required BillingInterval billingInterval,
+    bool useTrial = false,
   }) {
     return safeApiCall(() async {
       final response = await _remote.selectPlan(
         SelectPlanRequestModel(
           planCode: planCode,
           billingInterval: billingInterval,
+          useTrial: useTrial,
         ),
       );
       if (!response.success || response.data == null) {
@@ -51,6 +59,60 @@ class SubscriptionRepositoryImpl extends BaseRepository
         );
       }
       return SubscriptionMapper.toSelectedEntity(response.data!);
+    });
+  }
+
+  @override
+  Future<Result<List<SubscriptionServiceOfferEntity>>> getServices() {
+    return safeApiCall(() async {
+      final response = await _remote.getServices();
+      if (!response.success) {
+        throw ApiException(
+          response.message.isEmpty
+              ? 'Failed to load add-on services.'
+              : response.message,
+        );
+      }
+      return response.services
+          .where((s) => s.code.isNotEmpty)
+          .map(SubscriptionMapper.toServiceOfferEntity)
+          .toList(growable: false);
+    });
+  }
+
+  @override
+  Future<Result<CheckoutEntity>> checkout({
+    required BillingInterval billingInterval,
+    required PaymentMethod paymentMethod,
+    String? planCode,
+    String purpose = CheckoutPurpose.subscription,
+    List<String> addonCodes = const [],
+    List<String> serviceCodes = const [],
+  }) {
+    return safeApiCall(() async {
+      final response = await _remote.checkout(
+        CheckoutRequestModel(
+          planCode: planCode,
+          billingInterval: billingInterval,
+          paymentMethod: paymentMethod,
+          purpose: purpose,
+          addonCodes: addonCodes,
+          serviceCodes: serviceCodes,
+        ),
+      );
+      final payment = response.payment;
+      final redirectUrl = response.redirectUrl;
+      if (!response.success ||
+          payment == null ||
+          redirectUrl == null ||
+          redirectUrl.isEmpty) {
+        throw ApiException(
+          response.message.isEmpty
+              ? 'Failed to create checkout.'
+              : response.message,
+        );
+      }
+      return SubscriptionMapper.toCheckoutEntity(payment, redirectUrl);
     });
   }
 

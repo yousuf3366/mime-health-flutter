@@ -7,7 +7,8 @@ class GetSubscriptionPlansUseCase {
 
   final SubscriptionRepository _repository;
 
-  Future<Result<List<SubscriptionPlanEntity>>> call() => _repository.getPlans();
+  Future<Result<SubscriptionPlansResultEntity>> call() =>
+      _repository.getPlans();
 }
 
 class SelectSubscriptionPlanUseCase {
@@ -18,12 +19,47 @@ class SelectSubscriptionPlanUseCase {
   Future<Result<SelectedSubscriptionEntity>> call({
     required String planCode,
     required BillingInterval billingInterval,
+    bool useTrial = false,
   }) {
     return _repository.selectPlan(
       planCode: planCode,
       billingInterval: billingInterval,
+      useTrial: useTrial,
     );
   }
+}
+
+class CheckoutSubscriptionUseCase {
+  CheckoutSubscriptionUseCase(this._repository);
+
+  final SubscriptionRepository _repository;
+
+  Future<Result<CheckoutEntity>> call({
+    required BillingInterval billingInterval,
+    required PaymentMethod paymentMethod,
+    String? planCode,
+    String purpose = CheckoutPurpose.subscription,
+    List<String> addonCodes = const [],
+    List<String> serviceCodes = const [],
+  }) {
+    return _repository.checkout(
+      planCode: planCode,
+      billingInterval: billingInterval,
+      paymentMethod: paymentMethod,
+      purpose: purpose,
+      addonCodes: addonCodes,
+      serviceCodes: serviceCodes,
+    );
+  }
+}
+
+class GetSubscriptionServicesUseCase {
+  GetSubscriptionServicesUseCase(this._repository);
+
+  final SubscriptionRepository _repository;
+
+  Future<Result<List<SubscriptionServiceOfferEntity>>> call() =>
+      _repository.getServices();
 }
 
 class GetMySubscriptionUseCase {

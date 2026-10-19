@@ -16,10 +16,7 @@ class ErrorHandler {
       return _mapDioException(error);
     }
 
-    return UnknownException(
-      message: error.toString(),
-      originalError: error,
-    );
+    return UnknownException(message: error.toString(), originalError: error);
   }
 
   static AppException _mapDioException(DioException error) {
@@ -57,7 +54,8 @@ class ErrorHandler {
 
   static AppException _mapStatusCode(DioException error) {
     final statusCode = error.response?.statusCode;
-    final message = _extractMessage(error.response?.data) ??
+    final message =
+        _extractMessage(error.response?.data) ??
         error.message ??
         'Request failed.';
 

@@ -5,7 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 /// Monitors network connectivity and exposes a reactive stream.
 class ConnectivityService {
   ConnectivityService({Connectivity? connectivity})
-      : _connectivity = connectivity ?? Connectivity();
+    : _connectivity = connectivity ?? Connectivity();
 
   final Connectivity _connectivity;
   final _controller = StreamController<bool>.broadcast();

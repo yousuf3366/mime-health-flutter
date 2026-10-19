@@ -27,17 +27,17 @@ class DeviceInfo {
   final String uniqueId;
 
   Map<String, String> toHeaders() => {
-        'X-Device-Platform': platform,
-        'X-Device-Model': model,
-        'X-Device-OS': osVersion,
-        'X-Device-Id': uniqueId,
-      };
+    'X-Device-Platform': platform,
+    'X-Device-Model': model,
+    'X-Device-OS': osVersion,
+    'X-Device-Id': uniqueId,
+  };
 }
 
 /// Collects platform-specific device information via [device_info_plus].
 class DeviceInfoService {
   DeviceInfoService({DeviceInfoPlugin? plugin})
-      : _plugin = plugin ?? DeviceInfoPlugin();
+    : _plugin = plugin ?? DeviceInfoPlugin();
 
   final DeviceInfoPlugin _plugin;
   DeviceInfo? _cached;

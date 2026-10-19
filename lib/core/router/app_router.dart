@@ -13,6 +13,11 @@ import '../../features/profile/presentation/page/create_profile_page.dart';
 import '../../features/profile/domain/entity/profile_entity.dart';
 import '../../features/profile/presentation/screen/profile_view_screen.dart';
 import '../../features/splash/presentation/page/splash_page.dart';
+import '../../features/subscription/domain/entity/subscription_entity.dart';
+import '../../features/subscription/presentation/screen/my_subscription_screen.dart';
+import '../../features/subscription/presentation/screen/payment_webview_screen.dart';
+import '../../features/subscription/presentation/screen/subscription_payment_screen.dart';
+import '../../features/subscription/presentation/screen/subscription_plan_details_screen.dart';
 import '../../features/subscription/presentation/screen/subscription_plans_screen.dart';
 import '../../features/terms_and_condition/domain/entity/consent_document_codes.dart';
 import '../../features/terms_and_condition/presentation/screen/terms_and_condition_screen.dart';
@@ -73,6 +78,39 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.subscriptionPlans,
         name: 'subscriptionPlans',
         builder: (context, state) => const SubscriptionPlansScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.subscriptionPayment,
+        name: 'subscriptionPayment',
+        builder: (context, state) => SubscriptionPaymentScreen(
+          initialPlanCode: state.extra is String
+              ? state.extra! as String
+              : null,
+          addons: state.extra is List<SubscriptionServiceOfferEntity>
+              ? state.extra! as List<SubscriptionServiceOfferEntity>
+              : null,
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.subscriptionPlanDetails,
+        name: 'subscriptionPlanDetails',
+        builder: (context, state) => state.extra is SubscriptionPlanEntity
+            ? SubscriptionPlanDetailsScreen(
+                plan: state.extra! as SubscriptionPlanEntity,
+              )
+            : const _NotFoundPage(),
+      ),
+      GoRoute(
+        path: RouteNames.mySubscription,
+        name: 'mySubscription',
+        builder: (context, state) => const MySubscriptionScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.paymentWebView,
+        name: 'paymentWebView',
+        builder: (context, state) => state.extra is CheckoutEntity
+            ? PaymentWebViewScreen(checkout: state.extra! as CheckoutEntity)
+            : const _NotFoundPage(),
       ),
       GoRoute(
         path: RouteNames.termsAndConditions,

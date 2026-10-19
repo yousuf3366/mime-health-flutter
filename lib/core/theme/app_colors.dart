@@ -10,9 +10,9 @@ class AppColors {
   static const Color background = Color(0xFF0B1B3A);
   //static const Color backgroundDeep = Color(0xFF06101F);
   //static const Color backgroundDeep = Color(0xFF05153C);
-  static const Color backgroundDeep =Color(0xFF071440);
-  static const Color blackLight =Color(0xFF0E0E0E);
-  static const Color blackExtraLight =Color(0xff192022);
+  static const Color backgroundDeep = Color(0xFF071440);
+  static const Color blackLight = Color(0xFF0E0E0E);
+  static const Color blackExtraLight = Color(0xff192022);
 
   /// Shared AppBar background — deeper navy than [background] for clear contrast.
   // static const Color appBar = Color(0xFF040F2B);

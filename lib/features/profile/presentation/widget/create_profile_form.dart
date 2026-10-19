@@ -362,37 +362,34 @@ class CreateProfileForm extends HookConsumerWidget {
                             ],
                           ),
                         ),
-                        if (isSelf) ...[
-                          SizedBox(height: context.defaultPaddingSc),
-                          _FaceCaptureCard(
-                            title: l10n.t(L10nKeys.faceRecognitionRegisterFace),
-                            registeredLabel: l10n.t(
-                              L10nKeys.faceRecognitionRegistered,
-                            ),
-                            hint: l10n.t(L10nKeys.faceRecognitionCaptureHint),
-                            captureLabel: l10n.t(
-                              L10nKeys.faceRecognitionCaptureButton,
-                            ),
-                            retakeLabel: l10n.t(L10nKeys.faceRecognitionRetake),
-                            hasFace:
-                                (formState.imageEmbedding ?? '').isNotEmpty,
-                            mandatory: !isEditing,
-                            errorText: formState.imageEmbeddingError,
-                            onCapture: () async {
-                              final embedding = await Navigator.of(context)
-                                  .push<String>(
-                                    MaterialPageRoute(
-                                      builder: (_) => const FaceCameraScreen(
-                                        mode: FaceCameraMode.capture,
-                                      ),
-                                    ),
-                                  );
-                              if (embedding != null) {
-                                formNotifier.setImageEmbedding(embedding);
-                              }
-                            },
+                        SizedBox(height: context.defaultPaddingSc),
+                        _FaceCaptureCard(
+                          title: l10n.t(L10nKeys.faceRecognitionRegisterFace),
+                          registeredLabel: l10n.t(
+                            L10nKeys.faceRecognitionRegistered,
                           ),
-                        ],
+                          hint: l10n.t(L10nKeys.faceRecognitionCaptureHint),
+                          captureLabel: l10n.t(
+                            L10nKeys.faceRecognitionCaptureButton,
+                          ),
+                          retakeLabel: l10n.t(L10nKeys.faceRecognitionRetake),
+                          hasFace: (formState.imageEmbedding ?? '').isNotEmpty,
+                          mandatory: !isEditing,
+                          errorText: formState.imageEmbeddingError,
+                          onCapture: () async {
+                            final embedding = await Navigator.of(context)
+                                .push<String>(
+                                  MaterialPageRoute(
+                                    builder: (_) => const FaceCameraScreen(
+                                      mode: FaceCameraMode.capture,
+                                    ),
+                                  ),
+                                );
+                            if (embedding != null) {
+                              formNotifier.setImageEmbedding(embedding);
+                            }
+                          },
+                        ),
                         if (!isEditing) ...[
                           SizedBox(height: context.defaultPaddingSc),
                           _ConsentTile(

@@ -32,11 +32,7 @@ class AppWarningCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: context.scaleWidth(22),
-            color: AppColors.warning,
-          ),
+          Icon(icon, size: context.scaleWidth(22), color: AppColors.warning),
           SizedBox(width: context.scaleWidth(10)),
           Expanded(
             child: Text(

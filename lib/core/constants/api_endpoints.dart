@@ -26,6 +26,8 @@ class ApiEndpoints {
   static const String mySubscribedPlan = '/api/v1/subscription/me';
   static const String latestScansResult = '/api/v1/scans/latest';
   static const String feedback = '/api/v1/feedback';
+  static const String subscriptionCheckout = '/api/v1/subscription/checkout';
+  static const String subscriptionServices = '/api/v1/subscription/services';
   static const String subscriptionSelectPlan =
       '/api/v1/subscription/select-plan';
 

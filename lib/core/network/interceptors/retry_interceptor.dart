@@ -18,13 +18,7 @@ class RetryInterceptor extends Interceptor {
   final int maxRetries;
   final Duration baseDelay;
 
-  static const _retryableMethods = {
-    'GET',
-    'POST',
-    'PUT',
-    'DELETE',
-    'PATCH',
-  };
+  static const _retryableMethods = {'GET', 'POST', 'PUT', 'DELETE', 'PATCH'};
 
   @override
   Future<void> onError(
@@ -68,8 +62,7 @@ class RetryInterceptor extends Interceptor {
         err.type == DioExceptionType.sendTimeout ||
         err.type == DioExceptionType.receiveTimeout ||
         err.type == DioExceptionType.connectionError ||
-        (err.response?.statusCode != null &&
-            err.response!.statusCode! >= 500);
+        (err.response?.statusCode != null && err.response!.statusCode! >= 500);
   }
 
   Duration _computeDelay(int attempt) {

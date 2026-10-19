@@ -4,6 +4,21 @@ import '../model/subscription_models.dart';
 class SubscriptionMapper {
   SubscriptionMapper._();
 
+  static CheckoutEntity toCheckoutEntity(
+    CheckoutPaymentModel payment,
+    String redirectUrl,
+  ) {
+    return CheckoutEntity(
+      paymentId: payment.id,
+      status: payment.status,
+      amountBdt: payment.amountBdt,
+      currency: payment.currency,
+      redirectUrl: redirectUrl,
+      invoiceNumber: payment.invoiceNumber,
+      gatewayReference: payment.gatewayReference,
+    );
+  }
+
   static SubscriptionPlanEntity toPlanEntity(SubscriptionPlanModel model) {
     return SubscriptionPlanEntity(
       code: model.code,
@@ -21,8 +36,24 @@ class SubscriptionMapper {
       annualPriceBdt: model.annualPriceBdt,
       trialDays: model.trialDays,
       sortOrder: model.sortOrder,
+      services: toServiceEntities(model.services),
+      pricingMode: model.pricingMode,
       image: model.image,
     );
+  }
+
+  static List<SubscriptionServiceEntity> toServiceEntities(
+    List<SubscriptionServiceModel> models,
+  ) {
+    return models
+        .map(
+          (s) => SubscriptionServiceEntity(
+            code: s.code,
+            name: s.name,
+            type: s.type,
+          ),
+        )
+        .toList(growable: false);
   }
 
   static List<SubscriptionPlanEntity> toPlanEntities(
@@ -41,30 +72,76 @@ class SubscriptionMapper {
       currentPeriodStart: model.currentPeriodStart,
       currentPeriodEnd: model.currentPeriodEnd,
       externalUserId: model.externalUserId,
+      trialEndsAt: model.trialEndsAt,
+      cancelAt: model.cancelAt,
+      cancelledAt: model.cancelledAt,
+      cancelReason: model.cancelReason,
+      isTrialing: model.isTrialing,
+      isCancelScheduled: model.isCancelScheduled,
       plan: toPlanEntity(model.plan),
+    );
+  }
+
+  static SubscriptionEligibilityEntity toEligibilityEntity(
+    SubscriptionEligibilityModel model,
+  ) {
+    return SubscriptionEligibilityEntity(
+      trialConsumed: model.trialConsumed,
+      freePlanConsumed: model.freePlanConsumed,
+      trialAvailable: model.trialAvailable,
+      trialConsumedAt: model.trialConsumedAt,
+      freePlanConsumedAt: model.freePlanConsumedAt,
+    );
+  }
+
+  static SubscriptionServiceOfferEntity toServiceOfferEntity(
+    SubscriptionServiceOfferModel model,
+  ) {
+    return SubscriptionServiceOfferEntity(
+      code: model.code,
+      name: model.name,
+      type: model.type,
+      monthlyPriceBdt: model.monthlyPriceBdt,
+      annualPriceBdt: model.annualPriceBdt,
+      description: model.description,
+    );
+  }
+
+  static SubscriptionAddonEntity toAddonEntity(SubscriptionAddonModel model) {
+    return SubscriptionAddonEntity(
+      id: model.id,
+      code: model.code,
+      name: model.name,
+      status: model.status,
+      billingInterval: model.billingInterval,
+      amountBdt: model.amountBdt,
+      purchaseType: model.purchaseType,
+      serviceType: model.serviceType,
+      startsAt: model.startsAt,
+      endsAt: model.endsAt,
+      daysUntilExpiry: model.daysUntilExpiry,
+      subscriptionId: model.subscriptionId,
+      lastPaymentId: model.lastPaymentId,
     );
   }
 
   static MySubscriptionEntity? toMySubscriptionEntity(
     MySubscriptionDataModel? data,
   ) {
-    final subscription = data?.subscription;
-    if (subscription == null) return null;
-    final entitlements = data?.entitlements;
-    final quota = data?.quota;
+    if (data == null) return null;
+    final subscription = data.subscription;
+    final eligibility = data.eligibility;
+    final quota = data.quota;
     return MySubscriptionEntity(
-      subscription: toSelectedEntity(subscription),
-      entitlements: entitlements == null
+      status: data.status,
+      subscription: subscription == null
           ? null
-          : SubscriptionEntitlementsEntity(
-              maxProfiles: entitlements.maxProfiles,
-              monthlyScanQuota: entitlements.monthlyScanQuota,
-              biomarkerCodes: entitlements.biomarkerCodes,
-              metricCodes: entitlements.metricCodes,
-              historyRetentionDays: entitlements.historyRetentionDays,
-              isPaid: entitlements.isPaid,
-              daysUntilPeriodEnd: entitlements.daysUntilPeriodEnd,
-            ),
+          : toSelectedEntity(subscription),
+      pendingPlanChange: data.pendingPlanChange,
+      eligibility: eligibility == null
+          ? null
+          : toEligibilityEntity(eligibility),
+      addons: data.addons.map(toAddonEntity).toList(growable: false),
       quota: quota == null
           ? null
           : SubscriptionQuotaEntity(

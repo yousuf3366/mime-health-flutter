@@ -97,13 +97,13 @@ class StoreMimeFaceScanUseCase {
   }
 }
 
-/// Latest scan for Health Hub (`GET /api/v1/scans/latest`).
+/// Latest scan for a profile (`GET /api/v1/scans/latest?profile_id=`).
 class GetLatestMimeScanUseCase {
   GetLatestMimeScanUseCase(this._repository);
 
   final FaceScanRepository _repository;
 
-  Future<Result<FaceScanVitalsResult?>> call({int? profileId}) {
+  Future<Result<FaceScanVitalsResult?>> call({required int profileId}) {
     return _repository.getLatestMimeScan(profileId: profileId);
   }
 }

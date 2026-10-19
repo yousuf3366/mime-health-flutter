@@ -37,7 +37,7 @@ class FaceScanPreScreen extends HookConsumerWidget {
     final planLabel = mySubscription.maybeWhen(
       data: (data) {
         if (data?.hasActivePlan != true) return null;
-        return data!.subscription.plan.name;
+        return data!.subscription?.plan.name;
       },
       orElse: () => null,
     );
@@ -147,45 +147,40 @@ class FaceScanPreScreen extends HookConsumerWidget {
               isEnabled: dataSharingConsent.value && !flowState.isBusy,
               isLoading: flowState.isBusy,
               onPressed: () async {
-                final profile =
-                    selectedProfile ??
-                    await () async {
-                      final profiles = await ref.read(profilesProvider.future);
-                      return profiles.isEmpty
-                          ? null
-                          : _primaryProfile(profiles);
-                    }();
+                final profile = selectedProfile;
+
+                // await () async {
+                //   final profiles = await ref.read(profilesProvider.future);
+                //   return profiles.isEmpty
+                //       ? null
+                //       : _primaryProfile(profiles);
+                // }();
                 if (profile == null) {
                   ref
                       .read(snackbarServiceProvider)
                       .showError(l10n.t(L10nKeys.faceRecognitionNoStoredFace));
                   return;
                 }
+                // Every profile (self or family) must match its registered
+                // face before scanning.
                 final storedEmbedding = profile.imageEmbedding?.trim() ?? '';
-                final isSelf =
-                    profile.profileKind == AppConstants.profileKindSelf;
-
-                // Family/other profiles are created without a face, so only
-                // verify when a face is on file; self profiles always need one.
-                if (storedEmbedding.isEmpty && isSelf) {
+                if (storedEmbedding.isEmpty) {
                   ref
                       .read(snackbarServiceProvider)
                       .showError(l10n.t(L10nKeys.faceRecognitionNoStoredFace));
                   return;
                 }
 
-                if (storedEmbedding.isNotEmpty) {
-                  if (!context.mounted) return;
-                  final verified = await Navigator.of(context).push<bool>(
-                    MaterialPageRoute(
-                      builder: (_) => FaceCameraScreen(
-                        mode: FaceCameraMode.verify,
-                        storedEmbedding: storedEmbedding,
-                      ),
+                if (!context.mounted) return;
+                final verified = await Navigator.of(context).push<bool>(
+                  MaterialPageRoute(
+                    builder: (_) => FaceCameraScreen(
+                      mode: FaceCameraMode.verify,
+                      storedEmbedding: storedEmbedding,
                     ),
-                  );
-                  if (verified != true || !context.mounted) return;
-                }
+                  ),
+                );
+                if (verified != true || !context.mounted) return;
 
                 final result = await ref
                     .read(faceScanFlowNotifierProvider.notifier)

@@ -25,6 +25,25 @@ class SubscriptionRemoteDatasource {
     return SelectPlanResponseModel.fromJson(_asJsonMap(response.data));
   }
 
+  /// GET `/api/v1/subscription/services`
+  Future<SubscriptionServicesResponseModel> getServices() async {
+    final response = await _dio.get<Map<String, dynamic>>(
+      ApiEndpoints.subscriptionServices,
+    );
+    return SubscriptionServicesResponseModel.fromJson(
+      _asJsonMap(response.data),
+    );
+  }
+
+  /// POST `/api/v1/subscription/checkout`
+  Future<CheckoutResponseModel> checkout(CheckoutRequestModel request) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      ApiEndpoints.subscriptionCheckout,
+      data: request.toJson(),
+    );
+    return CheckoutResponseModel.fromJson(_asJsonMap(response.data));
+  }
+
   /// GET `/api/v1/subscription/me`
   Future<MySubscriptionResponseModel> getMySubscription() async {
     final response = await _dio.get<Map<String, dynamic>>(

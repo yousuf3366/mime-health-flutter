@@ -21,23 +21,43 @@ class HealthHubScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = ref.watch(languageControllerProvider);
     final profilesAsync = ref.watch(profilesProvider);
-    final latestAsync = ref.watch(latestMimeScanProvider);
 
-    final displayName = profilesAsync.maybeWhen(
-      data: (profiles) => _primaryProfile(profiles)?.displayName ?? 'there',
-      orElse: () => 'there',
-    );
-    final profileId = profilesAsync.maybeWhen(
-      data: (profiles) => _primaryProfile(profiles)?.id,
-      orElse: () => null,
-    );
+    // `/scans/latest` needs a profile id, so resolve the primary profile first.
+    if (!profilesAsync.hasValue) {
+      if (profilesAsync.hasError) {
+        final error = profilesAsync.error;
+        return _HubMessageBody(
+          icon: Icons.error_outline,
+          message: error is AppException
+              ? error.message
+              : l10n.t(L10nKeys.genericError),
+          actionLabel: l10n.t(L10nKeys.retry),
+          onAction: () => ref.invalidate(profilesProvider),
+        );
+      }
+      return const Center(
+        child: CircularProgressIndicator(color: AppColors.primaryContainer),
+      );
+    }
+
+    final primary = _primaryProfile(profilesAsync.requireValue);
+    if (primary == null) {
+      return _HubMessageBody(
+        icon: Icons.monitor_heart_outlined,
+        message: l10n.t(L10nKeys.healthHubNoScan),
+      );
+    }
+    final displayName = primary.displayName;
+    final profileId = primary.id;
+    final latestAsync = ref.watch(latestMimeScanProvider(profileId));
 
     return latestAsync.when(
       loading: () => const Center(
         child: CircularProgressIndicator(color: AppColors.primaryContainer),
       ),
       error: (error, _) {
-        final isNotFound = error is ApiException &&
+        final isNotFound =
+            error is ApiException &&
             (error.statusCode == 404 ||
                 error.message.toLowerCase().contains('scan not found'));
         if (isNotFound) {
@@ -52,7 +72,7 @@ class HealthHubScreen extends ConsumerWidget {
               ? error.message
               : l10n.t(L10nKeys.genericError),
           actionLabel: l10n.t(L10nKeys.retry),
-          onAction: () => ref.invalidate(latestMimeScanProvider),
+          onAction: () => ref.invalidate(latestMimeScanProvider(profileId)),
         );
       },
       data: (vitals) {

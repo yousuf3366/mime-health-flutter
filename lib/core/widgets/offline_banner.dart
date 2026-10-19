@@ -13,10 +13,9 @@ class OfflineBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final message = ref.watch(languageControllerProvider).t(
-          L10nKeys.networkError,
-          fallback: 'No internet connection',
-        );
+    final message = ref
+        .watch(languageControllerProvider)
+        .t(L10nKeys.networkError, fallback: 'No internet connection');
 
     return AnimatedSlide(
       duration: const Duration(milliseconds: 250),
@@ -38,9 +37,9 @@ class OfflineBanner extends ConsumerWidget {
                     child: Text(
                       message,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],

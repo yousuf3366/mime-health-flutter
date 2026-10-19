@@ -133,7 +133,8 @@ class L10nKeys {
   static const questionnaireSkip = 'mobile.face_scan.questionnaire_skip';
   static const faceScanChoosePlan = 'mobile.face_scan.choose_plan';
   static const faceScanPlanRequired = 'mobile.face_scan.plan_required';
-  static const faceScanUrlFailedMessage = 'mobile.face_scan.face_scan_url_failed';
+  static const faceScanUrlFailedMessage =
+      'mobile.face_scan.face_scan_url_failed';
   static const faceScanResultsLoadingTitle =
       'mobile.face_scan.results_loading_title';
   static const faceScanResultsLoadingSubtitle =
@@ -154,13 +155,11 @@ class L10nKeys {
       'mobile.face_recognition.capture_hint';
   static const faceRecognitionCaptureButton =
       'mobile.face_recognition.capture_button';
-  static const faceRecognitionRegistered =
-      'mobile.face_recognition.registered';
+  static const faceRecognitionRegistered = 'mobile.face_recognition.registered';
   static const faceRecognitionRegisterFace =
       'mobile.face_recognition.register_face';
   static const faceRecognitionRetake = 'mobile.face_recognition.retake';
-  static const faceRecognitionRequired =
-      'mobile.face_recognition.required';
+  static const faceRecognitionRequired = 'mobile.face_recognition.required';
   static const faceRecognitionVerifyTitle =
       'mobile.face_recognition.verify_title';
   static const faceRecognitionVerifyHint =
@@ -172,8 +171,7 @@ class L10nKeys {
   static const faceRecognitionNoFace = 'mobile.face_recognition.no_face';
   static const faceRecognitionNoStoredFace =
       'mobile.face_recognition.no_stored_face';
-  static const faceRecognitionProcessing =
-      'mobile.face_recognition.processing';
+  static const faceRecognitionProcessing = 'mobile.face_recognition.processing';
   static const faceRecognitionCaptureFailed =
       'mobile.face_recognition.capture_failed';
   static const faceRecognitionCameraUnavailable =
@@ -189,9 +187,13 @@ class L10nKeys {
   static const healthDashboardBloodPressure =
       'mobile.health_dashboard.blood_pressure';
   static const healthDashboardRespRate = 'mobile.health_dashboard.resp_rate';
-  static const healthDashboardSpo2 = 'mobile.health_dashboard.spo2';
-  static const healthResonantBreathingScore = 'mobile.health_dashboard.health_resonant_breathing_score';
+  static const healthResonantBreathingScore =
+      'mobile.health_dashboard.health_resonant_breathing_score';
   static const healthDashboardHrv = 'mobile.health_dashboard.hrv';
+  static const healthDashboardSystolicBp =
+      'mobile.health_dashboard.systolic_bp';
+  static const healthDashboardDiastolicBp =
+      'mobile.health_dashboard.diastolic_bp';
   static const healthDashboardMetrics = 'mobile.health_dashboard.metrics';
   static const healthDashboardMetricConfidence =
       'mobile.health_dashboard.metric_confidence';
@@ -207,8 +209,7 @@ class L10nKeys {
       'mobile.health_dashboard.metric_mental_stress';
   static const healthDashboardMetricSleepQuality =
       'mobile.health_dashboard.metric_sleep_quality';
-  static const healthDashboardWellbeing =
-      'mobile.health_dashboard.wellbeing';
+  static const healthDashboardWellbeing = 'mobile.health_dashboard.wellbeing';
   static const healthDashboardWellbeingMental =
       'mobile.health_dashboard.wellbeing_mental';
   static const healthDashboardWellbeingPhysical =
@@ -247,9 +248,72 @@ class L10nKeys {
   static const subscriptionDevices = 'mobile.subscription.devices';
   static const subscriptionPayNow = 'mobile.subscription.pay_now';
   static const subscriptionHealthCheckup = 'mobile.subscription.health_checkup';
-  static const subscriptionSelectPlanTab = 'mobile.subscription.select_plan_tab';
+  static const subscriptionSelectPlanTab =
+      'mobile.subscription.select_plan_tab';
   static const subscriptionAddOnsTab = 'mobile.subscription.add_ons_tab';
   static const subscriptionBillingPeriod = 'mobile.subscription.billing_period';
+  static const subscriptionFreeTrial = 'mobile.subscription.free_trial';
+  static const subscriptionTrialStarted = 'mobile.subscription.trial_started';
+  static const planDetailsDevicesSection =
+      'mobile.plan_details.devices_section';
+  static const planDetailsPartnerServices =
+      'mobile.plan_details.partner_services';
+  static const planDetailsIncluded = 'mobile.plan_details.included';
+  static const planDetailsMonthlyScans = 'mobile.plan_details.monthly_scans';
+  static const planDetailsDevices = 'mobile.plan_details.devices';
+  static const planDetailsCurrent = 'mobile.plan_details.current';
+  static const subscriptionAddonsEmpty = 'mobile.subscription.addons_empty';
+  static const subscriptionAddonsSelected =
+      'mobile.subscription.addons_selected';
+  static const subscriptionAddonsNoneSelected =
+      'mobile.subscription.addons_none_selected';
+  static const paymentSelectedAddons = 'mobile.payment.selected_addons';
+  static const paymentTitle = 'mobile.payment.title';
+  static const paymentSelectPackage = 'mobile.payment.select_package';
+  static const paymentPromoCode = 'mobile.payment.promo_code';
+  static const paymentAmount = 'mobile.payment.amount';
+  static const paymentMethod = 'mobile.payment.method';
+  static const paymentMethodBkash = 'mobile.payment.method_bkash';
+  static const paymentMethodNagad = 'mobile.payment.method_nagad';
+  static const paymentMethodCard = 'mobile.payment.method_card';
+  static const paymentCheckout = 'mobile.payment.checkout';
+  static const paymentCancel = 'mobile.payment.cancel';
+  static const paymentGatewayTitle = 'mobile.payment.gateway_title';
+  static const paymentSuccess = 'mobile.payment.success';
+  static const paymentFailed = 'mobile.payment.failed';
+  static const paymentCancelled = 'mobile.payment.cancelled';
+  static const paymentNotCompleted = 'mobile.payment.not_completed';
+  static const mySubscriptionTitle = 'mobile.my_subscription.title';
+  static const mySubscriptionEmpty = 'mobile.my_subscription.empty';
+  static const mySubscriptionViewPlans = 'mobile.my_subscription.view_plans';
+  static const mySubscriptionChangePlan = 'mobile.my_subscription.change_plan';
+  static const mySubscriptionStatusActive =
+      'mobile.my_subscription.status_active';
+  static const mySubscriptionStatusTrial =
+      'mobile.my_subscription.status_trial';
+  static const mySubscriptionStatusCancelScheduled =
+      'mobile.my_subscription.status_cancel_scheduled';
+  static const mySubscriptionPeriod = 'mobile.my_subscription.period';
+  static const mySubscriptionDaysLeft = 'mobile.my_subscription.days_left';
+  static const mySubscriptionTrialEnds = 'mobile.my_subscription.trial_ends';
+  static const mySubscriptionCancelsOn = 'mobile.my_subscription.cancels_on';
+  static const mySubscriptionUsage = 'mobile.my_subscription.usage';
+  static const mySubscriptionUsageValue = 'mobile.my_subscription.usage_value';
+  static const mySubscriptionRemaining = 'mobile.my_subscription.remaining';
+  static const mySubscriptionLimits = 'mobile.my_subscription.limits';
+  static const mySubscriptionMaxProfiles =
+      'mobile.my_subscription.max_profiles';
+  static const mySubscriptionHistory = 'mobile.my_subscription.history';
+  static const mySubscriptionDays = 'mobile.my_subscription.days';
+  static const mySubscriptionDevices = 'mobile.my_subscription.devices';
+  static const mySubscriptionFeatures = 'mobile.my_subscription.features';
+  static const mySubscriptionBiomarkers = 'mobile.my_subscription.biomarkers';
+  static const mySubscriptionMetrics = 'mobile.my_subscription.metrics';
+  static const mySubscriptionAddons = 'mobile.my_subscription.addons';
+  static const mySubscriptionOneTime = 'mobile.my_subscription.one_time';
+  static const mySubscriptionValidity = 'mobile.my_subscription.validity';
+  static const mySubscriptionStarts = 'mobile.my_subscription.starts';
+  static const mySubscriptionEnds = 'mobile.my_subscription.ends';
 
   // Settings
   static const language = 'mobile.settings.language';

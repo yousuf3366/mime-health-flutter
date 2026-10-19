@@ -12,6 +12,7 @@ import '../../../../core/localization/l10n_keys.dart';
 import '../../../language/presentation/provider/language_provider.dart';
 import '../../domain/entity/face_scan_entity.dart';
 import '../provider/face_scan_di.dart';
+import '../util/scan_result_items.dart';
 import 'face_scan_health_dashboard_screen.dart';
 
 /// Lists past Mime scans for a profile (`GET /api/v1/scans`).
@@ -75,11 +76,10 @@ class FaceScanHistoryScreen extends ConsumerWidget {
                 final scan = scans[index];
                 return _ScanHistoryCard(
                   scan: scan,
-                  heartRateLabel: l10n.t(L10nKeys.healthDashboardHeartRate),
-                  bloodPressureLabel: l10n.t(
-                    L10nKeys.healthDashboardBloodPressure,
-                  ),
-                  respRateLabel: l10n.t(L10nKeys.healthDashboardRespRate),
+                  highlights: biomarkerItems(
+                    scan.rawBiomarkers,
+                    l10n,
+                  ).take(3).toList(growable: false),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute<void>(
@@ -104,16 +104,12 @@ class FaceScanHistoryScreen extends ConsumerWidget {
 class _ScanHistoryCard extends StatelessWidget {
   const _ScanHistoryCard({
     required this.scan,
-    required this.heartRateLabel,
-    required this.bloodPressureLabel,
-    required this.respRateLabel,
+    required this.highlights,
     required this.onTap,
   });
 
   final FaceScanVitalsResult scan;
-  final String heartRateLabel;
-  final String bloodPressureLabel;
-  final String respRateLabel;
+  final List<ScanResultItem> highlights;
   final VoidCallback onTap;
 
   @override
@@ -172,33 +168,22 @@ class _ScanHistoryCard extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: context.scaleHeight(12)),
-              Row(
-                children: [
-                  Expanded(
-                    child: _MetricChip(
-                      label: heartRateLabel,
-                      value: '${scan.heartRate.toStringAsFixed(0)} BPM',
-                    ),
-                  ),
-                  SizedBox(width: context.scaleWidth(8)),
-                  Expanded(
-                    child: _MetricChip(
-                      label: bloodPressureLabel,
-                      value:
-                          '${scan.bloodPressureSystolic.toStringAsFixed(0)}/'
-                          '${scan.bloodPressureDiastolic.toStringAsFixed(0)}',
-                    ),
-                  ),
-                  SizedBox(width: context.scaleWidth(8)),
-                  Expanded(
-                    child: _MetricChip(
-                      label: respRateLabel,
-                      value: '${scan.respiratoryRate.toStringAsFixed(0)}/MIN',
-                    ),
-                  ),
-                ],
-              ),
+              if (highlights.isNotEmpty) ...[
+                SizedBox(height: context.scaleHeight(12)),
+                Row(
+                  children: [
+                    for (var i = 0; i < highlights.length; i++) ...[
+                      if (i > 0) SizedBox(width: context.scaleWidth(8)),
+                      Expanded(
+                        child: _MetricChip(
+                          label: highlights[i].title,
+                          value: highlights[i].value,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
             ],
           ),
         ),

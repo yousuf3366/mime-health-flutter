@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mime_health/core/extensions/context_extensions.dart';
@@ -14,10 +14,14 @@ import 'package:mime_health/core/widgets/app_warning_card.dart';
 
 import '../../../../core/localization/l10n_keys.dart';
 import '../../../language/presentation/provider/language_provider.dart';
+import '../../../subscription/presentation/provider/subscription_provider.dart';
 import '../../domain/entity/face_scan_entity.dart';
+import '../provider/face_scan_di.dart';
+import '../util/scan_result_items.dart';
+import '../widget/scan_result_grid.dart';
 
 /// Health results dashboard (biomarkers from Mime store / latest-scan response).
-class FaceScanHealthDashboardScreen extends ConsumerWidget {
+class FaceScanHealthDashboardScreen extends HookConsumerWidget {
   const FaceScanHealthDashboardScreen({
     super.key,
     required this.vitals,
@@ -38,9 +42,52 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = ref.watch(languageControllerProvider);
+    // Local copy so the scan can be re-fetched after the user upgrades.
+    final scanState = useState(this.vitals);
+    useEffect(() {
+      scanState.value = this.vitals;
+      return null;
+    }, [this.vitals]);
+    final vitals = scanState.value;
+    final isRefreshingPlan = useState(false);
+
+    Future<void> openPlansAndRefresh() async {
+      final paid = await context.push<bool>(RouteNames.subscriptionPlans);
+      if (!context.mounted) return;
+      isRefreshingPlan.value = true;
+      try {
+        final active = await _refreshActivePlan(
+          context,
+          ref,
+          retry: paid == true,
+        );
+        if (!active || !context.mounted) return;
+        final refreshed = await _reloadScan(ref, scanState.value);
+        if (refreshed != null && context.mounted) {
+          scanState.value = refreshed;
+        }
+      } finally {
+        if (context.mounted) isRefreshingPlan.value = false;
+      }
+    }
+
+    final hasOverallScore = _wellbeingMental(vitals)?['score'] != null;
     final score = _overallScore(vitals);
     final scoreLabel = _scoreLabel(vitals);
-    // final spo2 = vitals.spo2 > 0 ? vitals.spo2 : 98.0;
+    final biomarkers = biomarkerItems(vitals.rawBiomarkers, l10n);
+    final metrics = metricItems(vitals.rawMetrics, l10n);
+    final wellbeing = wellbeingItems(vitals.rawMetrics, l10n);
+    final mySubscription = ref.watch(mySubscriptionProvider);
+    final isCheckingPlan =
+        isRefreshingPlan.value ||
+        (mySubscription.isLoading && !mySubscription.hasValue);
+    final hasActivePlan = mySubscription.asData?.value?.hasActivePlan ?? false;
+    final sectionTitleStyle = TextStyle(
+      color: AppColors.primaryContainer,
+      fontSize: context.titleFontSize,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 1.2,
+    );
     // final quality = (vitals.qualityStatus?.trim().isNotEmpty ?? false)
     //     ? vitals.qualityStatus!.toUpperCase()
     //     : 'GOOD';
@@ -101,90 +148,60 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(height: context.scaleHeight(16)),
-              _OverallScoreCard(
-                score: score,
-                label: scoreLabel,
-                caption: l10n.t(L10nKeys.healthDashboardOverallScore),
-              ),
-              SizedBox(height: context.defaultPaddingSc),
-              Text(
-                l10n.t(L10nKeys.healthDashboardBiomarkers),
-                style: TextStyle(
-                  color: AppColors.primaryContainer,
-                  fontSize: context.titleFontSize,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
+              if (hasOverallScore) ...[
+                SizedBox(height: context.scaleHeight(16)),
+                _OverallScoreCard(
+                  score: score,
+                  label: scoreLabel,
+                  caption: l10n.t(L10nKeys.healthDashboardOverallScore),
                 ),
-              ),
-              SizedBox(height: context.defaultPaddingSc),
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisSpacing: context.scaleWidth(6),
-                mainAxisSpacing: context.scaleHeight(6),
-                childAspectRatio: 1.9,
-                children: [
-                  _BiomarkerCard(
-                    iconAsset: 'assets/images/heart_rate_Icon.svg',
-                    title: l10n.t(L10nKeys.healthDashboardHeartRate),
-                    value: '${vitals.heartRate.toStringAsFixed(0)} BPM',
-                  ),
-                  _BiomarkerCard(
-                    iconAsset: 'assets/images/blood_pressure_icon.svg',
-                    title: l10n.t(L10nKeys.healthDashboardBloodPressure),
-                    value:
-                        '${vitals.bloodPressureSystolic.toStringAsFixed(0)}/'
-                        '${vitals.bloodPressureDiastolic.toStringAsFixed(0)}',
-                  ),
-                  _BiomarkerCard(
-                    iconAsset: 'assets/images/resporitory_icon.svg',
-                    title: l10n.t(L10nKeys.healthDashboardRespRate),
-                    value: '${vitals.respiratoryRate.toStringAsFixed(0)}/MIN',
-                  ),
-                  _BiomarkerCard(
-                    iconAsset: 'assets/images/spo2_icon.svg',
-                    title: l10n.t(L10nKeys.healthResonantBreathingScore),
-                    value: '${vitals.resonantBreathingScore}',
-                    // badge: quality,
-                    badge: null,
-                  ),
-                  if (vitals.heartRateVariability != null)
-                    _BiomarkerCard(
-                      iconAsset: 'assets/images/heart_rate_Icon.svg',
-                      title: l10n.t(L10nKeys.healthDashboardHrv),
-                      value:
-                          '${vitals.heartRateVariability!.toStringAsFixed(0)} ms',
-                    ),
-                ],
-              ),
-              SizedBox(height: context.scaleHeight(10)),
-              AppWarningCard(
-                message: l10n.t(L10nKeys.healthDashboardMedicalDisclaimer),
-              ),
+              ],
+              if (biomarkers.isNotEmpty) ...[
+                SizedBox(height: context.defaultPaddingSc),
+                Text(
+                  l10n.t(L10nKeys.healthDashboardBiomarkers),
+                  style: sectionTitleStyle,
+                ),
+                SizedBox(height: context.defaultPaddingSc),
+                ScanResultGrid(items: biomarkers),
+                SizedBox(height: context.scaleHeight(10)),
+                AppWarningCard(
+                  message: l10n.t(L10nKeys.healthDashboardMedicalDisclaimer),
+                ),
+              ],
               SizedBox(height: context.defaultPaddingSc),
               Text(
                 l10n.t(L10nKeys.healthDashboardMetrics),
-                style: TextStyle(
-                  color: AppColors.primaryContainer,
-                  fontSize: context.titleFontSize,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
-                ),
+                style: sectionTitleStyle,
               ),
               SizedBox(height: context.defaultPaddingSc),
-              _MetricsUpgradeCard(
-                title: l10n.t(L10nKeys.healthDashboardUpgradeTitle),
-                body: l10n.t(L10nKeys.healthDashboardUpgradeBody),
-                cta: l10n.t(L10nKeys.healthDashboardUpgradeCta),
-                // onUpgrade: () => context.push(
-                //   RouteNames.scanMetrics,
-                //   extra: vitals,
-                // ),
-                // onUpgrade: () => _showComingSoon(ref),
-                onUpgrade: () => context.push(RouteNames.subscriptionPlans),
-              ),
+              if (isCheckingPlan)
+                const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryContainer,
+                  ),
+                )
+              else if (!hasActivePlan)
+                _MetricsUpgradeCard(
+                  title: l10n.t(L10nKeys.healthDashboardUpgradeTitle),
+                  body: l10n.t(L10nKeys.healthDashboardUpgradeBody),
+                  cta: l10n.t(L10nKeys.healthDashboardUpgradeCta),
+                  onUpgrade: openPlansAndRefresh,
+                ),
+              if (hasActivePlan && metrics.isNotEmpty)
+                ScanResultGrid(items: metrics),
+              if (hasActivePlan && wellbeing.isNotEmpty) ...[
+                SizedBox(height: context.defaultPaddingSc),
+                Text(
+                  l10n.t(
+                    L10nKeys.healthDashboardWellbeing,
+                    fallback: 'Wellbeing',
+                  ),
+                  style: sectionTitleStyle,
+                ),
+                SizedBox(height: context.defaultPaddingSc),
+                ScanResultGrid(items: wellbeing),
+              ],
               SizedBox(height: context.scaleHeight(20)),
               AppButton(
                 label: l10n.t(L10nKeys.healthDashboardConsult),
@@ -204,6 +221,62 @@ class FaceScanHealthDashboardScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// Re-fetches `/subscription/me`. After a successful payment the gateway
+  /// callback may activate the plan a moment later, so [retry] polls briefly.
+  static Future<bool> _refreshActivePlan(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool retry,
+  }) async {
+    final attempts = retry ? 4 : 1;
+    for (var attempt = 0; attempt < attempts; attempt++) {
+      if (attempt > 0) await Future<void>.delayed(const Duration(seconds: 2));
+      if (!context.mounted) return false;
+      try {
+        final sub = await ref.refresh(mySubscriptionProvider.future);
+        if (sub?.hasActivePlan == true) return true;
+      } catch (_) {
+        // Keep polling; the provider exposes the error state to the UI.
+      }
+    }
+    return false;
+  }
+
+  /// Reloads [scan] so metrics hidden by the old plan are returned.
+  static Future<FaceScanVitalsResult?> _reloadScan(
+    WidgetRef ref,
+    FaceScanVitalsResult scan,
+  ) async {
+    final scanId = scan.mimeScanId;
+    final profileId = scan.profileId;
+    if (profileId == null) return null;
+
+    final latest = await ref
+        .read(getLatestMimeScanUseCaseProvider)
+        .call(profileId: profileId);
+    final latestScan = latest.when(success: (v) => v, failure: (_) => null);
+    ref.invalidate(latestMimeScanProvider(profileId));
+    if (latestScan != null &&
+        (scanId == null || latestScan.mimeScanId == scanId)) {
+      return latestScan;
+    }
+
+    if (scanId == null) return null;
+    ref.invalidate(mimeScanHistoryProvider(profileId));
+    final history = await ref
+        .read(getMimeScansUseCaseProvider)
+        .call(profileId: profileId);
+    return history.when(
+      success: (items) {
+        for (final item in items) {
+          if (item.mimeScanId == scanId) return item;
+        }
+        return null;
+      },
+      failure: (_) => null,
     );
   }
 
@@ -390,116 +463,6 @@ class _ScoreRingPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _ScoreRingPainter oldDelegate) =>
       oldDelegate.progress != progress;
-}
-
-class _BiomarkerCard extends StatelessWidget {
-  const _BiomarkerCard({
-    required this.iconAsset,
-    required this.title,
-    required this.value,
-    this.badge,
-  });
-
-  final String iconAsset;
-  final String title;
-  final String value;
-  final String? badge;
-
-  @override
-  Widget build(BuildContext context) {
-    final iconSize = context.scaleWidth(20);
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.scaleWidth(8),
-        vertical: context.scaleHeight(8),
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundDeep,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: AppColors.borderFocused.withAlpha(120),
-          width: 0.5,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset(
-                iconAsset,
-                width: iconSize,
-                height: iconSize,
-                fit: BoxFit.contain,
-              ),
-              const Spacer(),
-              if (badge != null)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.scaleWidth(4),
-                    vertical: context.scaleHeight(1),
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.greenLight.withAlpha(240),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    badge!,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: context.extraSmallFontSize,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          Expanded(
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  value,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.primaryContainer,
-                    fontSize: context.scaleWidth(22),
-                    fontWeight: FontWeight.w700,
-                    height: 1.0,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: context.extraSmallFontSize,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.3,
-                    height: 1.0,
-                  ),
-                ),
-              ),
-              SizedBox(width: context.scaleWidth(4)),
-              Image.asset(
-                'assets/images/warning_Info_icon.png',
-                width: context.scaleWidth(25),
-                height: context.scaleWidth(25),
-                fit: BoxFit.contain,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class _MetricsUpgradeCard extends StatelessWidget {

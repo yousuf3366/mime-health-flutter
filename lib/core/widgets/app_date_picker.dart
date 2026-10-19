@@ -55,7 +55,8 @@ class AppDatePicker extends HookWidget {
         ? DateFormat(displayFormat).format(selectedDate!)
         : null;
 
-    final resolvedError = errorText ??
+    final resolvedError =
+        errorText ??
         (mandatory && touched.value && selectedDate == null
             ? '$label is required'
             : null);
@@ -64,7 +65,8 @@ class AppDatePicker extends HookWidget {
       if (!enabled) return;
       touched.value = true;
 
-      final initialDate = selectedDate ??
+      final initialDate =
+          selectedDate ??
           DateTime(
             lastDate.year,
             lastDate.month,
@@ -143,8 +145,8 @@ class AppDatePicker extends HookWidget {
                         color: !enabled
                             ? AppColors.textHint
                             : (selectedDate != null
-                                ? AppColors.textPrimary
-                                : AppColors.textSecondary),
+                                  ? AppColors.textPrimary
+                                  : AppColors.textSecondary),
                         fontSize: context.bodyFontSize,
                         fontWeight: FontWeight.w600,
                       ),

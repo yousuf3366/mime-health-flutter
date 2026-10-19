@@ -16,11 +16,13 @@ import '../../../profile/domain/entity/profile_entity.dart';
 import '../../../profile/presentation/provider/profile_di.dart';
 import '../../data/mapper/face_scan_mapper.dart';
 import '../../data/model/mime_scan_models.dart';
+
 // Temporarily unused while the question-and-answer screen is commented out.
 // import '../../domain/catalog/mime_question_catalog.dart';
 import '../../domain/entity/face_scan_entity.dart';
 import '../provider/face_scan_di.dart';
 import '../screen/face_scan_health_dashboard_screen.dart';
+
 // Temporarily unused while the question-and-answer screen is commented out.
 // import '../screen/face_scan_questionnaire_screen.dart';
 import '../screen/face_scan_results_loading_screen.dart';
@@ -60,19 +62,16 @@ class FaceScanFlowNotifier extends Notifier<FaceScanFlowState> {
       profile = forProfile;
     } else {
       try {
-        final profiles = await ref.read(profilesProvider.future);
+        // final profiles = await ref.read(profilesProvider.future);
         if (!isActive()) return FaceScanStartResult.aborted;
-        if (profiles.isEmpty) {
-          const message =
-              'Create a health profile before starting a face scan.';
-          state = state.copyWith(
-            status: FaceScanFlowStatus.error,
-            errorMessage: message,
-          );
-          snackbar.showError(message);
-          return FaceScanStartResult.aborted;
-        }
-        profile = _primaryProfile(profiles);
+
+        const message = 'Create a health profile before starting a face scan.';
+        state = state.copyWith(
+          status: FaceScanFlowStatus.error,
+          errorMessage: message,
+        );
+        snackbar.showError(message);
+        return FaceScanStartResult.aborted;
       } catch (error) {
         if (!isActive()) return FaceScanStartResult.aborted;
         final message = error is AppException
@@ -253,105 +252,6 @@ class FaceScanFlowNotifier extends Notifier<FaceScanFlowState> {
         ),
       ),
     );
-  }
-
-  // Temporarily unused while the question-and-answer screen is commented out.
-  // Restore this method together with the questionnaire block in [startScan].
-  /*
-  Future<void> _showAndSubmitQuestionnaire({
-    required String externalUserId,
-    String? sex,
-  }) async {
-    final navigator = rootNavigatorKey.currentState;
-    if (navigator == null) return;
-
-    // Completer: finish uses pushReplacement → loading (not pop), so we
-    // cannot rely on the route Future for answers.
-    final answersCompleter = Completer<List<FaceScanQuestionAnswer>?>();
-
-    unawaited(
-      navigator
-          .push<List<FaceScanQuestionAnswer>>(
-            MaterialPageRoute<List<FaceScanQuestionAnswer>>(
-              fullscreenDialog: true,
-              builder: (_) => FaceScanQuestionnaireScreen(
-                questions: MimeQuestionCatalog.postScanQuestions,
-                completionRoute: _resultsLoadingRoute(),
-                onCompleted: (answers) {
-                  state = state.copyWith(status: FaceScanFlowStatus.processing);
-                  if (!answersCompleter.isCompleted) {
-                    answersCompleter.complete(answers);
-                  }
-                },
-              ),
-            ),
-          )
-          .then((popped) {
-            // Cancel / system back still pops the questionnaire route.
-            if (!answersCompleter.isCompleted) {
-              answersCompleter.complete(popped);
-            }
-          }),
-    );
-
-    final result = await answersCompleter.future;
-    if (result == null || result.isEmpty) return;
-
-    try {
-      // Ensure IntelliProve user exists, then submit answers.
-      await ref
-          .read(ensureIntelliProveUserUseCaseProvider)
-          .call(
-            externalUserId: externalUserId,
-            language: AppConfig.intelliProveValidatedLanguage,
-            sex: sex,
-          );
-
-      final userIdResult = await ref
-          .read(getIntelliProveUserIdUseCaseProvider)
-          .call(externalUserId);
-      final userId = userIdResult.dataOrNull?.userId;
-      if (userId != null && userId.isNotEmpty) {
-        final many = await ref
-            .read(saveFaceScanQuestionAnswersManyUseCaseProvider)
-            .call(userId: externalUserId, answers: result, timezone: _timezone);
-        if (many.isSuccess) return;
-        if (kDebugMode) {
-          debugPrint(
-            '[FaceScan] questionnaire bulk submit failed: '
-            '${many.errorOrNull?.message}',
-          );
-        }
-      }
-
-      final fallback = await ref
-          .read(saveFaceScanQuestionAnswersUseCaseProvider)
-          .call(
-            externalUserId: externalUserId,
-            answers: result,
-            timezone: _timezone,
-          );
-      if (kDebugMode && !fallback.isSuccess) {
-        debugPrint(
-          '[FaceScan] questionnaire fallback failed: '
-          '${fallback.errorOrNull?.message}',
-        );
-      }
-    } catch (error) {
-      if (kDebugMode) {
-        debugPrint('[FaceScan] questionnaire submit failed: $error');
-      }
-    }
-  }
-  */
-
-  ProfileEntity _primaryProfile(List<ProfileEntity> profiles) {
-    for (final profile in profiles) {
-      if (profile.profileKind == AppConstants.profileKindSelf) {
-        return profile;
-      }
-    }
-    return profiles.first;
   }
 
   void _fail(AppException error, SnackbarService snackbar) {

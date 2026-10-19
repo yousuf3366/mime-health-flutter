@@ -113,12 +113,14 @@ class ProfileDetailsBody extends ConsumerWidget {
     required this.phoneNumber,
     required this.emailAddress,
     this.showAddAnother = true,
+    this.showSubscription = true,
   });
 
   final ProfileEntity profile;
   final String? phoneNumber;
   final String? emailAddress;
   final bool showAddAnother;
+  final bool showSubscription;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,7 +155,11 @@ class ProfileDetailsBody extends ConsumerWidget {
                     context.defaultPaddingSc,
                     context.scaleHeight(16),
                     context.defaultPaddingSc,
-                    context.scaleHeight(210),
+                    context.scaleHeight(
+                      150 +
+                          (showAddAnother ? 60 : 0) +
+                          (showSubscription ? 60 : 0),
+                    ),
                   ),
                   child: Column(
                     children: [
@@ -247,6 +253,12 @@ class ProfileDetailsBody extends ConsumerWidget {
                 : null,
             onSecondaryPressed: showAddAnother
                 ? () => context.push(RouteNames.createProfile)
+                : null,
+            subscriptionLabel: showSubscription
+                ? l10n.t(L10nKeys.mySubscriptionTitle)
+                : null,
+            onSubscriptionPressed: showSubscription
+                ? () => context.push(RouteNames.mySubscription)
                 : null,
           ),
         ),
@@ -481,12 +493,16 @@ class _BottomCta extends StatelessWidget {
     required this.onPressed,
     this.secondaryLabel,
     this.onSecondaryPressed,
+    this.subscriptionLabel,
+    this.onSubscriptionPressed,
   });
 
   final String label;
   final VoidCallback onPressed;
   final String? secondaryLabel;
   final VoidCallback? onSecondaryPressed;
+  final String? subscriptionLabel;
+  final VoidCallback? onSubscriptionPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -524,6 +540,15 @@ class _BottomCta extends StatelessWidget {
               label: secondaryLabel!,
               icon: Icons.person_add_alt_1_outlined,
               onPressed: onSecondaryPressed,
+              btnStyle: AppButtonStyle.primary,
+            ),
+          ],
+          if (subscriptionLabel != null && onSubscriptionPressed != null) ...[
+            SizedBox(height: context.scaleHeight(12)),
+            AppButton(
+              label: subscriptionLabel!,
+              icon: Icons.workspace_premium_outlined,
+              onPressed: onSubscriptionPressed,
               btnStyle: AppButtonStyle.primary,
             ),
           ],

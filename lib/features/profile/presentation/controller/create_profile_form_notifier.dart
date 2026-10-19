@@ -233,7 +233,6 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
       profileKind: value,
       phoneError: null,
       emailError: null,
-      imageEmbeddingError: null,
       errorMessage: null,
     );
   }
@@ -288,7 +287,6 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
     final sexError = state.sex == null ? 'Sex is required' : null;
     final imageEmbeddingError =
         requireFace &&
-            isSelf &&
             (state.imageEmbedding == null ||
                 state.imageEmbedding!.trim().isEmpty)
         ? 'Face registration is required'
@@ -394,7 +392,7 @@ class CreateProfileFormNotifier extends Notifier<CreateProfileFormState> {
       historyOfHypertension: state.historyOfHypertension,
       historyOfHighGlucoseLevels: state.historyOfHighGlucoseLevels,
       privacyLevel: AppConstants.profilePrivacyFullSharing,
-      imageEmbedding: isSelf ? state.imageEmbedding : null,
+      imageEmbedding: state.imageEmbedding,
     );
   }
 

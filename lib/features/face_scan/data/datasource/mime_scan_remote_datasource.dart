@@ -52,10 +52,14 @@ class MimeScanRemoteDatasource {
     //  return MimeScanStoreResponseModel.fromJson(_vitalsFromSampleScanJson());
   }
 
-  /// GET `/api/v1/scans/latest` — same `data` shape as store-scan response.
-  Future<MimeScanStoreResponseModel> getLatestScan({int? profileId}) async {
+  /// GET `/api/v1/scans/latest?profile_id={id}` — same `data` shape as the
+  /// store-scan response.
+  Future<MimeScanStoreResponseModel> getLatestScan({
+    required int profileId,
+  }) async {
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.latestScansResult,
+      queryParameters: {'profile_id': profileId},
     );
     return MimeScanStoreResponseModel.fromJson(_asJsonMap(response.data));
   }

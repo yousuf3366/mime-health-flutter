@@ -51,17 +51,17 @@ class IntelliProveUserIdResult extends Equatable {
   List<Object?> get props => [userId];
 }
 
-/// Mapped vitals from Mime scan store response.
+/// Mapped vitals from Mime scan store response. Every biomarker / metric is
+/// optional: the server only returns what the user's plan includes.
 class FaceScanVitalsResult extends Equatable {
   const FaceScanVitalsResult({
     required this.faceScanId,
     required this.timestamp,
-    required this.heartRate,
-    required this.respiratoryRate,
-    required this.bloodPressureSystolic,
-    required this.bloodPressureDiastolic,
-    required this.spo2,
-    required this.stressLevel,
+    this.heartRate,
+    this.respiratoryRate,
+    this.bloodPressureSystolic,
+    this.bloodPressureDiastolic,
+    this.stressLevel = 0,
     this.heartRateVariability,
     this.resonantBreathingScore,
     this.mimeScanId,
@@ -73,11 +73,10 @@ class FaceScanVitalsResult extends Equatable {
 
   final String faceScanId;
   final DateTime timestamp;
-  final double heartRate;
-  final double respiratoryRate;
-  final double bloodPressureSystolic;
-  final double bloodPressureDiastolic;
-  final double spo2;
+  final double? heartRate;
+  final double? respiratoryRate;
+  final double? bloodPressureSystolic;
+  final double? bloodPressureDiastolic;
   final double stressLevel;
 
   /// From Mime `biomarkers.heart_rate_variability`.
@@ -102,7 +101,6 @@ class FaceScanVitalsResult extends Equatable {
     respiratoryRate,
     bloodPressureSystolic,
     bloodPressureDiastolic,
-    spo2,
     stressLevel,
     heartRateVariability,
     resonantBreathingScore,

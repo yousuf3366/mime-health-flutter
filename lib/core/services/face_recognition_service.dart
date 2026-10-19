@@ -48,7 +48,10 @@ class FaceRecognitionService {
 
   Future<List<double>> _runEmbedding(List inputTensor) async {
     final interpreter = _interpreter!;
-    final output = List.generate(1, (_) => List.filled(kFaceEmbeddingSize, 0.0));
+    final output = List.generate(
+      1,
+      (_) => List.filled(kFaceEmbeddingSize, 0.0),
+    );
     interpreter.run(inputTensor, output);
     return List<double>.from(output[0]);
   }
@@ -61,10 +64,8 @@ class FaceRecognitionService {
   }
 }
 
-final faceRecognitionServiceProvider = Provider<FaceRecognitionService>(
-  (ref) {
-    final service = FaceRecognitionService();
-    ref.onDispose(service.dispose);
-    return service;
-  },
-);
+final faceRecognitionServiceProvider = Provider<FaceRecognitionService>((ref) {
+  final service = FaceRecognitionService();
+  ref.onDispose(service.dispose);
+  return service;
+});

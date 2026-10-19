@@ -9,8 +9,8 @@ import '../../domain/usecase/subscription_usecase.dart';
 
 final subscriptionRemoteDatasourceProvider =
     Provider<SubscriptionRemoteDatasource>(
-  (ref) => SubscriptionRemoteDatasource(ref.watch(dioProvider)),
-);
+      (ref) => SubscriptionRemoteDatasource(ref.watch(dioProvider)),
+    );
 
 final subscriptionRepositoryProvider = Provider<SubscriptionRepository>(
   (ref) => SubscriptionRepositoryImpl(
@@ -21,30 +21,42 @@ final subscriptionRepositoryProvider = Provider<SubscriptionRepository>(
 
 final getSubscriptionPlansUseCaseProvider =
     Provider<GetSubscriptionPlansUseCase>(
-  (ref) => GetSubscriptionPlansUseCase(
-    ref.watch(subscriptionRepositoryProvider),
-  ),
-);
+      (ref) => GetSubscriptionPlansUseCase(
+        ref.watch(subscriptionRepositoryProvider),
+      ),
+    );
 
 final selectSubscriptionPlanUseCaseProvider =
     Provider<SelectSubscriptionPlanUseCase>(
-  (ref) => SelectSubscriptionPlanUseCase(
-    ref.watch(subscriptionRepositoryProvider),
-  ),
-);
+      (ref) => SelectSubscriptionPlanUseCase(
+        ref.watch(subscriptionRepositoryProvider),
+      ),
+    );
+
+final checkoutSubscriptionUseCaseProvider =
+    Provider<CheckoutSubscriptionUseCase>(
+      (ref) => CheckoutSubscriptionUseCase(
+        ref.watch(subscriptionRepositoryProvider),
+      ),
+    );
+
+final getSubscriptionServicesUseCaseProvider =
+    Provider<GetSubscriptionServicesUseCase>(
+      (ref) => GetSubscriptionServicesUseCase(
+        ref.watch(subscriptionRepositoryProvider),
+      ),
+    );
 
 final getMySubscriptionUseCaseProvider = Provider<GetMySubscriptionUseCase>(
-  (ref) => GetMySubscriptionUseCase(
-    ref.watch(subscriptionRepositoryProvider),
-  ),
+  (ref) => GetMySubscriptionUseCase(ref.watch(subscriptionRepositoryProvider)),
 );
 
 /// Current subscription from Mime (`GET /subscription/me`). Not cached locally.
 final mySubscriptionProvider =
     FutureProvider.autoDispose<MySubscriptionEntity?>((ref) async {
-  final result = await ref.watch(getMySubscriptionUseCaseProvider).call();
-  return result.when(
-    success: (data) => data,
-    failure: (error) => throw error,
-  );
-});
+      final result = await ref.watch(getMySubscriptionUseCaseProvider).call();
+      return result.when(
+        success: (data) => data,
+        failure: (error) => throw error,
+      );
+    });

@@ -80,9 +80,7 @@ class AppMediaPickerField extends ConsumerWidget {
           : Icon(
               Icons.add_a_photo_outlined,
               size: context.scaleWidth(18),
-              color: canPress
-                  ? AppColors.primaryContainer
-                  : AppColors.textHint,
+              color: canPress ? AppColors.primaryContainer : AppColors.textHint,
             ),
       label: Text(
         label,

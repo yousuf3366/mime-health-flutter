@@ -52,7 +52,7 @@ class AppConfig {
   /// Override: `--dart-define=INTELLIPROVE_API_KEY=...`
   static const String intelliProveApiKey = String.fromEnvironment(
     'INTELLIPROVE_API_KEY',
-    defaultValue: 'testKey-wkqhs6ya8xf295suue9gembfl1k9dwt269z1ybzj'
+    defaultValue: 'testKey-wkqhs6ya8xf295suue9gembfl1k9dwt269z1ybzj',
   );
 
   /// Plugin / API language for IntelliProve.
@@ -91,8 +91,8 @@ class AppConfig {
 
   static String get intelliProveValidatedLanguage =>
       intelliProveSupportedLanguages.contains(intelliProveLanguage)
-          ? intelliProveLanguage
-          : 'en';
+      ? intelliProveLanguage
+      : 'en';
 
   static bool get hasIntelliProveApiKey => intelliProveApiKey.isNotEmpty;
 

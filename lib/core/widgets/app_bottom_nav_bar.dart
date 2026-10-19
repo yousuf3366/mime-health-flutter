@@ -3,13 +3,7 @@ import 'package:flutter/material.dart';
 import '../extensions/context_extensions.dart';
 import '../theme/app_colors.dart';
 
-enum AppBottomNavItem {
-  home,
-  healthHub,
-  faceScan,
-  trends,
-  profile,
-}
+enum AppBottomNavItem { home, healthHub, faceScan, trends, profile }
 
 class AppBottomNavDestination {
   const AppBottomNavDestination({
@@ -52,9 +46,7 @@ class AppBottomNavBar extends StatelessWidget {
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(context.scaleWidth(12)),
         ),
-        border: const Border(
-          top: BorderSide(color: AppColors.outlineVariant),
-        ),
+        border: const Border(top: BorderSide(color: AppColors.outlineVariant)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.35),
@@ -92,8 +84,9 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        isActive ? AppColors.primaryContainer : AppColors.textSecondary;
+    final color = isActive
+        ? AppColors.primaryContainer
+        : AppColors.textSecondary;
 
     return Material(
       color: Colors.transparent,
@@ -113,7 +106,11 @@ class _NavItem extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(destination.icon, color: color, size: context.scaleWidth(24)),
+              Icon(
+                destination.icon,
+                color: color,
+                size: context.scaleWidth(24),
+              ),
               SizedBox(height: context.scaleHeight(4)),
               Text(
                 destination.label,

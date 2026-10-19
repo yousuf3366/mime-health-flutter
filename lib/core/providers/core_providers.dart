@@ -10,7 +10,8 @@ import '../router/route_names.dart';
 import '../services/connectivity_service.dart';
 import '../services/device_info_service.dart';
 import '../services/dialog_service.dart';
-import '../services/snackbar_service.dart' show SnackbarService, rootNavigatorKey;
+import '../services/snackbar_service.dart'
+    show SnackbarService, rootNavigatorKey;
 import '../storage/secure_storage_service.dart';
 import '../storage/shared_prefs_service.dart';
 
@@ -43,9 +44,7 @@ final snackbarServiceProvider = Provider<SnackbarService>(
   (ref) => SnackbarService(),
 );
 
-final dialogServiceProvider = Provider<DialogService>(
-  (ref) => DialogService(),
-);
+final dialogServiceProvider = Provider<DialogService>((ref) => DialogService());
 
 /// Session-expired callback used by [AuthInterceptor].
 final sessionExpiredHandlerProvider = Provider<OnSessionExpired>((ref) {
@@ -54,9 +53,9 @@ final sessionExpiredHandlerProvider = Provider<OnSessionExpired>((ref) {
     final context = rootNavigatorKey.currentContext;
     if (context != null && context.mounted) {
       GoRouter.of(context).go(RouteNames.login);
-      ref.read(snackbarServiceProvider).showWarning(
-            'Session expired. Please sign in again.',
-          );
+      ref
+          .read(snackbarServiceProvider)
+          .showWarning('Session expired. Please sign in again.');
     }
   };
 });

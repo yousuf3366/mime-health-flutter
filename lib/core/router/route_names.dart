@@ -9,6 +9,10 @@ class RouteNames {
   static const String createProfile = '/create-profile';
   static const String profileView = '/profile/view';
   static const String subscriptionPlans = '/subscription/plans';
+  static const String subscriptionPlanDetails = '/subscription/plans/details';
+  static const String subscriptionPayment = '/subscription/payment';
+  static const String paymentWebView = '/subscription/payment/gateway';
+  static const String mySubscription = '/subscription/me';
   static const String termsAndConditions = '/terms-and-conditions';
   static const String dataSharingConsent = '/data-sharing-consent';
   static const String scanHistory = '/scan-history';

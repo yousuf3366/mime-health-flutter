@@ -92,8 +92,7 @@ class _AppTextFieldState extends State<AppTextField> {
         hintText: widget.hint,
         errorText: widget.errorState,
         counterStyle: theme.textTheme.bodySmall,
-        prefixIcon:
-            widget.prefixIcon == null ? null : Icon(widget.prefixIcon),
+        prefixIcon: widget.prefixIcon == null ? null : Icon(widget.prefixIcon),
         suffixIcon: widget.suffixIcon,
       ),
     );

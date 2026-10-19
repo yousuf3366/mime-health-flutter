@@ -62,6 +62,7 @@ class ProfileViewScreen extends HookConsumerWidget {
         phoneNumber: phone,
         emailAddress: email,
         showAddAnother: false,
+        showSubscription: false,
       ),
     );
   }

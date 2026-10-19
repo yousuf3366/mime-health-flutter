@@ -41,7 +41,8 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final canPop = Navigator.of(context).canPop();
-    final Widget? resolvedLeading = leading ??
+    final Widget? resolvedLeading =
+        leading ??
         (automaticallyImplyLeading && canPop
             ? IconButton(
                 onPressed: onBack ?? () => Navigator.of(context).maybePop(),
