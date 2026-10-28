@@ -1,7 +1,7 @@
 name: mime_health
 description: Production-ready Mime Health Flutter application with Clean Architecture.
 publish_to: 'none'
-version: 1.0.4+4
+version: 1.0.6+6
 
 environment:
   sdk: ^3.11.5
@@ -53,6 +53,8 @@ dependencies:
   flutter_markdown: ^0.7.7+1
   webview_flutter: ^4.14.1
   webview_flutter_android: ^4.14.1
+  open_filex: ^5.0.0
+  share_plus: ^11.1.0
 
 dev_dependencies:
   flutter_test:
@@ -62,5 +64,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/
     - assets/images/
     - assets/models/mobilefacenet.tflite

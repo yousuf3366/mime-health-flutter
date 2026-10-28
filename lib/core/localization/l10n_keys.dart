@@ -268,6 +268,32 @@ class L10nKeys {
   static const subscriptionAddonsNoneSelected =
       'mobile.subscription.addons_none_selected';
   static const paymentSelectedAddons = 'mobile.payment.selected_addons';
+  static const scanShare = 'mobile.scan_share.share';
+  static const scanShareSubject = 'mobile.scan_share.subject';
+  static const scanShareMessage = 'mobile.scan_share.message';
+  static const scanShareLinkCopied = 'mobile.scan_share.link_copied';
+  static const paymentHistoryTitle = 'mobile.payment_history.title';
+  static const paymentHistoryEmpty = 'mobile.payment_history.empty';
+  static const paymentHistoryInvoice = 'mobile.payment_history.invoice';
+  static const paymentHistoryPaidOn = 'mobile.payment_history.paid_on';
+  static const paymentHistoryCreatedOn = 'mobile.payment_history.created_on';
+  static const paymentHistoryMethod = 'mobile.payment_history.method';
+  static const paymentHistoryTransaction = 'mobile.payment_history.transaction';
+  static const paymentHistoryFailure = 'mobile.payment_history.failure';
+  static const paymentHistoryDownload = 'mobile.payment_history.download';
+  static const paymentHistorySaved = 'mobile.payment_history.saved';
+  static const paymentHistoryFilterTitle =
+      'mobile.payment_history.filter_title';
+  static const paymentHistoryClearFilter =
+      'mobile.payment_history.clear_filter';
+  static const paymentHistoryEmptyFiltered =
+      'mobile.payment_history.empty_filtered';
+  static const paymentStatusCompleted = 'mobile.payment.status_completed';
+  static const paymentStatusPending = 'mobile.payment.status_pending';
+  static const paymentStatusFailed = 'mobile.payment.status_failed';
+  static const paymentPurposeSubscription =
+      'mobile.payment.purpose_subscription';
+  static const paymentPurposeServices = 'mobile.payment.purpose_services';
   static const paymentTitle = 'mobile.payment.title';
   static const paymentSelectPackage = 'mobile.payment.select_package';
   static const paymentPromoCode = 'mobile.payment.promo_code';

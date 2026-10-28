@@ -124,8 +124,8 @@ class ScanResultCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: context.scaleWidth(4)),
-              Image.asset(
-                'assets/images/warning_Info_icon.png',
+              SvgPicture.asset(
+                'assets/images/warning_Info_icon.svg',
                 width: context.scaleWidth(25),
                 height: context.scaleWidth(25),
                 fit: BoxFit.contain,

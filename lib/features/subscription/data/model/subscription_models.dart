@@ -3,6 +3,7 @@ library;
 
 export 'checkout_models.dart';
 export 'my_subscription_models.dart';
+export 'payment_history_models.dart';
 export 'select_plan_models.dart';
 export 'selected_subscription_model.dart';
 export 'subscription_eligibility_model.dart';

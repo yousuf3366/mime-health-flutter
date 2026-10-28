@@ -1,6 +1,8 @@
+export '../controller/payment_history_notifier.dart';
 export '../controller/subscription_addons_notifier.dart';
 export '../controller/subscription_checkout_notifier.dart';
 export '../controller/subscription_plans_notifier.dart';
+export '../state/payment_history_state.dart';
 export '../state/subscription_addons_state.dart';
 export '../state/subscription_checkout_state.dart';
 export '../state/subscription_plans_state.dart';

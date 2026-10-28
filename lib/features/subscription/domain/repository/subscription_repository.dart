@@ -23,6 +23,21 @@ abstract class SubscriptionRepository {
     List<String> serviceCodes = const [],
   });
 
+  /// Payment history page (`GET /subscription/payments`), optionally limited
+  /// to payments between [fromDate] and [toDate] (inclusive).
+  Future<Result<PaymentHistoryPageEntity>> getPayments({
+    int page = 1,
+    int perPage = 25,
+    DateTime? fromDate,
+    DateTime? toDate,
+  });
+
+  /// Saves the invoice at [url] to [savePath]; returns the saved path.
+  Future<Result<String>> downloadInvoice({
+    required String url,
+    required String savePath,
+  });
+
   /// Current subscription from Mime (`GET /api/v1/subscription/me`).
   /// Returns `null` when the user has no subscription.
   Future<Result<MySubscriptionEntity?>> getMySubscription();

@@ -1,3 +1,6 @@
+import 'package:intl/intl.dart';
+
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/repository/base_repository.dart';
@@ -113,6 +116,43 @@ class SubscriptionRepositoryImpl extends BaseRepository
         );
       }
       return SubscriptionMapper.toCheckoutEntity(payment, redirectUrl);
+    });
+  }
+
+  @override
+  Future<Result<PaymentHistoryPageEntity>> getPayments({
+    int page = 1,
+    int perPage = 25,
+    DateTime? fromDate,
+    DateTime? toDate,
+  }) {
+    final format = DateFormat(AppConstants.serverDateFormat);
+    return safeApiCall(() async {
+      final response = await _remote.getPayments(
+        page: page,
+        perPage: perPage,
+        fromDate: fromDate == null ? null : format.format(fromDate),
+        toDate: toDate == null ? null : format.format(toDate),
+      );
+      if (!response.success) {
+        throw ApiException(
+          response.message.isEmpty
+              ? 'Failed to load payment history.'
+              : response.message,
+        );
+      }
+      return SubscriptionMapper.toPaymentHistoryPage(response);
+    });
+  }
+
+  @override
+  Future<Result<String>> downloadInvoice({
+    required String url,
+    required String savePath,
+  }) {
+    return safeApiCall(() async {
+      await _remote.downloadInvoice(url: url, savePath: savePath);
+      return savePath;
     });
   }
 

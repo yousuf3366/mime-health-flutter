@@ -15,6 +15,7 @@ import '../../features/profile/presentation/screen/profile_view_screen.dart';
 import '../../features/splash/presentation/page/splash_page.dart';
 import '../../features/subscription/domain/entity/subscription_entity.dart';
 import '../../features/subscription/presentation/screen/my_subscription_screen.dart';
+import '../../features/subscription/presentation/screen/payment_history_screen.dart';
 import '../../features/subscription/presentation/screen/payment_webview_screen.dart';
 import '../../features/subscription/presentation/screen/subscription_payment_screen.dart';
 import '../../features/subscription/presentation/screen/subscription_plan_details_screen.dart';
@@ -99,6 +100,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 plan: state.extra! as SubscriptionPlanEntity,
               )
             : const _NotFoundPage(),
+      ),
+      GoRoute(
+        path: RouteNames.paymentHistory,
+        name: 'paymentHistory',
+        builder: (context, state) => const PaymentHistoryScreen(),
       ),
       GoRoute(
         path: RouteNames.mySubscription,

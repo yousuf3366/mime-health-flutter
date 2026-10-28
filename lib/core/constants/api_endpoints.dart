@@ -28,6 +28,8 @@ class ApiEndpoints {
   static const String feedback = '/api/v1/feedback';
   static const String subscriptionCheckout = '/api/v1/subscription/checkout';
   static const String subscriptionServices = '/api/v1/subscription/services';
+  static const String subscriptionPayments = '/api/v1/subscription/payments';
+  static const String shareLinks = '/api/v1/share-links';
   static const String subscriptionSelectPlan =
       '/api/v1/subscription/select-plan';
 

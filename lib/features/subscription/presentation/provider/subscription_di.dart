@@ -47,6 +47,14 @@ final getSubscriptionServicesUseCaseProvider =
       ),
     );
 
+final getPaymentHistoryUseCaseProvider = Provider<GetPaymentHistoryUseCase>(
+  (ref) => GetPaymentHistoryUseCase(ref.watch(subscriptionRepositoryProvider)),
+);
+
+final downloadInvoiceUseCaseProvider = Provider<DownloadInvoiceUseCase>(
+  (ref) => DownloadInvoiceUseCase(ref.watch(subscriptionRepositoryProvider)),
+);
+
 final getMySubscriptionUseCaseProvider = Provider<GetMySubscriptionUseCase>(
   (ref) => GetMySubscriptionUseCase(ref.watch(subscriptionRepositoryProvider)),
 );

@@ -82,6 +82,52 @@ class SubscriptionMapper {
     );
   }
 
+  static PaymentHistoryPageEntity toPaymentHistoryPage(
+    PaymentHistoryResponseModel model,
+  ) {
+    final pagination = model.pagination;
+    return PaymentHistoryPageEntity(
+      items: model.items.map(toPaymentEntity).toList(growable: false),
+      currentPage: pagination?.currentPage ?? 1,
+      lastPage: pagination?.lastPage ?? 1,
+      total: pagination?.total ?? model.items.length,
+    );
+  }
+
+  static PaymentEntity toPaymentEntity(PaymentModel model) {
+    return PaymentEntity(
+      id: model.id,
+      subscriptionId: model.subscriptionId,
+      parentUserId: model.parentUserId,
+      purpose: model.purpose,
+      amountBdt: model.amountBdt,
+      currency: model.currency,
+      paymentMethod: model.paymentMethod,
+      status: model.status,
+      gateway: model.gateway,
+      gatewayReference: model.gatewayReference,
+      gatewayTransactionId: model.gatewayTransactionId,
+      invoiceNumber: model.invoiceNumber,
+      lineItems: model.lineItems
+          .map(
+            (item) => PaymentLineItemEntity(
+              type: item.type,
+              code: item.code,
+              title: item.title,
+              amountBdt: item.amountBdt,
+              billingInterval: item.billingInterval,
+            ),
+          )
+          .toList(growable: false),
+      paidAt: model.paidAt,
+      reconciledAt: model.reconciledAt,
+      failureReason: model.failureReason,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
+      downloadUrl: model.downloadUrl,
+    );
+  }
+
   static SubscriptionEligibilityEntity toEligibilityEntity(
     SubscriptionEligibilityModel model,
   ) {

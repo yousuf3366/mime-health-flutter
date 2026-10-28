@@ -3,6 +3,7 @@ library;
 
 export 'checkout_entity.dart';
 export 'my_subscription_entity.dart';
+export 'payment_history_entity.dart';
 export 'selected_subscription_entity.dart';
 export 'subscription_eligibility_entity.dart';
 export 'subscription_enums.dart';

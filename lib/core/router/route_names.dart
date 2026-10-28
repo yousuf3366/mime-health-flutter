@@ -13,6 +13,7 @@ class RouteNames {
   static const String subscriptionPayment = '/subscription/payment';
   static const String paymentWebView = '/subscription/payment/gateway';
   static const String mySubscription = '/subscription/me';
+  static const String paymentHistory = '/subscription/payments';
   static const String termsAndConditions = '/terms-and-conditions';
   static const String dataSharingConsent = '/data-sharing-consent';
   static const String scanHistory = '/scan-history';

@@ -14,6 +14,7 @@ import 'package:mime_health/core/widgets/app_warning_card.dart';
 
 import '../../../../core/localization/l10n_keys.dart';
 import '../../../language/presentation/provider/language_provider.dart';
+import '../../../scan_share/presentation/widget/scan_share_button.dart';
 import '../../../subscription/presentation/provider/subscription_provider.dart';
 import '../../domain/entity/face_scan_entity.dart';
 import '../provider/face_scan_di.dart';
@@ -100,6 +101,10 @@ class FaceScanHealthDashboardScreen extends HookConsumerWidget {
         title: l10n.t(L10nKeys.healthDashboardTitle),
         automaticallyImplyLeading: false,
         actions: [
+          ScanShareButton(
+            profileId: vitals.profileId ?? historyProfileId,
+            scanId: vitals.mimeScanId,
+          ),
           if (showCloseAction)
             IconButton(
               onPressed: () => Navigator.of(context).pop(),

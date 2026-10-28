@@ -62,6 +62,35 @@ class GetSubscriptionServicesUseCase {
       _repository.getServices();
 }
 
+class GetPaymentHistoryUseCase {
+  GetPaymentHistoryUseCase(this._repository);
+
+  final SubscriptionRepository _repository;
+
+  Future<Result<PaymentHistoryPageEntity>> call({
+    int page = 1,
+    int perPage = 10,
+    DateTime? fromDate,
+    DateTime? toDate,
+  }) => _repository.getPayments(
+    page: page,
+    perPage: perPage,
+    fromDate: fromDate,
+    toDate: toDate,
+  );
+}
+
+class DownloadInvoiceUseCase {
+  DownloadInvoiceUseCase(this._repository);
+
+  final SubscriptionRepository _repository;
+
+  Future<Result<String>> call({
+    required String url,
+    required String savePath,
+  }) => _repository.downloadInvoice(url: url, savePath: savePath);
+}
+
 class GetMySubscriptionUseCase {
   GetMySubscriptionUseCase(this._repository);
 

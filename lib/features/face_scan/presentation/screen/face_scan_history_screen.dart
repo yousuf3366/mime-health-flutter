@@ -10,6 +10,7 @@ import 'package:mime_health/core/widgets/app_button.dart';
 
 import '../../../../core/localization/l10n_keys.dart';
 import '../../../language/presentation/provider/language_provider.dart';
+import '../../../scan_share/presentation/widget/scan_share_button.dart';
 import '../../domain/entity/face_scan_entity.dart';
 import '../provider/face_scan_di.dart';
 import '../util/scan_result_items.dart';
@@ -165,6 +166,10 @@ class _ScanHistoryCard extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+                  ),
+                  ScanShareButton(
+                    profileId: scan.profileId,
+                    scanId: scan.mimeScanId,
                   ),
                 ],
               ),

@@ -40,11 +40,13 @@ class SplashPage extends HookConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.health_and_safety_rounded,
-                size: 88,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+              Image.asset('assets/app_icon_white.png',
+              height: 88,),
+              // Icon(
+              //   Icons.health_and_safety_rounded,
+              //   size: 88,
+              //   color: Theme.of(context).colorScheme.primary,
+              // ),
               const SizedBox(height: 16),
               Text(
                 AppConfig.appName,

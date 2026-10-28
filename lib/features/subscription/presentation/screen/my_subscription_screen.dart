@@ -165,6 +165,13 @@ class _SubscriptionDetails extends StatelessWidget {
           icon: Icons.swap_horiz_rounded,
           onPressed: onChangePlan,
         ),
+        SizedBox(height: context.scaleHeight(12)),
+        AppButton(
+          label: t(L10nKeys.paymentHistoryTitle),
+          icon: Icons.receipt_long_outlined,
+          btnStyle: AppButtonStyle.secondary,
+          onPressed: () => context.push(RouteNames.paymentHistory),
+        ),
       ],
     );
   }

@@ -44,6 +44,34 @@ class SubscriptionRemoteDatasource {
     return CheckoutResponseModel.fromJson(_asJsonMap(response.data));
   }
 
+  /// GET `/api/v1/subscription/payments?page=&per_page=&from_date=&to_date=`
+  /// ([fromDate] / [toDate] as `yyyy-MM-dd`).
+  Future<PaymentHistoryResponseModel> getPayments({
+    int page = 1,
+    int perPage = 10,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    final response = await _dio.get<Map<String, dynamic>>(
+      ApiEndpoints.subscriptionPayments,
+      queryParameters: {
+        'page': page,
+        'per_page': perPage,
+        'from_date': ?fromDate,
+        'to_date': ?toDate,
+      },
+    );
+    return PaymentHistoryResponseModel.fromJson(_asJsonMap(response.data));
+  }
+
+  /// Downloads an invoice from its (authenticated) [url] to [savePath].
+  Future<void> downloadInvoice({
+    required String url,
+    required String savePath,
+  }) async {
+    await _dio.download(url, savePath);
+  }
+
   /// GET `/api/v1/subscription/me`
   Future<MySubscriptionResponseModel> getMySubscription() async {
     final response = await _dio.get<Map<String, dynamic>>(
