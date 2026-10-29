@@ -32,6 +32,7 @@ class ApiEndpoints {
   static const String shareLinks = '/api/v1/share-links';
   static const String subscriptionSelectPlan =
       '/api/v1/subscription/select-plan';
+  static const String subscriptionCancel = '/api/v1/subscription/cancel';
 
   /// e.g. `/api/v1/consent-documents/tos`
   static String consentDocument(String code) =>

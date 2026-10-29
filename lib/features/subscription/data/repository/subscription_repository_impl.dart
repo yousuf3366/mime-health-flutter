@@ -170,4 +170,9 @@ class SubscriptionRepositoryImpl extends BaseRepository
       return SubscriptionMapper.toMySubscriptionEntity(response.data);
     });
   }
+
+  @override
+  Future<Result<String>> cancelSubscription({required String reason}) {
+    return safeApiCall(() => _remote.cancelSubscription(reason: reason));
+  }
 }

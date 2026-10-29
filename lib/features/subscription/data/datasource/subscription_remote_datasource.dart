@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/constants/api_endpoints.dart';
+import '../../../../core/error/exceptions.dart';
 import '../model/subscription_models.dart';
 
 class SubscriptionRemoteDatasource {
@@ -78,6 +79,22 @@ class SubscriptionRemoteDatasource {
       ApiEndpoints.mySubscribedPlan,
     );
     return MySubscriptionResponseModel.fromJson(_asJsonMap(response.data));
+  }
+
+  /// POST `/api/v1/subscription/cancel`; returns the server message.
+  Future<String> cancelSubscription({required String reason}) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      ApiEndpoints.subscriptionCancel,
+      data: {'reason': reason},
+    );
+    final json = _asJsonMap(response.data);
+    final message = json['message']?.toString() ?? '';
+    if (json['success'] != true) {
+      throw ApiException(
+        message.isEmpty ? 'Failed to cancel subscription.' : message,
+      );
+    }
+    return message.isEmpty ? 'Subscription cancelled.' : message;
   }
 
   Map<String, dynamic> _asJsonMap(dynamic data) {

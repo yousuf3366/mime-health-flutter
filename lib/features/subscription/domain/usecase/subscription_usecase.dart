@@ -99,3 +99,12 @@ class GetMySubscriptionUseCase {
   Future<Result<MySubscriptionEntity?>> call() =>
       _repository.getMySubscription();
 }
+
+class CancelSubscriptionUseCase {
+  CancelSubscriptionUseCase(this._repository);
+
+  final SubscriptionRepository _repository;
+
+  Future<Result<String>> call({required String reason}) =>
+      _repository.cancelSubscription(reason: reason);
+}

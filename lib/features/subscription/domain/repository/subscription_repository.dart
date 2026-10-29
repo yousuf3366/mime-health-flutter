@@ -41,4 +41,7 @@ abstract class SubscriptionRepository {
   /// Current subscription from Mime (`GET /api/v1/subscription/me`).
   /// Returns `null` when the user has no subscription.
   Future<Result<MySubscriptionEntity?>> getMySubscription();
+
+  /// `POST /subscription/cancel`; returns the server message.
+  Future<Result<String>> cancelSubscription({required String reason});
 }

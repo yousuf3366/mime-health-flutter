@@ -313,6 +313,19 @@ class L10nKeys {
   static const mySubscriptionEmpty = 'mobile.my_subscription.empty';
   static const mySubscriptionViewPlans = 'mobile.my_subscription.view_plans';
   static const mySubscriptionChangePlan = 'mobile.my_subscription.change_plan';
+  static const mySubscriptionCancel = 'mobile.my_subscription.cancel';
+  static const mySubscriptionCancelConfirm =
+      'mobile.my_subscription.cancel_confirm';
+  static const mySubscriptionCancelTitle =
+      'mobile.my_subscription.cancel_title';
+  static const mySubscriptionCancelReason =
+      'mobile.my_subscription.cancel_reason';
+  static const mySubscriptionCancelReasonRequired =
+      'mobile.my_subscription.cancel_reason_required';
+  static const mySubscriptionCancelSubmit =
+      'mobile.my_subscription.cancel_submit';
+  static const mySubscriptionCancelClose =
+      'mobile.my_subscription.cancel_close';
   static const mySubscriptionStatusActive =
       'mobile.my_subscription.status_active';
   static const mySubscriptionStatusTrial =

@@ -59,6 +59,10 @@ final getMySubscriptionUseCaseProvider = Provider<GetMySubscriptionUseCase>(
   (ref) => GetMySubscriptionUseCase(ref.watch(subscriptionRepositoryProvider)),
 );
 
+final cancelSubscriptionUseCaseProvider = Provider<CancelSubscriptionUseCase>(
+  (ref) => CancelSubscriptionUseCase(ref.watch(subscriptionRepositoryProvider)),
+);
+
 /// Current subscription from Mime (`GET /subscription/me`). Not cached locally.
 final mySubscriptionProvider =
     FutureProvider.autoDispose<MySubscriptionEntity?>((ref) async {

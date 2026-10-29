@@ -8,9 +8,11 @@ import 'package:mime_health/core/extensions/context_extensions.dart';
 import 'package:mime_health/core/theme/app_colors.dart';
 import 'package:mime_health/core/widgets/app_app_bar.dart';
 import 'package:mime_health/core/widgets/app_button.dart';
+import 'package:mime_health/core/widgets/app_text_field1.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/localization/l10n_keys.dart';
+import '../../../../core/providers/core_providers.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../language/presentation/provider/language_provider.dart';
 import '../../domain/entity/subscription_entity.dart';
@@ -31,6 +33,31 @@ class MySubscriptionScreen extends ConsumerWidget {
     }
 
     Future<void> refresh() => ref.refresh(mySubscriptionProvider.future);
+
+    Future<void> cancelPlan() async {
+      final reason = await showDialog<String>(
+        context: context,
+        useRootNavigator: true,
+        builder: (_) => _CancelSubscriptionDialog(t: l10n.t),
+      );
+      if (reason == null) return;
+
+      final dialog = ref.read(dialogServiceProvider);
+      dialog.showLoading();
+      final result = await ref
+          .read(cancelSubscriptionUseCaseProvider)
+          .call(reason: reason);
+      dialog.hideLoading();
+
+      final snackbar = ref.read(snackbarServiceProvider);
+      result.when(
+        success: (message) {
+          snackbar.showSuccess(message);
+          ref.invalidate(mySubscriptionProvider);
+        },
+        failure: (error) => snackbar.showError(error.message),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColors.backgroundDeep,
@@ -62,6 +89,7 @@ class MySubscriptionScreen extends ConsumerWidget {
                 subscription: subscription,
                 t: l10n.t,
                 onChangePlan: openPlans,
+                onCancel: cancelPlan,
               ),
             );
           },
@@ -77,12 +105,14 @@ class _SubscriptionDetails extends StatelessWidget {
     required this.subscription,
     required this.t,
     required this.onChangePlan,
+    required this.onCancel,
   });
 
   final MySubscriptionEntity data;
   final SelectedSubscriptionEntity subscription;
   final String Function(String key) t;
   final VoidCallback onChangePlan;
+  final VoidCallback onCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -166,11 +196,118 @@ class _SubscriptionDetails extends StatelessWidget {
           onPressed: onChangePlan,
         ),
         SizedBox(height: context.scaleHeight(12)),
+        if (!plan.isFree) ...[
+          AppButton(
+            label: t(L10nKeys.mySubscriptionCancel),
+            icon: Icons.cancel_outlined,
+            btnStyle: AppButtonStyle.cancel,
+            isEnabled: !subscription.isCancelScheduled,
+            onPressed: onCancel,
+          ),
+          SizedBox(height: context.scaleHeight(12)),
+        ],
         AppButton(
           label: t(L10nKeys.paymentHistoryTitle),
           icon: Icons.receipt_long_outlined,
           btnStyle: AppButtonStyle.secondary,
           onPressed: () => context.push(RouteNames.paymentHistory),
+        ),
+      ],
+    );
+  }
+}
+
+/// Pops with the trimmed reason on Submit, or `null` on Close.
+class _CancelSubscriptionDialog extends StatefulWidget {
+  const _CancelSubscriptionDialog({required this.t});
+
+  final String Function(String key) t;
+
+  @override
+  State<_CancelSubscriptionDialog> createState() =>
+      _CancelSubscriptionDialogState();
+}
+
+class _CancelSubscriptionDialogState extends State<_CancelSubscriptionDialog> {
+  String _reason = '';
+  String? _error;
+
+  void _submit() {
+    final reason = _reason.trim();
+    if (reason.isEmpty) {
+      setState(
+        () => _error = widget.t(L10nKeys.mySubscriptionCancelReasonRequired),
+      );
+      return;
+    }
+    Navigator.of(context).pop(reason);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = widget.t;
+    return AlertDialog(
+      backgroundColor: AppColors.surfaceSolid,
+      title: Text(
+        t(L10nKeys.mySubscriptionCancelTitle),
+        style: TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: context.titleFontSize,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              t(L10nKeys.mySubscriptionCancelConfirm),
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: context.fontSize,
+              ),
+            ),
+            SizedBox(height: context.scaleHeight(16)),
+            AppTextField1(
+              label: t(L10nKeys.mySubscriptionCancelReason),
+              mandatory: true,
+              isMultiline: true,
+              minLines: 3,
+              maxLines: 5,
+              errorText: _error,
+              onChanged: (value) => setState(() {
+                _reason = value;
+                _error = null;
+              }),
+            ),
+          ],
+        ),
+      ),
+      actionsPadding: EdgeInsets.fromLTRB(
+        context.scaleWidth(16),
+        0,
+        context.scaleWidth(16),
+        context.scaleHeight(16),
+      ),
+      actions: [
+        Row(
+          children: [
+            Expanded(
+              child: AppButton(
+                label: t(L10nKeys.mySubscriptionCancelClose),
+                btnStyle: AppButtonStyle.secondary,
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+            SizedBox(width: context.scaleWidth(12)),
+            Expanded(
+              child: AppButton(
+                label: t(L10nKeys.mySubscriptionCancelSubmit),
+                onPressed: _submit,
+              ),
+            ),
+          ],
         ),
       ],
     );

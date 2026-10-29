@@ -83,6 +83,8 @@ class FaceScanHealthDashboardScreen extends HookConsumerWidget {
         isRefreshingPlan.value ||
         (mySubscription.isLoading && !mySubscription.hasValue);
     final hasActivePlan = mySubscription.asData?.value?.hasActivePlan ?? false;
+    final isFreePlan =
+        mySubscription.asData?.value?.subscription?.plan.isFree ?? true;
     final sectionTitleStyle = TextStyle(
       color: AppColors.primaryContainer,
       fontSize: context.titleFontSize,
@@ -111,7 +113,7 @@ class FaceScanHealthDashboardScreen extends HookConsumerWidget {
               icon: const Icon(Icons.close),
               tooltip: l10n.t(L10nKeys.mediaCancel),
             ),
-          if (!showCloseAction && historyProfileId != null)
+          if (!showCloseAction && historyProfileId != null && !isFreePlan)
             TextButton(
               onPressed: () {
                 context.push(
